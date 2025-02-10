@@ -1,0 +1,183 @@
+
+import { ChartBar, GraduationCap, User, Users, ArrowRight } from "lucide-react";
+import StepCard from "@/components/StepCard";
+import MentorshipCard from "@/components/MentorshipCard";
+import MentorCard from "@/components/MentorCard";
+import StatsCard from "@/components/StatsCard";
+import Navbar from "@/components/Navbar";
+
+const Services = () => {
+  const steps = [
+    {
+      title: "Submit Your Details",
+      description: "Share your JEE rank and college preferences with us",
+      icon: <User className="w-6 h-6 text-primary" />,
+    },
+    {
+      title: "Get Expert Analysis",
+      description: "Receive a detailed analysis of your college options",
+      icon: <ChartBar className="w-6 h-6 text-primary" />,
+    },
+    {
+      title: "Connect with Mentor",
+      description: "Get personalized guidance from experienced mentors",
+      icon: <Users className="w-6 h-6 text-primary" />,
+    },
+    {
+      title: "Secure Admission",
+      description: "Successfully enroll in your dream college",
+      icon: <GraduationCap className="w-6 h-6 text-primary" />,
+    },
+  ];
+
+  const mentorshipOptions = [
+    {
+      title: "Free Rank Analysis",
+      description: "Get a basic analysis of your college options based on your JEE rank",
+      features: ["Rank-based college suggestions", "Basic placement statistics", "College comparison"],
+      price: "Free",
+    },
+    {
+      title: "One-on-One Expert Mentorship",
+      description: "Personalized guidance from experienced mentors",
+      features: ["1-hour mentorship call", "Detailed college analysis", "Admission strategy", "Query resolution"],
+      price: "₹399",
+      featured: true,
+    },
+    {
+      title: "Personalized College Roadmap",
+      description: "Comprehensive guidance for your college journey",
+      features: ["2 mentorship sessions", "Detailed roadmap", "Regular follow-ups", "Parent counseling"],
+      price: "₹699",
+    },
+  ];
+
+  const mentors = [
+    {
+      name: "Rajesh Kumar",
+      role: "IIT Delhi Alumni",
+      expertise: "JEE Advanced Counseling",
+      experience: "5+ years",
+      image: "/placeholder.svg",
+    },
+    {
+      name: "Priya Sharma",
+      role: "NIT Trichy Alumni",
+      expertise: "College Selection Strategy",
+      experience: "4+ years",
+      image: "/placeholder.svg",
+    },
+    {
+      name: "Amit Patel",
+      role: "BITS Pilani Alumni",
+      expertise: "Scholarship Guidance",
+      experience: "6+ years",
+      image: "/placeholder.svg",
+    },
+  ];
+
+  const stats = [
+    {
+      title: "IIT Placements",
+      value: "500+",
+      description: "Students placed in IITs",
+    },
+    {
+      title: "NIT Success",
+      value: "1000+",
+      description: "Students in NITs",
+    },
+    {
+      title: "Satisfaction Rate",
+      value: "98%",
+      description: "Happy students",
+    },
+    {
+      title: "Mentorship Hours",
+      value: "5000+",
+      description: "Of guidance provided",
+    },
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-white to-primary/5">
+      <Navbar />
+      
+      {/* How It Works Section */}
+      <section className="pt-32 pb-20 px-6">
+        <div className="container mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-text mb-4">
+            How It Works
+          </h2>
+          <p className="text-text-light text-center max-w-2xl mx-auto mb-12">
+            Our step-by-step mentorship program guides you through the college selection process
+          </p>
+          <div className="grid md:grid-cols-4 gap-8">
+            {steps.map((step, index) => (
+              <StepCard
+                key={index}
+                title={step.title}
+                description={step.description}
+                icon={step.icon}
+                number={index + 1}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Mentorship Options Section */}
+      <section className="py-20 px-6 bg-white">
+        <div className="container mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-text mb-4">
+            Mentorship Options
+          </h2>
+          <p className="text-text-light text-center max-w-2xl mx-auto mb-12">
+            Choose the mentorship package that best suits your needs
+          </p>
+          <div className="grid md:grid-cols-3 gap-8">
+            {mentorshipOptions.map((option, index) => (
+              <MentorshipCard key={index} {...option} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Meet Our Mentors Section */}
+      <section className="py-20 px-6">
+        <div className="container mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-text mb-4">
+            Meet Our Mentors
+          </h2>
+          <p className="text-text-light text-center max-w-2xl mx-auto mb-12">
+            Learn from experienced professionals who have guided thousands of students
+          </p>
+          <div className="grid md:grid-cols-3 gap-8">
+            {mentors.map((mentor, index) => (
+              <MentorCard key={index} {...mentor} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Success Rate Section */}
+      <section className="py-20 px-6 bg-white">
+        <div className="container mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-text mb-4">
+            Our Success Stories
+          </h2>
+          <p className="text-text-light text-center max-w-2xl mx-auto mb-12">
+            Join thousands of students who achieved their college dreams with us
+          </p>
+          <div className="grid md:grid-cols-4 gap-8">
+            {stats.map((stat, index) => (
+              <StatsCard key={index} {...stat} />
+            ))}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default Services;
