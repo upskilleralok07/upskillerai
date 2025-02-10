@@ -1,4 +1,6 @@
 
+import { ArrowRight } from "lucide-react";
+
 interface StepCardProps {
   icon: React.ReactNode;
   title: string;
