@@ -1,9 +1,13 @@
 
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "@/components/theme-provider";
+import { Switch } from "@/components/ui/switch";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,7 +21,7 @@ const Navbar = () => {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-white/80 backdrop-blur-lg shadow-lg"
+          ? "bg-background/80 backdrop-blur-lg shadow-lg"
           : "bg-transparent"
       }`}
     >
@@ -35,13 +39,24 @@ const Navbar = () => {
                 <Link
                   key={item}
                   to={`/${item.toLowerCase()}`}
-                  className="text-text hover:text-primary transition-colors duration-200"
+                  className="text-foreground hover:text-primary transition-colors duration-200"
                 >
                   {item}
                 </Link>
               )
             )}
-            <button className="bg-primary hover:bg-primary-dark text-white px-6 py-2 rounded-lg transition-colors duration-200">
+            <div className="flex items-center space-x-2">
+              <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Switch
+                checked={theme === "dark"}
+                onCheckedChange={() =>
+                  setTheme(theme === "dark" ? "light" : "dark")
+                }
+                className="transition-transform duration-200"
+              />
+              <Moon className="h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            </div>
+            <button className="bg-primary hover:bg-primary-dark text-primary-foreground px-6 py-2 rounded-lg transition-colors duration-200">
               Get Started
             </button>
           </div>
