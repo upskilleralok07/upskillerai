@@ -12,6 +12,7 @@ import Services from "./pages/Services";
 import Reviews from "./pages/Reviews";
 import Pricing from "./pages/Pricing";
 import Contact from "./pages/Contact";
+import Resources from "./pages/Resources";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -57,6 +58,14 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <Contact />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/resources"
+                element={
+                  <ProtectedRoute>
+                    <Resources />
                   </ProtectedRoute>
                 }
               />

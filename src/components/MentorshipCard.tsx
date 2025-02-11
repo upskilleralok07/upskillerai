@@ -1,4 +1,8 @@
 
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+
 interface MentorshipCardProps {
   title: string;
   description: string;
@@ -8,6 +12,29 @@ interface MentorshipCardProps {
 }
 
 const MentorshipCard = ({ title, description, features, price, featured = false }: MentorshipCardProps) => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const { user } = useAuth();
+
+  const handleGetStarted = () => {
+    if (title === "Free Plan") {
+      if (!user) {
+        toast({
+          title: "Authentication required",
+          description: "Please sign in to access the free resources",
+        });
+        navigate("/auth");
+      } else {
+        navigate("/resources");
+      }
+    } else {
+      toast({
+        title: "Coming Soon",
+        description: "This plan will be available soon!",
+      });
+    }
+  };
+
   return (
     <div className={`p-6 rounded-2xl ${featured ? 'bg-primary/5 border-2 border-primary' : 'bg-card'} shadow-lg hover:shadow-xl transition-all duration-300 relative animate-fade-in`}>
       {featured && (
@@ -28,7 +55,12 @@ const MentorshipCard = ({ title, description, features, price, featured = false 
         ))}
       </div>
       <div className="text-3xl font-bold text-foreground mb-6">{price}</div>
-      <button className={`w-full py-3 rounded-lg font-medium transition-colors duration-200 ${featured ? 'bg-primary text-primary-foreground hover:bg-primary-dark' : 'bg-primary/10 text-primary hover:bg-primary/20'}`}>
+      <button 
+        onClick={handleGetStarted}
+        className={`w-full py-3 rounded-lg font-medium transition-colors duration-200 ${
+          featured ? 'bg-primary text-primary-foreground hover:bg-primary-dark' : 'bg-primary/10 text-primary hover:bg-primary/20'
+        }`}
+      >
         Get Started
       </button>
     </div>

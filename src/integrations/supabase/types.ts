@@ -30,6 +30,33 @@ export type Database = {
         }
         Relationships: []
       }
+      study_resources: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          resource_type: string
+          title: string
+          url: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          resource_type: string
+          title: string
+          url: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          resource_type?: string
+          title?: string
+          url?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
