@@ -1,10 +1,10 @@
-
 import { ChartBar, GraduationCap, User, Users, ArrowRight } from "lucide-react";
 import StepCard from "@/components/StepCard";
 import MentorshipCard from "@/components/MentorshipCard";
 import MentorCard from "@/components/MentorCard";
 import StatsCard from "@/components/StatsCard";
 import Navbar from "@/components/Navbar";
+import JoinWhatsApp from "@/components/JoinWhatsApp";
 
 const Services = () => {
   const steps = [
@@ -54,26 +54,12 @@ const Services = () => {
 
   const mentors = [
     {
-      name: "Rajesh Kumar",
-      role: "IIT Delhi Alumni",
-      expertise: "JEE Advanced Counseling",
-      experience: "5+ years",
-      image: "/placeholder.svg",
-    },
-    {
-      name: "Priya Sharma",
-      role: "NIT Trichy Alumni",
-      expertise: "College Selection Strategy",
-      experience: "4+ years",
-      image: "/placeholder.svg",
-    },
-    {
-      name: "Amit Patel",
-      role: "BITS Pilani Alumni",
-      expertise: "Scholarship Guidance",
-      experience: "6+ years",
-      image: "/placeholder.svg",
-    },
+      name: "Alok Sharma",
+      role: "Founder - Upskiller & CollegeSarthi",
+      expertise: "College Counseling & Career Guidance",
+      experience: "Expert Mentor",
+      image: "/lovable-uploads/3b1c05fb-b051-4025-8490-a85e953996ae.png",
+    }
   ];
 
   const stats = [
@@ -100,7 +86,7 @@ const Services = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-primary/5">
+    <div className="min-h-screen bg-gradient-to-b from-white to-primary/5 dark:from-gray-900 dark:to-gray-800">
       <Navbar />
       
       {/* How It Works Section */}
@@ -146,16 +132,21 @@ const Services = () => {
       {/* Meet Our Mentors Section */}
       <section className="py-20 px-6">
         <div className="container mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center text-text mb-4">
-            Meet Our Mentors
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-text dark:text-white mb-4">
+            Meet Our Founder
           </h2>
-          <p className="text-text-light text-center max-w-2xl mx-auto mb-12">
+          <p className="text-text-light dark:text-gray-300 text-center max-w-2xl mx-auto mb-12">
             Learn from experienced professionals who have guided thousands of students
           </p>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-1 gap-8 max-w-2xl mx-auto">
             {mentors.map((mentor, index) => (
               <MentorCard key={index} {...mentor} />
             ))}
+          </div>
+          
+          {/* WhatsApp Join Section */}
+          <div className="mt-16">
+            <JoinWhatsApp />
           </div>
         </div>
       </section>
