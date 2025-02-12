@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/components/ui/use-toast";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface StudyResource {
   id: string;
@@ -31,13 +32,18 @@ const Resources = () => {
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const { data: resources, isLoading: resourcesLoading } = useQuery({
+  const { data: resources, isLoading: resourcesLoading, error } = useQuery({
     queryKey: ["study-resources"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("study_resources")
-        .select("*");
-      if (error) throw error;
+        .select("*")
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        console.error("Supabase error:", error);
+        throw error;
+      }
       return data as StudyResource[];
     },
   });
@@ -45,15 +51,13 @@ const Resources = () => {
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
 
-    // Add user message to chat
     const userMessage = { isUser: true, content: inputMessage.trim() };
     setMessages(prev => [...prev, userMessage]);
     setInputMessage("");
     setIsLoading(true);
 
     try {
-      // Here you would typically call your AI service
-      // For now, we'll simulate a response
+      // Simulated AI response for now
       setTimeout(() => {
         const aiResponse = {
           isUser: false,
@@ -83,6 +87,21 @@ const Resources = () => {
     );
   }
 
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="container mx-auto px-4 py-24">
+          <Alert variant="destructive">
+            <AlertDescription>
+              Failed to load resources. Please try again later.
+            </AlertDescription>
+          </Alert>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -90,7 +109,7 @@ const Resources = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Study Resources Section */}
           <div>
-            <h1 className="text-4xl font-bold text-foreground mb-8">Free Study Resources</h1>
+            <h1 className="text-4xl font-bold text-foreground mb-8">Study Resources</h1>
             <div className="grid grid-cols-1 gap-6">
               {resources?.map((resource) => (
                 <Card key={resource.id} className="p-6 hover:shadow-lg transition-shadow">
@@ -154,4 +173,3 @@ const Resources = () => {
 };
 
 export default Resources;
-
