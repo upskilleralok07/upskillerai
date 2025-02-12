@@ -163,6 +163,7 @@ export type Database = {
           created_at: string | null
           description: string | null
           id: string
+          plan_type: string
           resource_type: string
           title: string
           url: string
@@ -171,6 +172,7 @@ export type Database = {
           created_at?: string | null
           description?: string | null
           id?: string
+          plan_type?: string
           resource_type: string
           title: string
           url: string
@@ -179,6 +181,7 @@ export type Database = {
           created_at?: string | null
           description?: string | null
           id?: string
+          plan_type?: string
           resource_type?: string
           title?: string
           url?: string

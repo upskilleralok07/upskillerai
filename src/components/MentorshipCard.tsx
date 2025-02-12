@@ -2,37 +2,59 @@
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 interface MentorshipCardProps {
   title: string;
   description: string;
   features: string[];
   price: string;
+  planType: 'free' | 'premium';
   featured?: boolean;
 }
 
-const MentorshipCard = ({ title, description, features, price, featured = false }: MentorshipCardProps) => {
+const MentorshipCard = ({ title, description, features, price, planType, featured = false }: MentorshipCardProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
 
-  const handleGetStarted = () => {
-    if (title === "Free Plan") {
-      if (!user) {
-        toast({
-          title: "Authentication required",
-          description: "Please sign in to access the free resources",
-        });
-        navigate("/auth");
-      } else {
-        navigate("/resources");
+  const { data: resources } = useQuery({
+    queryKey: ["study-resources", planType],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("study_resources")
+        .select("*")
+        .eq('plan_type', planType)
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        console.error("Supabase error:", error);
+        throw error;
       }
-    } else {
+      return data;
+    },
+  });
+
+  const handleGetStarted = () => {
+    if (!user) {
       toast({
-        title: "Coming Soon",
-        description: "This plan will be available soon!",
+        title: "Authentication required",
+        description: "Please sign in to access the resources",
       });
+      navigate("/auth");
+      return;
     }
+
+    if (planType === 'premium') {
+      toast({
+        title: "Premium Features",
+        description: "Subscribe to access premium resources including AI roadmap and exclusive video content!",
+      });
+      return;
+    }
+
+    navigate("/resources");
   };
 
   return (
@@ -53,6 +75,18 @@ const MentorshipCard = ({ title, description, features, price, featured = false 
             <span className="text-muted-foreground">{feature}</span>
           </div>
         ))}
+        {resources && resources.length > 0 && (
+          <div className="mt-4 pt-4 border-t">
+            <h4 className="text-lg font-semibold mb-2">Included Resources:</h4>
+            <ul className="list-disc pl-5 space-y-2">
+              {resources.map((resource) => (
+                <li key={resource.id} className="text-muted-foreground">
+                  {resource.title}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
       <div className="text-3xl font-bold text-foreground mb-6">{price}</div>
       <button 

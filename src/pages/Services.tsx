@@ -1,4 +1,4 @@
-import { ChartBar, GraduationCap, User, Users, ArrowRight } from "lucide-react";
+import { ChartBar, GraduationCap, User, Users } from "lucide-react";
 import StepCard from "@/components/StepCard";
 import MentorshipCard from "@/components/MentorshipCard";
 import MentorCard from "@/components/MentorCard";
@@ -36,6 +36,7 @@ const Services = () => {
       description: "Get a basic analysis of your college options based on your JEE rank",
       features: ["Rank-based college suggestions", "Basic placement statistics", "College comparison"],
       price: "Free",
+      planType: "free" as const,
     },
     {
       title: "One-on-One Expert Mentorship",
@@ -43,12 +44,14 @@ const Services = () => {
       features: ["1-hour mentorship call", "Detailed college analysis", "Admission strategy", "Query resolution"],
       price: "₹399",
       featured: true,
+      planType: "premium" as const,
     },
     {
       title: "Personalized College Roadmap",
       description: "Comprehensive guidance for your college journey",
       features: ["2 mentorship sessions", "Detailed roadmap", "Regular follow-ups", "Parent counseling"],
       price: "₹699",
+      planType: "premium" as const,
     },
   ];
 

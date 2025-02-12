@@ -10,8 +10,19 @@ const Index = () => {
       
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-6">
-        <div className="container mx-auto text-center">
-          <div className="max-w-3xl mx-auto">
+        <div className="container mx-auto">
+          <div className="max-w-4xl mx-auto text-center mb-12">
+            <div className="aspect-video w-full mb-8">
+              <iframe
+                width="100%"
+                height="100%"
+                src="https://www.youtube.com/embed/kdPIQCKMjE8?autoplay=1"
+                title="Welcome Video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="rounded-lg shadow-lg"
+              ></iframe>
+            </div>
             <h1 className="text-4xl md:text-6xl font-bold text-text mb-6 animate-slide-in">
               Find Your Best College Match with Expert Guidance!
             </h1>
