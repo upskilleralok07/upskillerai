@@ -54,6 +54,30 @@ export type Database = {
         }
         Relationships: []
       }
+      chat_messages: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          is_bot: boolean | null
+          user_id: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          is_bot?: boolean | null
+          user_id?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          is_bot?: boolean | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       college_cutoffs: {
         Row: {
           branch: string
