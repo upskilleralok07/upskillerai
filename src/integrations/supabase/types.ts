@@ -9,24 +9,152 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      chat_conversations: {
+        Row: {
+          advanced_rank: number | null
+          board_percentage: number | null
+          budget_range: string | null
+          career_goal: string | null
+          category: string | null
+          created_at: string | null
+          id: string
+          is_completed: boolean | null
+          jee_rank: number | null
+          location_preference: string | null
+          preferred_branch: string | null
+          user_id: string | null
+        }
+        Insert: {
+          advanced_rank?: number | null
+          board_percentage?: number | null
+          budget_range?: string | null
+          career_goal?: string | null
+          category?: string | null
+          created_at?: string | null
+          id?: string
+          is_completed?: boolean | null
+          jee_rank?: number | null
+          location_preference?: string | null
+          preferred_branch?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          advanced_rank?: number | null
+          board_percentage?: number | null
+          budget_range?: string | null
+          career_goal?: string | null
+          category?: string | null
+          created_at?: string | null
+          id?: string
+          is_completed?: boolean | null
+          jee_rank?: number | null
+          location_preference?: string | null
+          preferred_branch?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      college_cutoffs: {
+        Row: {
+          branch: string
+          category: string
+          college_id: string | null
+          created_at: string | null
+          cutoff_rank: number
+          id: string
+          is_premium: boolean | null
+          round: number
+          year: number
+        }
+        Insert: {
+          branch: string
+          category: string
+          college_id?: string | null
+          created_at?: string | null
+          cutoff_rank: number
+          id?: string
+          is_premium?: boolean | null
+          round: number
+          year: number
+        }
+        Update: {
+          branch?: string
+          category?: string
+          college_id?: string | null
+          created_at?: string | null
+          cutoff_rank?: number
+          id?: string
+          is_premium?: boolean | null
+          round?: number
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "college_cutoffs_college_id_fkey"
+            columns: ["college_id"]
+            isOneToOne: false
+            referencedRelation: "colleges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      colleges: {
+        Row: {
+          campus_life: string | null
+          created_at: string | null
+          id: string
+          location: string
+          name: string
+          placement_stats: string | null
+          research_opportunities: string | null
+          type: string
+          website: string | null
+        }
+        Insert: {
+          campus_life?: string | null
+          created_at?: string | null
+          id?: string
+          location: string
+          name: string
+          placement_stats?: string | null
+          research_opportunities?: string | null
+          type: string
+          website?: string | null
+        }
+        Update: {
+          campus_life?: string | null
+          created_at?: string | null
+          id?: string
+          location?: string
+          name?: string
+          placement_stats?: string | null
+          research_opportunities?: string | null
+          type?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
           email: string | null
           id: string
           name: string | null
+          subscription_tier: string | null
         }
         Insert: {
           created_at?: string
           email?: string | null
           id: string
           name?: string | null
+          subscription_tier?: string | null
         }
         Update: {
           created_at?: string
           email?: string | null
           id?: string
           name?: string | null
+          subscription_tier?: string | null
         }
         Relationships: []
       }
