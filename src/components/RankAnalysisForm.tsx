@@ -1,7 +1,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import * as z from "zod"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useToast } from "@/components/ui/use-toast"
@@ -10,23 +9,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-
-const formSchema = z.object({
-  jee_mains_rank: z.string().transform((val) => parseInt(val, 10)),
-  jee_advanced_rank: z.string().transform((val) => val ? parseInt(val, 10) : undefined).optional(),
-  category: z.string(),
-  gender: z.string(),
-  home_state: z.string(),
-  counseling_type: z.enum(["josaa", "csab", "mpdter", "uptac"]),
-})
-
-interface CollegeRecommendation {
-  college_name: string;
-  branch: string;
-  round: number;
-  probability: string;
-}
+import { rankAnalysisSchema, type RankAnalysisFormData, type CollegeRecommendation } from "./rank-analysis/rankAnalysisSchema"
+import { CollegeRecommendationsList } from "./rank-analysis/CollegeRecommendationsList"
 
 export default function RankAnalysisForm() {
   const { toast } = useToast()
@@ -34,8 +18,8 @@ export default function RankAnalysisForm() {
   const [recommendations, setRecommendations] = useState<CollegeRecommendation[]>([])
   const [loading, setLoading] = useState(false)
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<RankAnalysisFormData>({
+    resolver: zodResolver(rankAnalysisSchema),
     defaultValues: {
       jee_mains_rank: "",
       jee_advanced_rank: "",
@@ -46,7 +30,7 @@ export default function RankAnalysisForm() {
     },
   })
 
-  async function getCollegeRecommendations(values: z.infer<typeof formSchema>) {
+  async function getCollegeRecommendations(values: RankAnalysisFormData) {
     const { data: cutoffs, error } = await supabase
       .from('college_cutoffs')
       .select(`
@@ -72,7 +56,7 @@ export default function RankAnalysisForm() {
     }))
   }
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: RankAnalysisFormData) {
     try {
       setLoading(true)
       const { data: session } = await supabase.auth.getSession()
@@ -242,33 +226,7 @@ export default function RankAnalysisForm() {
         </form>
       </Form>
 
-      {recommendations.length > 0 && (
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold">College Recommendations</h3>
-          {recommendations.map((recommendation, index) => (
-            <Card key={index}>
-              <CardHeader>
-                <CardTitle className="text-lg">{recommendation.college_name}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <p><span className="font-medium">Branch:</span> {recommendation.branch}</p>
-                  <p><span className="font-medium">Round:</span> {recommendation.round}</p>
-                  <p><span className="font-medium">Admission Probability:</span> 
-                    <span className={`ml-2 px-2 py-1 rounded text-sm ${
-                      recommendation.probability === 'High' 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-yellow-100 text-yellow-800'
-                    }`}>
-                      {recommendation.probability}
-                    </span>
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
+      <CollegeRecommendationsList recommendations={recommendations} />
     </div>
   )
 }
