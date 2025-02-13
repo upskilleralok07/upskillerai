@@ -4,6 +4,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import RankAnalysisForm from "./RankAnalysisForm";
 
 interface MentorshipCardProps {
   title: string;
@@ -26,6 +27,7 @@ const MentorshipCard = ({ title, description, features, price, planType, feature
         .from("study_resources")
         .select("*")
         .eq('plan_type', planType)
+        .eq('resource_type', 'roadmap')
         .order('created_at', { ascending: false });
       
       if (error) {
@@ -34,6 +36,7 @@ const MentorshipCard = ({ title, description, features, price, planType, feature
       }
       return data;
     },
+    enabled: planType === 'premium', // Only fetch for premium plans
   });
 
   const handleGetStarted = () => {
@@ -49,7 +52,7 @@ const MentorshipCard = ({ title, description, features, price, planType, feature
     if (planType === 'premium') {
       toast({
         title: "Premium Features",
-        description: "Subscribe to access premium resources including AI roadmap and exclusive video content!",
+        description: "Subscribe to access premium resources including career roadmaps and exclusive content!",
       });
       return;
     }
@@ -75,9 +78,9 @@ const MentorshipCard = ({ title, description, features, price, planType, feature
             <span className="text-muted-foreground">{feature}</span>
           </div>
         ))}
-        {resources && resources.length > 0 && (
+        {planType === 'premium' && resources && resources.length > 0 && (
           <div className="mt-4 pt-4 border-t">
-            <h4 className="text-lg font-semibold mb-2">Included Resources:</h4>
+            <h4 className="text-lg font-semibold mb-2">Career Roadmaps Included:</h4>
             <ul className="list-disc pl-5 space-y-2">
               {resources.map((resource) => (
                 <li key={resource.id} className="text-muted-foreground">
@@ -89,14 +92,20 @@ const MentorshipCard = ({ title, description, features, price, planType, feature
         )}
       </div>
       <div className="text-3xl font-bold text-foreground mb-6">{price}</div>
-      <button 
-        onClick={handleGetStarted}
-        className={`w-full py-3 rounded-lg font-medium transition-colors duration-200 ${
-          featured ? 'bg-primary text-primary-foreground hover:bg-primary-dark' : 'bg-primary/10 text-primary hover:bg-primary/20'
-        }`}
-      >
-        Get Started
-      </button>
+      {planType === 'free' ? (
+        <div className="mt-4">
+          <RankAnalysisForm />
+        </div>
+      ) : (
+        <button 
+          onClick={handleGetStarted}
+          className={`w-full py-3 rounded-lg font-medium transition-colors duration-200 ${
+            featured ? 'bg-primary text-primary-foreground hover:bg-primary-dark' : 'bg-primary/10 text-primary hover:bg-primary/20'
+          }`}
+        >
+          Get Started
+        </button>
+      )}
     </div>
   );
 };

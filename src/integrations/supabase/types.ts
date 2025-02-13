@@ -122,6 +122,51 @@ export type Database = {
           },
         ]
       }
+      college_recommendations: {
+        Row: {
+          analysis_request_id: string | null
+          branch: string
+          college_id: string | null
+          created_at: string | null
+          id: string
+          probability: string
+          round: number
+        }
+        Insert: {
+          analysis_request_id?: string | null
+          branch: string
+          college_id?: string | null
+          created_at?: string | null
+          id?: string
+          probability: string
+          round: number
+        }
+        Update: {
+          analysis_request_id?: string | null
+          branch?: string
+          college_id?: string | null
+          created_at?: string | null
+          id?: string
+          probability?: string
+          round?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "college_recommendations_analysis_request_id_fkey"
+            columns: ["analysis_request_id"]
+            isOneToOne: false
+            referencedRelation: "rank_analysis_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "college_recommendations_college_id_fkey"
+            columns: ["college_id"]
+            isOneToOne: false
+            referencedRelation: "colleges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       colleges: {
         Row: {
           campus_life: string | null
@@ -182,6 +227,42 @@ export type Database = {
         }
         Relationships: []
       }
+      rank_analysis_requests: {
+        Row: {
+          category: string
+          counseling_type: Database["public"]["Enums"]["counseling_type"]
+          created_at: string | null
+          gender: string
+          home_state: string
+          id: string
+          jee_advanced_rank: number | null
+          jee_mains_rank: number | null
+          user_id: string | null
+        }
+        Insert: {
+          category: string
+          counseling_type: Database["public"]["Enums"]["counseling_type"]
+          created_at?: string | null
+          gender: string
+          home_state: string
+          id?: string
+          jee_advanced_rank?: number | null
+          jee_mains_rank?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          category?: string
+          counseling_type?: Database["public"]["Enums"]["counseling_type"]
+          created_at?: string | null
+          gender?: string
+          home_state?: string
+          id?: string
+          jee_advanced_rank?: number | null
+          jee_mains_rank?: number | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       study_resources: {
         Row: {
           created_at: string | null
@@ -223,7 +304,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      counseling_type: "josaa" | "csab" | "mpdter" | "uptac"
     }
     CompositeTypes: {
       [_ in never]: never

@@ -1,4 +1,3 @@
-
 import { ChartBar, GraduationCap, User, Users } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -53,8 +52,13 @@ const Services = () => {
   const mentorshipOptions = [
     {
       title: "Free Rank Analysis",
-      description: "Get a basic analysis of your college options based on your JEE rank",
-      features: ["Rank-based college suggestions", "Basic placement statistics", "College comparison"],
+      description: "Get detailed college recommendations based on your JEE rank and preferences",
+      features: [
+        "Rank-based college analysis",
+        "Support for JoSAA, CSAB, MPDTER, UPTAC",
+        "Category-wise predictions",
+        "Basic placement statistics"
+      ],
       price: "Free",
       planType: "free" as const,
     },
@@ -67,7 +71,8 @@ const Services = () => {
         "Admission strategy",
         "Query resolution",
         "Access to all career roadmaps",
-        "Premium study resources"
+        "Premium study resources",
+        "Category-wise cutoff analysis"
       ],
       price: "₹399",
       featured: true,
@@ -83,7 +88,8 @@ const Services = () => {
         "Parent counseling",
         "Career path planning",
         `${roadmaps?.length || '15+'} Career Roadmaps`,
-        "AI-powered learning assistant"
+        "Advanced college predictions",
+        "Branch-wise analysis"
       ],
       price: "₹699",
       planType: "premium" as const,
