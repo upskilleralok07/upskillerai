@@ -1,4 +1,3 @@
-
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { useState } from "react"
@@ -38,7 +37,9 @@ export default function RankAnalysisForm() {
         round,
         branch,
         colleges (
-          name
+          name,
+          location,
+          type
         )
       `)
       .eq('category', values.category)
@@ -90,7 +91,7 @@ export default function RankAnalysisForm() {
 
       toast({
         title: "Analysis Complete",
-        description: "Here are your college recommendations based on your rank and preferences.",
+        description: `Found ${collegeRecommendations.length} college recommendations based on your rank and preferences.`,
       })
     } catch (error) {
       toast({
@@ -110,11 +111,16 @@ export default function RankAnalysisForm() {
           <FormField
             control={form.control}
             name="jee_mains_rank"
-            render={({ field }) => (
+            render={({ field: { onChange, ...field } }) => (
               <FormItem>
                 <FormLabel>JEE Mains Rank</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Enter your JEE Mains rank" {...field} />
+                  <Input 
+                    type="number" 
+                    placeholder="Enter your JEE Mains rank" 
+                    onChange={(e) => onChange(e.target.value)}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -124,11 +130,16 @@ export default function RankAnalysisForm() {
           <FormField
             control={form.control}
             name="jee_advanced_rank"
-            render={({ field }) => (
+            render={({ field: { onChange, ...field } }) => (
               <FormItem>
                 <FormLabel>JEE Advanced Rank (optional)</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Enter your JEE Advanced rank" {...field} />
+                  <Input 
+                    type="number" 
+                    placeholder="Enter your JEE Advanced rank" 
+                    onChange={(e) => onChange(e.target.value)}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
