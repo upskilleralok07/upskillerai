@@ -189,6 +189,7 @@ export type Database = {
           id: string
           plan_type: string
           resource_type: string
+          roadmap_type: string | null
           title: string
           url: string
         }
@@ -198,6 +199,7 @@ export type Database = {
           id?: string
           plan_type?: string
           resource_type: string
+          roadmap_type?: string | null
           title: string
           url: string
         }
@@ -207,6 +209,7 @@ export type Database = {
           id?: string
           plan_type?: string
           resource_type?: string
+          roadmap_type?: string | null
           title?: string
           url?: string
         }

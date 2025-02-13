@@ -1,4 +1,7 @@
+
 import { ChartBar, GraduationCap, User, Users } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import StepCard from "@/components/StepCard";
 import MentorshipCard from "@/components/MentorshipCard";
 import MentorCard from "@/components/MentorCard";
@@ -7,6 +10,23 @@ import Navbar from "@/components/Navbar";
 import JoinWhatsApp from "@/components/JoinWhatsApp";
 
 const Services = () => {
+  const { data: roadmaps } = useQuery({
+    queryKey: ["roadmaps"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("study_resources")
+        .select("*")
+        .eq('resource_type', 'roadmap')
+        .order('title', { ascending: true });
+      
+      if (error) {
+        console.error("Error fetching roadmaps:", error);
+        throw error;
+      }
+      return data;
+    },
+  });
+
   const steps = [
     {
       title: "Submit Your Details",
@@ -41,7 +61,14 @@ const Services = () => {
     {
       title: "One-on-One Expert Mentorship",
       description: "Personalized guidance from experienced mentors",
-      features: ["1-hour mentorship call", "Detailed college analysis", "Admission strategy", "Query resolution"],
+      features: [
+        "1-hour mentorship call",
+        "Detailed college analysis",
+        "Admission strategy",
+        "Query resolution",
+        "Access to all career roadmaps",
+        "Premium study resources"
+      ],
       price: "₹399",
       featured: true,
       planType: "premium" as const,
@@ -49,7 +76,15 @@ const Services = () => {
     {
       title: "Personalized College Roadmap",
       description: "Comprehensive guidance for your college journey",
-      features: ["2 mentorship sessions", "Detailed roadmap", "Regular follow-ups", "Parent counseling"],
+      features: [
+        "2 mentorship sessions",
+        "Detailed roadmap",
+        "Regular follow-ups",
+        "Parent counseling",
+        "Career path planning",
+        `${roadmaps?.length || '15+'} Career Roadmaps`,
+        "AI-powered learning assistant"
+      ],
       price: "₹699",
       planType: "premium" as const,
     },
