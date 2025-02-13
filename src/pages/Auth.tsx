@@ -34,12 +34,15 @@ const Auth = () => {
       });
       if (error) throw error;
       if (data.user) {
-        // Update profile with phone number
+        // Create/update profile with correct fields
         const { error: profileError } = await supabase
           .from('profiles')
-          .update({ phone_number: phone })
-          .eq('id', data.user.id);
-          
+          .upsert({ 
+            id: data.user.id,
+            name,
+            email,
+          })
+
         if (profileError) throw profileError;
 
         toast({

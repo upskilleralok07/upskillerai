@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import React from "react";
 import { Plus } from "lucide-react";
 import {
   Accordion,
@@ -13,41 +13,48 @@ import Navbar from "@/components/Navbar";
 const Pricing = () => {
   const pricingPlans = [
     {
-      title: "Free Plan",
-      description: "Get started with basic rank analysis",
-      price: "₹0",
+      title: "Free Rank Analysis",
+      description: "Get detailed college recommendations based on your JEE rank and preferences",
       features: [
-        "Basic rank analysis",
-        "College predictor",
-        "Basic resources access",
-        "Community forum access",
+        "Rank-based college analysis",
+        "Support for JoSAA, CSAB, MPDTER, UPTAC",
+        "Category-wise predictions",
+        "Basic placement statistics"
       ],
+      price: "Free",
+      planType: "free" as const,
     },
     {
-      title: "Standard Plan",
-      description: "Perfect for serious aspirants",
-      price: "₹399",
+      title: "One-on-One Expert Mentorship",
+      description: "Personalized guidance from experienced mentors",
       features: [
-        "Everything in Free plan",
-        "2 Mentorship calls",
-        "AI-powered analysis",
-        "Personalized study plan",
-        "Priority support",
+        "1-hour mentorship call",
+        "Detailed college analysis",
+        "Admission strategy",
+        "Query resolution",
+        "Access to all career roadmaps",
+        "Premium study resources",
+        "Category-wise cutoff analysis"
       ],
+      price: "₹399",
+      planType: "premium" as const,
       featured: true,
     },
     {
-      title: "Premium Plan",
-      description: "For maximum preparation support",
-      price: "₹699",
+      title: "Personalized College Roadmap",
+      description: "Comprehensive guidance for your college journey",
       features: [
-        "Everything in Standard plan",
-        "Unlimited mentorship calls",
-        "Personalized college roadmap",
-        "Interview preparation",
-        "Direct mentor access",
-        "Premium study materials",
+        "2 mentorship sessions",
+        "Detailed roadmap",
+        "Regular follow-ups",
+        "Parent counseling",
+        "Career path planning",
+        "15+ Career Roadmaps",
+        "Advanced college predictions",
+        "Branch-wise analysis"
       ],
+      price: "₹699",
+      planType: "premium" as const,
     },
   ];
 
@@ -97,11 +104,7 @@ const Pricing = () => {
           {pricingPlans.map((plan) => (
             <MentorshipCard
               key={plan.title}
-              title={plan.title}
-              description={plan.description}
-              price={plan.price}
-              features={plan.features}
-              featured={plan.featured}
+              {...plan}
             />
           ))}
         </div>

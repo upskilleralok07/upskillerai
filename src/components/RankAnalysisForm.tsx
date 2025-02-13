@@ -13,8 +13,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 const formSchema = z.object({
-  jee_mains_rank: z.string().transform(Number),
-  jee_advanced_rank: z.string().transform(Number).optional(),
+  jee_mains_rank: z.string().transform((val) => parseInt(val, 10)),
+  jee_advanced_rank: z.string().transform((val) => val ? parseInt(val, 10) : undefined).optional(),
   category: z.string(),
   gender: z.string(),
   home_state: z.string(),
