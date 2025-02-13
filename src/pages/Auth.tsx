@@ -13,6 +13,7 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -27,11 +28,20 @@ const Auth = () => {
         options: {
           data: {
             name,
+            phone,
           },
         },
       });
       if (error) throw error;
       if (data.user) {
+        // Update profile with phone number
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .update({ phone_number: phone })
+          .eq('id', data.user.id);
+          
+        if (profileError) throw profileError;
+
         toast({
           title: "Success!",
           description: "Please check your email to verify your account.",
@@ -126,6 +136,17 @@ const Auth = () => {
                     placeholder="Enter your full name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone Number</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    placeholder="Enter your phone number"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
                     required
                   />
                 </div>
