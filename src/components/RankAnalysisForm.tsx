@@ -1,181 +1,227 @@
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Button } from "@/components/ui/button";
+
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 const formSchema = z.object({
-  rank: z.string().transform((val) => Number(val)),
-  category: z.string(),
-  category_rank: z.string().transform((val) => Number(val)),
-  state: z.string(),
+  name: z.string().min(2, {
+    message: "Name must be at least 2 characters.",
+  }),
+  phone_number: z.string().regex(/^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$/, {
+    message: "Invalid phone number",
+  }),
+  email: z.string().email({
+    message: "Invalid email address",
+  }),
+  jee_mains_rank: z.string().optional(),
+  jee_advanced_rank: z.string().optional(),
+  category: z.string().optional(),
+  gender: z.string().optional(),
+  is_pwd: z.string().optional(),
 });
-
-type RankAnalysisFormData = z.infer<typeof formSchema>;
 
 export function RankAnalysisForm() {
   const { toast } = useToast();
-  const form = useForm<RankAnalysisFormData>({
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      rank: "",
+      name: "",
+      phone_number: "",
+      email: "",
+      jee_mains_rank: "",
+      jee_advanced_rank: "",
       category: "",
-      category_rank: "",
-      state: "",
+      gender: "",
+      is_pwd: "",
     },
   });
 
-  const onSubmit = async (data: RankAnalysisFormData) => {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+    setIsSuccess(false);
+
+    const formValues = {
+      name: values.name,
+      phone_number: values.phone_number,
+      email: values.email,
+      jee_mains_rank: values.jee_mains_rank ? Number(values.jee_mains_rank) : null,
+      jee_advanced_rank: values.jee_advanced_rank ? Number(values.jee_advanced_rank) : null,
+      category: values.category,
+      gender: values.gender,
+      is_pwd: values.is_pwd,
+    };
+
     try {
-      const { error } = await supabase.from("rank_analysis").insert([
-        {
-          rank: Number(data.rank),
-          category: data.category,
-          category_rank: Number(data.category_rank),
-          state: data.state,
-        },
-      ]);
+      const { data, error } = await supabase
+        .from("rank_analysis_requests")
+        .insert(formValues)
+        .select();
 
-      if (error) throw error;
-
-      toast({
-        title: "Analysis Submitted",
-        description: "We'll analyze your rank and get back to you soon!",
-      });
-
-      form.reset();
-    } catch (error: any) {
+      if (error) {
+        console.error("Supabase error:", error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to submit rank analysis request. Please try again.",
+        });
+      } else {
+        setIsSuccess(true);
+        toast({
+          title: "Success",
+          description: "Rank analysis request submitted successfully!",
+        });
+        form.reset();
+      }
+    } catch (error) {
+      console.error("Unexpected error:", error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: error.message,
+        description: "An unexpected error occurred. Please try again later.",
       });
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        {isSuccess && (
+          <Alert>
+            <AlertDescription>
+              Your details have been submitted successfully! We will get back to
+              you soon.
+            </AlertDescription>
+          </Alert>
+        )}
         <FormField
           control={form.control}
-          name="rank"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>JEE Main Rank</FormLabel>
+              <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input
-                  type="number"
-                  placeholder="Enter your JEE Main rank"
-                  {...field}
-                  className="hover-lift"
-                />
+                <Input placeholder="Enter your name" {...field} />
               </FormControl>
-              <FormDescription>
-                Enter your JEE Main 2024 common rank
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-
+        <FormField
+          control={form.control}
+          name="phone_number"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Phone Number</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter your phone number" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter your email" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="jee_mains_rank"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>JEE Mains Rank (optional)</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter your JEE Mains rank" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="jee_advanced_rank"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>JEE Advanced Rank (optional)</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter your JEE Advanced rank" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="category"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Category</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="hover-lift">
-                    <SelectValue placeholder="Select your category" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="GENERAL">General</SelectItem>
-                  <SelectItem value="OBC">OBC</SelectItem>
-                  <SelectItem value="SC">SC</SelectItem>
-                  <SelectItem value="ST">ST</SelectItem>
-                  <SelectItem value="EWS">EWS</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormDescription>Select your reservation category</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="category_rank"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Category Rank</FormLabel>
+              <FormLabel>Category (optional)</FormLabel>
               <FormControl>
-                <Input
-                  type="number"
-                  placeholder="Enter your category rank"
-                  {...field}
-                  className="hover-lift"
-                />
+                <Input placeholder="Enter your category" {...field} />
               </FormControl>
-              <FormDescription>
-                Enter your rank in your selected category
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
-          name="state"
+          name="gender"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>State</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="hover-lift">
-                    <SelectValue placeholder="Select your state" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="UP">Uttar Pradesh</SelectItem>
-                  <SelectItem value="MP">Madhya Pradesh</SelectItem>
-                  <SelectItem value="DL">Delhi</SelectItem>
-                  <SelectItem value="MH">Maharashtra</SelectItem>
-                  <SelectItem value="OTHER">Other</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormDescription>Select your state of domicile</FormDescription>
+              <FormLabel>Gender (optional)</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter your gender" {...field} />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-
-        <Button
-          type="submit"
-          className="w-full gradient-bg hover-lift text-white"
-          disabled={form.formState.isSubmitting}
-        >
-          {form.formState.isSubmitting ? "Analyzing..." : "Analyze My Rank"}
+        <FormField
+          control={form.control}
+          name="is_pwd"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>PWD (optional)</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter yes if pwd else no" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" disabled={isLoading}>
+          {isLoading && (
+            <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+          )}
+          Submit
         </Button>
       </form>
     </Form>

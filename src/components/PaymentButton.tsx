@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/use-toast"
 import { supabase } from "@/integrations/supabase/client"
 import { Send, MessageSquare } from "lucide-react"
+import { ResourcesPopup } from './ResourcesPopup'
 
 interface PaymentButtonProps {
   amount: number
@@ -14,6 +15,7 @@ interface PaymentButtonProps {
 
 export function PaymentButton({ amount, productName, onSuccess, onError }: PaymentButtonProps) {
   const [loading, setLoading] = useState(false)
+  const [resourcesOpen, setResourcesOpen] = useState(false)
   const { toast } = useToast()
   
   // Different WhatsApp group links based on amount
@@ -35,11 +37,12 @@ export function PaymentButton({ amount, productName, onSuccess, onError }: Payme
     try {
       setLoading(true)
 
-      // If it's the free plan, redirect to Telegram
+      // If it's the free plan, open resources popup and redirect to Telegram
       if (amount === 0) {
+        setResourcesOpen(true)
         toast({
-          title: "Redirecting to Telegram",
-          description: "You'll be redirected to our Telegram group for free counseling",
+          title: "Free Resources Available",
+          description: "We've opened our free roadmaps and resources for you",
         })
         window.open(telegramGroupLink, '_blank')
         onSuccess?.()
@@ -84,32 +87,35 @@ export function PaymentButton({ amount, productName, onSuccess, onError }: Payme
   }
 
   return (
-    <Button 
-      onClick={handlePayment} 
-      disabled={loading}
-      className={`hover-lift ${amount === 0 ? 
-        "bg-[#0088cc] hover:bg-[#006699] text-white" : 
-        "bg-[#25D366] hover:bg-[#128C7E] text-white"}`}
-    >
-      {amount === 0 ? (
-        loading ? (
-          "Redirecting..."
+    <>
+      <Button 
+        onClick={handlePayment} 
+        disabled={loading}
+        className={`hover-lift ${amount === 0 ? 
+          "bg-[#0088cc] hover:bg-[#006699] text-white" : 
+          "bg-[#25D366] hover:bg-[#128C7E] text-white"}`}
+      >
+        {amount === 0 ? (
+          loading ? (
+            "Redirecting..."
+          ) : (
+            <>
+              <Send className="w-4 h-4 mr-2" />
+              Get Free Analysis
+            </>
+          )
         ) : (
-          <>
-            <Send className="w-4 h-4 mr-2" />
-            Get Free Analysis
-          </>
-        )
-      ) : (
-        loading ? (
-          "Redirecting..."
-        ) : (
-          <>
-            <MessageSquare className="w-4 h-4 mr-2" />
-            Pay ₹{amount} with WhatsApp
-          </>
-        )
-      )}
-    </Button>
+          loading ? (
+            "Redirecting..."
+          ) : (
+            <>
+              <MessageSquare className="w-4 h-4 mr-2" />
+              Pay ₹{amount} with WhatsApp
+            </>
+          )
+        )}
+      </Button>
+      <ResourcesPopup isOpen={resourcesOpen} onOpenChange={setResourcesOpen} />
+    </>
   )
 }
