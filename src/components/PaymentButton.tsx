@@ -14,8 +14,10 @@ interface PaymentButtonProps {
 export function PaymentButton({ amount, productName, onSuccess, onError }: PaymentButtonProps) {
   const [loading, setLoading] = useState(false)
   const { toast } = useToast()
+  
+  const whatsappGroupLink = "https://chat.whatsapp.com/ByBo7LqvC9r7KPqY2Gdx9V"
 
-  const initiatePayment = async () => {
+  const handlePayment = async () => {
     try {
       setLoading(true)
 
@@ -24,43 +26,27 @@ export function PaymentButton({ amount, productName, onSuccess, onError }: Payme
       if (!session) {
         toast({
           title: "Authentication required",
-          description: "Please sign in to make a payment",
+          description: "Please sign in to continue",
           variant: "destructive",
         })
         return
       }
 
-      // Create a unique order ID
-      const orderId = `ORDER_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`
-
-      // Call our payment function
-      const { data, error } = await supabase.functions.invoke('process-payment', {
-        body: {
-          amount,
-          orderId,
-          productName,
-          userPhone: session.user.phone || '',
-        },
-      })
-
-      if (error) throw error
-
-      if (data.paymentUrl) {
-        // In a real implementation, you would:
-        // 1. Redirect to PhonePe's payment page
-        // 2. Handle the payment callback
-        // For now, we'll just show a success message
-        toast({
-          title: "Payment Initiated",
-          description: "Please complete the payment in your PhonePe app",
-        })
-        onSuccess?.()
-      }
-    } catch (error) {
-      console.error('Payment error:', error)
+      // Show success toast
       toast({
-        title: "Payment Failed",
-        description: "Unable to process payment. Please try again.",
+        title: "Redirecting to WhatsApp",
+        description: "You'll be redirected to our WhatsApp group to complete the payment",
+      })
+      
+      // Redirect to WhatsApp group
+      window.open(whatsappGroupLink, '_blank')
+      
+      onSuccess?.()
+    } catch (error) {
+      console.error('Error:', error)
+      toast({
+        title: "Redirection Failed",
+        description: "Unable to redirect to WhatsApp. Please try again.",
         variant: "destructive",
       })
       onError?.(error as string)
@@ -71,11 +57,15 @@ export function PaymentButton({ amount, productName, onSuccess, onError }: Payme
 
   return (
     <Button 
-      onClick={initiatePayment} 
+      onClick={handlePayment} 
       disabled={loading}
-      className="bg-[#5F259F] hover:bg-[#4A1D7A] text-white"
+      className="bg-[#25D366] hover:bg-[#128C7E] text-white"
     >
-      {loading ? "Processing..." : `Pay ₹${amount} with PhonePe`}
+      {amount === 0 ? (
+        "Get Free Analysis"
+      ) : (
+        loading ? "Redirecting..." : `Pay ₹${amount} with WhatsApp`
+      )}
     </Button>
   )
 }
