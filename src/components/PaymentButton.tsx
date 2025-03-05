@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/use-toast"
 import { supabase } from "@/integrations/supabase/client"
+import { Send, MessageSquare } from "lucide-react"
 
 interface PaymentButtonProps {
   amount: number
@@ -86,14 +87,28 @@ export function PaymentButton({ amount, productName, onSuccess, onError }: Payme
     <Button 
       onClick={handlePayment} 
       disabled={loading}
-      className={amount === 0 ? 
+      className={`hover-lift ${amount === 0 ? 
         "bg-[#0088cc] hover:bg-[#006699] text-white" : 
-        "bg-[#25D366] hover:bg-[#128C7E] text-white"}
+        "bg-[#25D366] hover:bg-[#128C7E] text-white"}`}
     >
       {amount === 0 ? (
-        loading ? "Redirecting..." : "Get Free Analysis"
+        loading ? (
+          "Redirecting..."
+        ) : (
+          <>
+            <Send className="w-4 h-4 mr-2" />
+            Get Free Analysis
+          </>
+        )
       ) : (
-        loading ? "Redirecting..." : `Pay ₹${amount} with WhatsApp`
+        loading ? (
+          "Redirecting..."
+        ) : (
+          <>
+            <MessageSquare className="w-4 h-4 mr-2" />
+            Pay ₹{amount} with WhatsApp
+          </>
+        )
       )}
     </Button>
   )
