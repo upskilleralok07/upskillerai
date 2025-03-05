@@ -22,6 +22,8 @@ export function PaymentButton({ amount, productName, onSuccess, onError }: Payme
     default: "https://chat.whatsapp.com/ByBo7LqvC9r7KPqY2Gdx9V" // Default link
   }
 
+  const telegramGroupLink = "https://t.me/+xvC3KZxuZFpjOTU1" // Telegram group for free analysis
+
   const getWhatsAppLink = () => {
     if (amount === 699) return whatsappGroupLinks[699]
     if (amount === 399) return whatsappGroupLinks[399]
@@ -32,7 +34,18 @@ export function PaymentButton({ amount, productName, onSuccess, onError }: Payme
     try {
       setLoading(true)
 
-      // Get current user session
+      // If it's the free plan, redirect to Telegram
+      if (amount === 0) {
+        toast({
+          title: "Redirecting to Telegram",
+          description: "You'll be redirected to our Telegram group for free counseling",
+        })
+        window.open(telegramGroupLink, '_blank')
+        onSuccess?.()
+        return
+      }
+
+      // Get current user session for paid plans
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) {
         toast({
@@ -60,7 +73,7 @@ export function PaymentButton({ amount, productName, onSuccess, onError }: Payme
       console.error('Error:', error)
       toast({
         title: "Redirection Failed",
-        description: "Unable to redirect to WhatsApp. Please try again.",
+        description: "Unable to redirect. Please try again.",
         variant: "destructive",
       })
       onError?.(error as string)
@@ -73,10 +86,12 @@ export function PaymentButton({ amount, productName, onSuccess, onError }: Payme
     <Button 
       onClick={handlePayment} 
       disabled={loading}
-      className="bg-[#25D366] hover:bg-[#128C7E] text-white"
+      className={amount === 0 ? 
+        "bg-[#0088cc] hover:bg-[#006699] text-white" : 
+        "bg-[#25D366] hover:bg-[#128C7E] text-white"}
     >
       {amount === 0 ? (
-        "Get Free Analysis"
+        loading ? "Redirecting..." : "Get Free Analysis"
       ) : (
         loading ? "Redirecting..." : `Pay ₹${amount} with WhatsApp`
       )}

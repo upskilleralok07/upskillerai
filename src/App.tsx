@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { TelegramPopup } from "@/components/TelegramPopup";
 import Index from "./pages/Index";
 import Services from "./pages/Services";
 import Reviews from "./pages/Reviews";
@@ -25,6 +26,7 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
+          <TelegramPopup />
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
