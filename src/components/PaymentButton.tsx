@@ -15,7 +15,18 @@ export function PaymentButton({ amount, productName, onSuccess, onError }: Payme
   const [loading, setLoading] = useState(false)
   const { toast } = useToast()
   
-  const whatsappGroupLink = "https://chat.whatsapp.com/ByBo7LqvC9r7KPqY2Gdx9V"
+  // Different WhatsApp group links based on amount
+  const whatsappGroupLinks = {
+    399: "https://chat.whatsapp.com/ByBo7LqvC9r7KPqY2Gdx9V", // For ₹399 plan
+    699: "https://chat.whatsapp.com/LxqaRjEm8tv5D1u5qabyIh", // For ₹699 plan
+    default: "https://chat.whatsapp.com/ByBo7LqvC9r7KPqY2Gdx9V" // Default link
+  }
+
+  const getWhatsAppLink = () => {
+    if (amount === 699) return whatsappGroupLinks[699]
+    if (amount === 399) return whatsappGroupLinks[399]
+    return whatsappGroupLinks.default
+  }
 
   const handlePayment = async () => {
     try {
@@ -32,6 +43,9 @@ export function PaymentButton({ amount, productName, onSuccess, onError }: Payme
         return
       }
 
+      // Get the appropriate WhatsApp link
+      const whatsappLink = getWhatsAppLink()
+
       // Show success toast
       toast({
         title: "Redirecting to WhatsApp",
@@ -39,7 +53,7 @@ export function PaymentButton({ amount, productName, onSuccess, onError }: Payme
       })
       
       // Redirect to WhatsApp group
-      window.open(whatsappGroupLink, '_blank')
+      window.open(whatsappLink, '_blank')
       
       onSuccess?.()
     } catch (error) {
