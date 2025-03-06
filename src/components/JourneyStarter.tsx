@@ -44,6 +44,7 @@ export function JourneyStarter({ children }: { children: React.ReactNode }) {
   const [step, setStep] = useState(1);
   const [journeyOpen, setJourneyOpen] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -52,15 +53,11 @@ export function JourneyStarter({ children }: { children: React.ReactNode }) {
     navigate('/auth');
   };
 
-  const handleExploreResources = () => {
-    setResourcesOpen(true);
-  };
-
   const handleRankAnalysis = () => {
     if (user) {
       navigate('/services');
     } else {
-      handleAuthenticate();
+      setShowAuth(true);
     }
   };
 
@@ -68,7 +65,7 @@ export function JourneyStarter({ children }: { children: React.ReactNode }) {
     if (user) {
       navigate('/contact');
     } else {
-      handleAuthenticate();
+      setShowAuth(true);
     }
   };
 
@@ -77,7 +74,7 @@ export function JourneyStarter({ children }: { children: React.ReactNode }) {
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md backdrop-blur-md bg-white/80 dark:bg-background/80 border-primary/20 shadow-lg">
         <DialogHeader>
           <DialogTitle className="text-xl gradient-text flex items-center justify-center gap-2">
             <GraduationCap className="h-5 w-5" />
@@ -88,49 +85,56 @@ export function JourneyStarter({ children }: { children: React.ReactNode }) {
           </DialogDescription>
         </DialogHeader>
         
-        <div className="space-y-4 my-4">
-          <JourneyStep 
-            icon={<Send className="h-5 w-5 text-primary" />}
-            title="Get JEE Rank Analysis"
-            description="Let our experts analyze your JEE rank and recommend suitable colleges."
-            action={handleRankAnalysis}
-            actionText="Analyze Rank"
-          />
-          
-          <JourneyStep 
-            icon={<Calendar className="h-5 w-5 text-primary" />}
-            title="Book College Counseling"
-            description="Schedule a one-on-one session with our experienced counselors."
-            action={handleBookConsultation}
-            actionText="Book Session"
-          />
-        </div>
-        
-        <DialogFooter className="flex-col gap-3 sm:gap-0">
-          {!user && (
-            <div className="w-full flex flex-col space-y-3">
+        {!showAuth ? (
+          <div className="space-y-4 my-4">
+            <JourneyStep 
+              icon={<Send className="h-5 w-5 text-primary" />}
+              title="Get JEE Rank Analysis"
+              description="Let our experts analyze your JEE rank and recommend suitable colleges."
+              action={handleRankAnalysis}
+              actionText="Analyze Rank"
+            />
+            
+            <JourneyStep 
+              icon={<Calendar className="h-5 w-5 text-primary" />}
+              title="Book College Counseling"
+              description="Schedule a one-on-one session with our experienced counselors."
+              action={handleBookConsultation}
+              actionText="Book Session"
+            />
+          </div>
+        ) : (
+          <div className="w-full flex flex-col space-y-6 py-4">
+            <Button 
+              onClick={handleAuthenticate} 
+              className="w-full group bg-gradient-to-r from-primary to-primary-dark hover:shadow-lg transition-all duration-300 py-6 cursor-pointer backdrop-blur-sm bg-white/10 border border-white/20 hover:bg-white/20"
+            >
+              <UserPlus className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
+              <span className="font-medium">Sign Up</span>
+              <span className="ml-1 text-white/80 text-sm">for Personalized Help</span>
+            </Button>
+            
+            <div className="flex items-center justify-center">
+              <span className="text-muted-foreground text-sm">Already have an account?</span>
               <Button 
+                variant="ghost" 
                 onClick={handleAuthenticate} 
-                className="w-full group bg-gradient-to-r from-primary to-primary-dark hover:shadow-lg transition-all duration-300 py-6"
+                className="text-primary hover:text-primary-dark underline-offset-4 hover:underline ml-1 px-2 cursor-pointer"
               >
-                <UserPlus className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
-                <span className="font-medium">Sign Up</span>
-                <span className="ml-1 text-white/80 text-sm">for Personalized Help</span>
+                <LogIn className="mr-1 h-4 w-4" /> Sign In
               </Button>
-              
-              <div className="flex items-center justify-center">
-                <span className="text-muted-foreground text-sm">Already have an account?</span>
-                <Button 
-                  variant="ghost" 
-                  onClick={handleAuthenticate} 
-                  className="text-primary hover:text-primary-dark underline-offset-4 hover:underline ml-1 px-2"
-                >
-                  <LogIn className="mr-1 h-4 w-4" /> Sign In
-                </Button>
-              </div>
             </div>
-          )}
-        </DialogFooter>
+            
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setShowAuth(false)} 
+              className="mx-auto mt-4 cursor-pointer"
+            >
+              Go Back
+            </Button>
+          </div>
+        )}
       </DialogContent>
       <ResourcesPopup isOpen={resourcesOpen} onOpenChange={setResourcesOpen} />
     </>
@@ -141,7 +145,7 @@ export function JourneyStarterButton() {
   return (
     <Dialog>
       <JourneyStarter>
-        <Button className="inline-flex items-center bg-primary hover:bg-primary-dark text-white px-8 py-3 rounded-lg text-lg font-medium transition-all duration-200 animate-slide-in hover-lift">
+        <Button className="inline-flex items-center bg-primary hover:bg-primary-dark text-white px-8 py-3 rounded-lg text-lg font-medium transition-all duration-200 animate-slide-in hover-lift cursor-pointer">
           Start Your Journey
           <ArrowRight className="ml-2 h-5 w-5" />
         </Button>

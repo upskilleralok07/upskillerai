@@ -31,13 +31,15 @@ const Index = () => {
             <p className="text-xl text-text-light dark:text-foreground/70 mb-8 animate-slide-in" style={{ animationDelay: "0.2s" }}>
               Get personalized recommendations and mentorship to secure your dream college admission.
             </p>
-            <JourneyStarterButton />
+            <div className="cursor-pointer">
+              <JourneyStarterButton />
+            </div>
           </div>
         </div>
       </section>
 
       {/* AI Rank Analyzer Section */}
-      <section className="py-16 px-6 bg-muted/50">
+      <section className="py-16 px-6 bg-muted/50 backdrop-blur-sm">
         <div className="container mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-text dark:text-foreground mb-4">
@@ -47,7 +49,7 @@ const Index = () => {
               Get instant answers to your college admission queries with our AI-powered assistant
             </p>
           </div>
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-3xl mx-auto glass-card p-4 rounded-lg">
             <AIRankAnalyzer />
           </div>
         </div>
