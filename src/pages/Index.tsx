@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import FeatureCard from "@/components/FeatureCard";
 import { JourneyStarterButton } from "@/components/JourneyStarter";
+import { AIRankAnalyzer } from "@/components/AIRankAnalyzer";
 
 const Index = () => {
   return (
@@ -31,6 +32,23 @@ const Index = () => {
               Get personalized recommendations and mentorship to secure your dream college admission.
             </p>
             <JourneyStarterButton />
+          </div>
+        </div>
+      </section>
+
+      {/* AI Rank Analyzer Section */}
+      <section className="py-16 px-6 bg-muted/50">
+        <div className="container mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-text dark:text-foreground mb-4">
+              Ask Our AI Assistant
+            </h2>
+            <p className="text-text-light dark:text-foreground/70 max-w-2xl mx-auto mb-8">
+              Get instant answers to your college admission queries with our AI-powered assistant
+            </p>
+          </div>
+          <div className="max-w-3xl mx-auto">
+            <AIRankAnalyzer />
           </div>
         </div>
       </section>
