@@ -2,17 +2,18 @@
 import { ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import FeatureCard from "@/components/FeatureCard";
+import { JourneyStarterButton } from "@/components/JourneyStarter";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-primary/5">
+    <div className="min-h-screen bg-gradient-to-b from-white to-primary/5 dark:from-background dark:to-primary/10">
       <Navbar />
       
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-6">
         <div className="container mx-auto">
           <div className="max-w-4xl mx-auto text-center mb-12">
-            <div className="aspect-video w-full mb-8">
+            <div className="aspect-video w-full mb-8 rounded-xl overflow-hidden shadow-lg hover-lift transition-all duration-300">
               <iframe
                 width="100%"
                 height="100%"
@@ -20,19 +21,16 @@ const Index = () => {
                 title="Welcome Video"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
-                className="rounded-lg shadow-lg"
+                className="rounded-lg"
               ></iframe>
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold text-text mb-6 animate-slide-in">
+            <h1 className="text-4xl md:text-6xl font-bold text-text dark:text-foreground mb-6 animate-slide-in">
               Find Your Best College Match with Expert Guidance!
             </h1>
-            <p className="text-xl text-text-light mb-8 animate-slide-in" style={{ animationDelay: "0.2s" }}>
+            <p className="text-xl text-text-light dark:text-foreground/70 mb-8 animate-slide-in" style={{ animationDelay: "0.2s" }}>
               Get personalized recommendations and mentorship to secure your dream college admission.
             </p>
-            <button className="inline-flex items-center bg-primary hover:bg-primary-dark text-white px-8 py-3 rounded-lg text-lg font-medium transition-all duration-200 animate-slide-in" style={{ animationDelay: "0.4s" }}>
-              Start Your Journey
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </button>
+            <JourneyStarterButton />
           </div>
         </div>
       </section>
@@ -40,10 +38,10 @@ const Index = () => {
       {/* Features Section */}
       <section className="py-20 px-6">
         <div className="container mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center text-text mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-text dark:text-foreground mb-4">
             Why Choose College Sarthi?
           </h2>
-          <p className="text-text-light text-center max-w-2xl mx-auto mb-12">
+          <p className="text-text-light dark:text-foreground/70 text-center max-w-2xl mx-auto mb-12">
             We provide comprehensive guidance to help you make informed decisions about your academic future.
           </p>
           <div className="grid md:grid-cols-3 gap-8">
