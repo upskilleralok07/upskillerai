@@ -90,14 +90,6 @@ export function JourneyStarter({ children }: { children: React.ReactNode }) {
         
         <div className="space-y-4 my-4">
           <JourneyStep 
-            icon={<BookOpen className="h-5 w-5 text-primary" />}
-            title="Explore Free Resources"
-            description="Access roadmaps, study materials, and guides to help with your preparation."
-            action={handleExploreResources}
-            actionText="Get Resources"
-          />
-          
-          <JourneyStep 
             icon={<Send className="h-5 w-5 text-primary" />}
             title="Get JEE Rank Analysis"
             description="Let our experts analyze your JEE rank and recommend suitable colleges."
