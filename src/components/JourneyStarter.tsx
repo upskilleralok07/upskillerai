@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ResourcesPopup } from './ResourcesPopup';
-import { ArrowRight, BookOpen, Calendar, GraduationCap, Send } from 'lucide-react';
+import { ArrowRight, BookOpen, Calendar, GraduationCap, LogIn, Send, UserPlus } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface JourneyStepProps {
@@ -106,11 +106,29 @@ export function JourneyStarter({ children }: { children: React.ReactNode }) {
           />
         </div>
         
-        <DialogFooter className="flex-col sm:flex-row gap-2">
+        <DialogFooter className="flex-col gap-3 sm:gap-0">
           {!user && (
-            <Button onClick={handleAuthenticate} className="w-full sm:w-auto">
-              Sign Up for Personalized Help
-            </Button>
+            <div className="w-full flex flex-col space-y-3">
+              <Button 
+                onClick={handleAuthenticate} 
+                className="w-full group bg-gradient-to-r from-primary to-primary-dark hover:shadow-lg transition-all duration-300 py-6"
+              >
+                <UserPlus className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
+                <span className="font-medium">Sign Up</span>
+                <span className="ml-1 text-white/80 text-sm">for Personalized Help</span>
+              </Button>
+              
+              <div className="flex items-center justify-center">
+                <span className="text-muted-foreground text-sm">Already have an account?</span>
+                <Button 
+                  variant="ghost" 
+                  onClick={handleAuthenticate} 
+                  className="text-primary hover:text-primary-dark underline-offset-4 hover:underline ml-1 px-2"
+                >
+                  <LogIn className="mr-1 h-4 w-4" /> Sign In
+                </Button>
+              </div>
+            </div>
           )}
         </DialogFooter>
       </DialogContent>

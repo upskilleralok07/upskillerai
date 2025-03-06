@@ -3,10 +3,10 @@ import { useState } from 'react';
 import { Send } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 type Message = {
   id: string;
@@ -46,26 +46,18 @@ export function AIRankAnalyzer() {
     setIsLoading(true);
     
     try {
-      const response = await fetch('https://orhtixtxklzhaqryeirk.supabase.co/functions/v1/chat-with-ai', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          prompt: input,
-        }),
+      const response = await supabase.functions.invoke('chat-with-ai', {
+        body: { prompt: input },
       });
       
-      if (!response.ok) {
-        throw new Error('Failed to get response from AI');
+      if (response.error) {
+        throw new Error(response.error.message || 'Failed to get response from AI');
       }
-      
-      const data = await response.json();
       
       // Add AI response
       const aiMessage: Message = {
         id: Date.now().toString(),
-        content: data.response,
+        content: response.data.response,
         sender: 'ai',
         timestamp: new Date(),
       };
