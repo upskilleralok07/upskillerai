@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, Moon, Sun, X, BookOpen, UserCircle } from "lucide-react";
@@ -96,11 +97,11 @@ const Navbar = () => {
           : "bg-transparent"
       }`}
     >
-      <div className="container mx-auto px-6 py-3">
+      <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           <Link
             to="/"
-            className="text-2xl font-bold text-primary hover:opacity-90 transition-opacity animate-fade-in flex items-center"
+            className="text-xl md:text-2xl font-bold text-primary hover:opacity-90 transition-opacity animate-fade-in flex items-center"
           >
             <span className="gradient-text">College Sarthi × Upskiller</span>
           </Link>
@@ -150,9 +151,9 @@ const Navbar = () => {
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[80%] sm:w-[385px]">
+              <SheetContent side="right" className="w-[85vw] max-w-[300px]">
                 <div className="flex flex-col space-y-6 mt-8">
-                  <div className="space-y-4">
+                  <div className="space-y-4 flex flex-col">
                     <NavLinks />
                   </div>
                   <div className="flex items-center space-x-2">
