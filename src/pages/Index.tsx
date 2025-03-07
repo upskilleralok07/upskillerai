@@ -30,8 +30,30 @@ const Index = () => {
               </div>
             </div>
             <div className="lg:w-1/2 animate-fade-in" style={{ animationDelay: "0.3s" }}>
-              <CollegeJourneyAnimation />
+              <div className="aspect-video w-full rounded-xl overflow-hidden shadow-lg hover-lift transition-all duration-300 glass-card">
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src="https://www.youtube.com/embed/kdPIQCKMjE8?autoplay=1"
+                  title="Welcome Video"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="rounded-lg"
+                ></iframe>
+              </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Animation Section */}
+      <section className="py-16 px-6">
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-text dark:text-foreground mb-8">
+            How It <span className="gradient-text">Works</span>
+          </h2>
+          <div className="max-w-4xl mx-auto">
+            <CollegeJourneyAnimation />
           </div>
         </div>
       </section>

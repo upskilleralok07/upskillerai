@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, Moon, Sun, X, BookOpen, UserCircle } from "lucide-react";
@@ -103,7 +102,7 @@ const Navbar = () => {
             to="/"
             className="text-2xl font-bold text-primary hover:opacity-90 transition-opacity animate-fade-in flex items-center"
           >
-            <span className="gradient-text">College Sarthi</span>
+            <span className="gradient-text">College Sarthi × Upskiller</span>
           </Link>
 
           {/* Desktop Navigation */}
