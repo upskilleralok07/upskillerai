@@ -11,40 +11,25 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { ResourcesPopup } from './ResourcesPopup';
-import { ArrowRight, BookOpen, Calendar, GraduationCap, LogIn, Send, UserPlus } from 'lucide-react';
+import { ArrowRight, Calendar, GraduationCap, LogIn, Send, UserPlus } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
-interface JourneyStepProps {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  action?: () => void;
-  actionText?: string;
+export function JourneyStarterButton() {
+  return (
+    <Dialog>
+      <JourneyStarter>
+        <Button className="bg-gradient-to-r from-primary to-primary-dark text-white px-8 py-6 rounded-lg text-lg font-medium transition-all duration-300 animate-slide-in hover-lift cursor-pointer shadow-md">
+          Start Your Journey
+          <ArrowRight className="ml-2 h-5 w-5" />
+        </Button>
+      </JourneyStarter>
+    </Dialog>
+  );
 }
 
-const JourneyStep = ({ icon, title, description, action, actionText = "Continue" }: JourneyStepProps) => (
-  <div className="flex items-start space-x-4 p-4 border border-border rounded-lg hover:border-primary/50 transition-all bg-card hover-lift">
-    <div className="bg-primary/10 p-3 rounded-full">
-      {icon}
-    </div>
-    <div className="flex-1">
-      <h3 className="font-medium text-lg mb-1">{title}</h3>
-      <p className="text-muted-foreground text-sm mb-3">{description}</p>
-      {action && (
-        <Button variant="outline" size="sm" onClick={action} className="hover:bg-primary/10">
-          {actionText} <ArrowRight className="ml-1 h-3 w-3" />
-        </Button>
-      )}
-    </div>
-  </div>
-);
-
 export function JourneyStarter({ children }: { children: React.ReactNode }) {
-  const [step, setStep] = useState(1);
+  const [journeyOption, setJourneyOption] = useState<string | null>(null);
   const [journeyOpen, setJourneyOpen] = useState(false);
-  const [resourcesOpen, setResourcesOpen] = useState(false);
-  const [showAuth, setShowAuth] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -53,20 +38,19 @@ export function JourneyStarter({ children }: { children: React.ReactNode }) {
     navigate('/auth');
   };
 
-  const handleRankAnalysis = () => {
+  const selectOption = (option: string) => {
+    setJourneyOption(option);
     if (user) {
-      navigate('/services');
-    } else {
-      setShowAuth(true);
+      if (option === 'rank') {
+        navigate('/services');
+      } else if (option === 'counseling') {
+        navigate('/contact');
+      }
     }
   };
 
-  const handleBookConsultation = () => {
-    if (user) {
-      navigate('/contact');
-    } else {
-      setShowAuth(true);
-    }
+  const resetOptions = () => {
+    setJourneyOption(null);
   };
 
   return (
@@ -74,7 +58,7 @@ export function JourneyStarter({ children }: { children: React.ReactNode }) {
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md backdrop-blur-md bg-white/80 dark:bg-background/80 border-primary/20 shadow-lg">
+      <DialogContent className="sm:max-w-md backdrop-blur-xl bg-white/90 dark:bg-background/80 border-primary/20 shadow-lg rounded-2xl">
         <DialogHeader>
           <DialogTitle className="text-xl gradient-text flex items-center justify-center gap-2">
             <GraduationCap className="h-5 w-5" />
@@ -85,26 +69,43 @@ export function JourneyStarter({ children }: { children: React.ReactNode }) {
           </DialogDescription>
         </DialogHeader>
         
-        {!showAuth ? (
+        {!journeyOption ? (
           <div className="space-y-4 my-4">
-            <JourneyStep 
-              icon={<Send className="h-5 w-5 text-primary" />}
-              title="Get JEE Rank Analysis"
-              description="Let our experts analyze your JEE rank and recommend suitable colleges."
-              action={handleRankAnalysis}
-              actionText="Analyze Rank"
-            />
+            <div 
+              onClick={() => selectOption('rank')}
+              className="flex items-start space-x-4 p-4 border border-border rounded-lg hover:border-primary/50 transition-all bg-white/50 dark:bg-card/50 hover-lift cursor-pointer"
+            >
+              <div className="bg-primary/10 p-3 rounded-full">
+                <Send className="h-5 w-5 text-primary" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-medium text-lg mb-1">Get JEE Rank Analysis</h3>
+                <p className="text-muted-foreground text-sm mb-3">Let our experts analyze your JEE rank and recommend suitable colleges.</p>
+              </div>
+            </div>
             
-            <JourneyStep 
-              icon={<Calendar className="h-5 w-5 text-primary" />}
-              title="Book College Counseling"
-              description="Schedule a one-on-one session with our experienced counselors."
-              action={handleBookConsultation}
-              actionText="Book Session"
-            />
+            <div 
+              onClick={() => selectOption('counseling')}
+              className="flex items-start space-x-4 p-4 border border-border rounded-lg hover:border-primary/50 transition-all bg-white/50 dark:bg-card/50 hover-lift cursor-pointer"
+            >
+              <div className="bg-primary/10 p-3 rounded-full">
+                <Calendar className="h-5 w-5 text-primary" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-medium text-lg mb-1">Book College Counseling</h3>
+                <p className="text-muted-foreground text-sm mb-3">Schedule a one-on-one session with our experienced counselors.</p>
+              </div>
+            </div>
           </div>
         ) : (
-          <div className="w-full flex flex-col space-y-6 py-4">
+          <div className="w-full flex flex-col space-y-6 py-6 px-2">
+            <div className="text-center mb-2">
+              <h3 className="text-lg font-medium gradient-text">
+                {journeyOption === 'rank' ? 'Sign Up for Rank Analysis' : 'Sign Up for College Counseling'}
+              </h3>
+              <p className="text-sm text-muted-foreground mt-1">Create an account to continue</p>
+            </div>
+            
             <Button 
               onClick={handleAuthenticate} 
               className="w-full group bg-gradient-to-r from-primary to-primary-dark hover:shadow-lg transition-all duration-300 py-6 cursor-pointer backdrop-blur-sm bg-white/10 border border-white/20 hover:bg-white/20"
@@ -114,42 +115,33 @@ export function JourneyStarter({ children }: { children: React.ReactNode }) {
               <span className="ml-1 text-white/80 text-sm">for Personalized Help</span>
             </Button>
             
-            <div className="flex items-center justify-center">
-              <span className="text-muted-foreground text-sm">Already have an account?</span>
-              <Button 
-                variant="ghost" 
-                onClick={handleAuthenticate} 
-                className="text-primary hover:text-primary-dark underline-offset-4 hover:underline ml-1 px-2 cursor-pointer"
-              >
-                <LogIn className="mr-1 h-4 w-4" /> Sign In
-              </Button>
+            <div className="relative flex items-center justify-center my-2">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-border"></div>
+              </div>
+              <div className="relative px-3 text-xs uppercase text-muted-foreground bg-card">Or</div>
             </div>
             
             <Button 
               variant="outline" 
+              onClick={handleAuthenticate} 
+              className="w-full flex items-center justify-center gap-2 py-5 border border-primary/20 hover:bg-primary/5 cursor-pointer"
+            >
+              <LogIn className="h-4 w-4 text-primary" /> 
+              <span>Sign In to Your Account</span>
+            </Button>
+            
+            <Button 
+              variant="ghost" 
               size="sm" 
-              onClick={() => setShowAuth(false)} 
-              className="mx-auto mt-4 cursor-pointer"
+              onClick={resetOptions} 
+              className="mx-auto mt-2 text-primary hover:text-primary-dark cursor-pointer"
             >
               Go Back
             </Button>
           </div>
         )}
       </DialogContent>
-      <ResourcesPopup isOpen={resourcesOpen} onOpenChange={setResourcesOpen} />
     </>
-  );
-}
-
-export function JourneyStarterButton() {
-  return (
-    <Dialog>
-      <JourneyStarter>
-        <Button className="inline-flex items-center bg-primary hover:bg-primary-dark text-white px-8 py-3 rounded-lg text-lg font-medium transition-all duration-200 animate-slide-in hover-lift cursor-pointer">
-          Start Your Journey
-          <ArrowRight className="ml-2 h-5 w-5" />
-        </Button>
-      </JourneyStarter>
-    </Dialog>
   );
 }
