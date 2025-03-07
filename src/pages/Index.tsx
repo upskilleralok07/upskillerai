@@ -1,10 +1,10 @@
-
 import { ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import FeatureCard from "@/components/FeatureCard";
 import { JourneyStarterButton } from "@/components/JourneyStarter";
 import { AIRankAnalyzer } from "@/components/AIRankAnalyzer";
 import TestimonialCard from "@/components/TestimonialCard";
+import CollegeJourneyAnimation from "@/components/CollegeJourneyAnimation";
 
 const Index = () => {
   return (
@@ -30,17 +30,7 @@ const Index = () => {
               </div>
             </div>
             <div className="lg:w-1/2 animate-fade-in" style={{ animationDelay: "0.3s" }}>
-              <div className="aspect-video w-full rounded-xl overflow-hidden shadow-lg hover-lift transition-all duration-300 glass-card">
-                <iframe
-                  width="100%"
-                  height="100%"
-                  src="https://www.youtube.com/embed/kdPIQCKMjE8?autoplay=1"
-                  title="Welcome Video"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="rounded-lg"
-                ></iframe>
-              </div>
+              <CollegeJourneyAnimation />
             </div>
           </div>
         </div>

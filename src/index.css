@@ -61,7 +61,7 @@
 
 /* Glass effects */
 .glass-card {
-  @apply bg-white/50 dark:bg-card/50 backdrop-blur-md border border-white/20 dark:border-white/10;
+  @apply bg-white/50 dark:bg-card/50 backdrop-blur-md border border-white/20 dark:border-white/10 shadow-lg;
 }
 
 /* Enhanced animations */
