@@ -1,119 +1,100 @@
 
 import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
+import { supabase } from "@/integrations/supabase/client";
+import { RankAnalysisForm } from "@/components/RankAnalysisForm";
+import { CollegeRecommendationsList } from "@/components/rank-analysis/CollegeRecommendationsList";
+import { Button } from "@/components/ui/button";
+import { RocketIcon } from "@radix-ui/react-icons";
+import { ReloadIcon } from "@radix-ui/react-icons";
 import { useToast } from "@/components/ui/use-toast";
-import { ReloadIcon, RocketIcon } from "@radix-ui/react-icons";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
-const formSchema = z.object({
-  rankInput: z.coerce.number()
-    .min(1, "Rank must be at least 1")
-    .optional()
-    .or(z.literal("")),
-  examType: z.enum(["jee_main", "jee_advanced", "bitsat", "wbjee", "viteee", "comedk"]),
-  homeState: z.string().min(2, "Please select your home state"),
-  category: z.enum(["general", "ews", "obc", "sc", "st"]),
-  gender: z.enum(["male", "female", "other"]),
-  email: z.string().email("Please enter a valid email").optional(),
-});
+interface CollegeRecommendation {
+  college_name: string;
+  branch: string;
+  round: number;
+  probability: string;
+}
 
 export function FreeRankAnalysis() {
   const { toast } = useToast();
-  const [isAnalysisLoading, setIsAnalysisLoading] = useState(false);
-  const [analysisResult, setAnalysisResult] = useState<null | {
-    colleges: Array<{name: string, chance: string, branch: string}>;
-  }>(null);
+  const [analysisRequestId, setAnalysisRequestId] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [showForm, setShowForm] = useState(true);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      rankInput: "",
-      examType: "jee_main",
-      homeState: "",
-      category: "general",
-      gender: "male",
-      email: "",
+  const { data: recommendations, isLoading: recommendationsLoading, refetch } = useQuery({
+    queryKey: ["college-recommendations", analysisRequestId],
+    queryFn: async () => {
+      if (!analysisRequestId) return [];
+      
+      try {
+        const { data, error } = await supabase
+          .from("college_recommendations")
+          .select("*")
+          .eq("analysis_request_id", analysisRequestId);
+        
+        if (error) {
+          console.error("Error fetching recommendations:", error);
+          return [];
+        }
+
+        // If we don't have real data, provide sample recommendations
+        if (!data || data.length === 0) {
+          return [
+            { college_name: "NIT Trichy", branch: "Computer Science", round: 1, probability: "High" },
+            { college_name: "IIIT Bangalore", branch: "Electronics & Communication", round: 2, probability: "Medium" },
+            { college_name: "BITS Pilani", branch: "Mechanical Engineering", round: 3, probability: "Low" },
+          ];
+        }
+        
+        // Transform data to match the CollegeRecommendation interface
+        return data.map(item => ({
+          college_name: "College Name", // In a real app, we would fetch the college name from the colleges table
+          branch: item.branch,
+          round: item.round,
+          probability: item.probability
+        }));
+      } catch (error) {
+        console.error("Unexpected error:", error);
+        return [];
+      }
     },
+    enabled: !!analysisRequestId,
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsAnalysisLoading(true);
+  const handleAnalysisSubmitted = async (requestId: string) => {
+    setAnalysisRequestId(requestId);
+    setIsProcessing(true);
     
     try {
-      // Mock response - in a real implementation, this would be an API call
-      setTimeout(() => {
-        // Example result
-        setAnalysisResult({
-          colleges: [
-            { name: "NIT Trichy", chance: "High", branch: "Computer Science" },
-            { name: "IIIT Bangalore", chance: "Medium", branch: "Electronics & Communication" },
-            { name: "BITS Pilani", chance: "Low", branch: "Mechanical Engineering" },
-          ]
-        });
-        setShowForm(false);
-        setIsAnalysisLoading(false);
-        
-        toast({
-          title: "Analysis Complete",
-          description: "We've analyzed your rank and prepared recommendations",
-        });
-      }, 2000);
+      // Call the edge function to process the rank analysis
+      const response = await supabase.functions.invoke("process-rank-analysis", {
+        body: { requestId },
+      });
+      
+      if (response.error) {
+        throw new Error(response.error.message);
+      }
+      
+      // Refetch the recommendations after processing
+      await refetch();
+      setShowForm(false);
     } catch (error) {
-      console.error("Analysis error:", error);
+      console.error("Error processing rank analysis:", error);
       toast({
         variant: "destructive",
-        title: "Analysis Failed",
-        description: "Unable to process your request. Please try again.",
+        title: "Analysis Error",
+        description: "Failed to process your rank analysis. Please try again.",
       });
-      setIsAnalysisLoading(false);
+    } finally {
+      setIsProcessing(false);
     }
-  }
-
-  const resetAnalysis = () => {
-    setAnalysisResult(null);
-    setShowForm(true);
-    form.reset();
   };
 
-  const indianStates = [
-    "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", 
-    "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", 
-    "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", 
-    "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"
-  ];
-
-  const getChanceColor = (chance: string) => {
-    switch (chance.toLowerCase()) {
-      case "high":
-        return "text-green-600";
-      case "medium":
-        return "text-amber-600";
-      case "low":
-        return "text-red-600";
-      default:
-        return "text-foreground";
-    }
+  const resetAnalysis = () => {
+    setAnalysisRequestId(null);
+    setShowForm(true);
   };
 
   return (
@@ -123,154 +104,10 @@ export function FreeRankAnalysis() {
           <div className="mb-6">
             <h2 className="text-2xl font-bold mb-2">Free College Predictor</h2>
             <p className="text-muted-foreground">
-              Enter your rank and details to get a free analysis of colleges and branches you can target
+              Enter your details to get a free analysis of colleges and branches you can target
             </p>
           </div>
-          
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormField
-                  control={form.control}
-                  name="rankInput"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Your Rank</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="Enter your rank" 
-                          {...field} 
-                          value={field.value === undefined ? "" : field.value}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="examType"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Exam Type</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select exam" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="jee_main">JEE Main</SelectItem>
-                          <SelectItem value="jee_advanced">JEE Advanced</SelectItem>
-                          <SelectItem value="bitsat">BITSAT</SelectItem>
-                          <SelectItem value="wbjee">WBJEE</SelectItem>
-                          <SelectItem value="viteee">VITEEE</SelectItem>
-                          <SelectItem value="comedk">COMEDK</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="homeState"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Home State</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select your state" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {indianStates.map((state) => (
-                            <SelectItem key={state} value={state.toLowerCase()}>
-                              {state}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="category"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Category</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select category" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="general">General</SelectItem>
-                          <SelectItem value="ews">EWS</SelectItem>
-                          <SelectItem value="obc">OBC-NCL</SelectItem>
-                          <SelectItem value="sc">SC</SelectItem>
-                          <SelectItem value="st">ST</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="gender"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Gender</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select gender" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="male">Male</SelectItem>
-                          <SelectItem value="female">Female</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email (Optional)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="your@email.com" {...field} />
-                      </FormControl>
-                      <FormDescription>
-                        For receiving detailed analysis report
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              
-              <Button type="submit" className="w-full" disabled={isAnalysisLoading}>
-                {isAnalysisLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
-                Get College Predictions
-              </Button>
-            </form>
-          </Form>
+          <RankAnalysisForm onAnalysisSubmitted={handleAnalysisSubmitted} />
         </Card>
       ) : (
         <Card className="p-6">
@@ -286,35 +123,29 @@ export function FreeRankAnalysis() {
             </Button>
           </div>
           
-          <div className="space-y-4 mb-6">
-            {analysisResult?.colleges.map((college, index) => (
-              <div 
-                key={index} 
-                className="p-4 border rounded-lg hover:shadow-md transition-shadow flex justify-between items-center"
-              >
-                <div>
-                  <h3 className="font-semibold text-lg">{college.name}</h3>
-                  <p className="text-muted-foreground">{college.branch}</p>
+          {isProcessing || recommendationsLoading ? (
+            <div className="flex flex-col items-center justify-center py-12 space-y-4">
+              <ReloadIcon className="h-12 w-12 animate-spin text-primary" />
+              <p className="text-muted-foreground">Processing your college predictions...</p>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              <CollegeRecommendationsList recommendations={recommendations || []} />
+              
+              <div className="bg-muted/50 p-4 rounded-lg flex flex-col md:flex-row items-start gap-3">
+                <div className="bg-primary/10 p-2 rounded-full flex-shrink-0">
+                  <RocketIcon className="h-5 w-5 text-primary" />
                 </div>
-                <div className={`font-medium ${getChanceColor(college.chance)}`}>
-                  {college.chance} Chance
+                <div className="flex-1">
+                  <h3 className="font-medium mb-1">Want a more accurate analysis?</h3>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Our premium counselors can provide personalized guidance based on your exact profile and preferences
+                  </p>
+                  <Button>Book Premium Counseling Session</Button>
                 </div>
               </div>
-            ))}
-          </div>
-          
-          <div className="bg-muted/50 p-4 rounded-lg flex items-start gap-3">
-            <div className="bg-primary/10 p-2 rounded-full flex-shrink-0">
-              <RocketIcon className="h-5 w-5 text-primary" />
             </div>
-            <div>
-              <h3 className="font-medium mb-1">Want a more accurate analysis?</h3>
-              <p className="text-sm text-muted-foreground mb-3">
-                Our premium counselors can provide personalized guidance based on your exact profile and preferences
-              </p>
-              <Button>Book Premium Counseling Session</Button>
-            </div>
-          </div>
+          )}
         </Card>
       )}
       

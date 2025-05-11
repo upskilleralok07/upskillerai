@@ -9,24 +9,37 @@ interface CollegeRecommendation {
 }
 
 export function CollegeRecommendationCard({ recommendation }: { recommendation: CollegeRecommendation }) {
+  const getProbabilityColor = (probability: string) => {
+    switch (probability.toLowerCase()) {
+      case "high":
+        return "bg-green-100 text-green-800";
+      case "medium":
+        return "bg-amber-100 text-amber-800";
+      case "low":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
   return (
-    <Card>
-      <CardHeader>
+    <Card className="hover:shadow-md transition-shadow">
+      <CardHeader className="pb-2">
         <CardTitle className="text-lg">{recommendation.college_name}</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-2">
-          <p><span className="font-medium">Branch:</span> {recommendation.branch}</p>
-          <p><span className="font-medium">Round:</span> {recommendation.round}</p>
-          <p><span className="font-medium">Admission Probability:</span> 
-            <span className={`ml-2 px-2 py-1 rounded text-sm ${
-              recommendation.probability === 'High' 
-                ? 'bg-green-100 text-green-800' 
-                : 'bg-yellow-100 text-yellow-800'
-            }`}>
-              {recommendation.probability}
+        <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
+          <div>
+            <p><span className="font-medium">Branch:</span> {recommendation.branch}</p>
+            <p><span className="font-medium">Round:</span> {recommendation.round}</p>
+          </div>
+          <div>
+            <span 
+              className={`px-3 py-1 rounded-full text-sm font-medium ${getProbabilityColor(recommendation.probability)}`}
+            >
+              {recommendation.probability} Chance
             </span>
-          </p>
+          </div>
         </div>
       </CardContent>
     </Card>
