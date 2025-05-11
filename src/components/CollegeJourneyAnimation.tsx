@@ -19,7 +19,7 @@ const CollegeJourneyAnimation = () => {
       setCurrentStep((prev) => (prev + 1) % steps.length);
     }, 2000);
     return () => clearInterval(interval);
-  }, []);
+  }, [steps.length]);
 
   const calculateDistance = () => {
     return isMobile ? 100 : 120;
@@ -27,8 +27,8 @@ const CollegeJourneyAnimation = () => {
 
   return (
     <div className="relative w-full h-[300px] md:h-[400px] flex items-center justify-center touch-none select-none">
-      <div className="absolute w-[200px] md:w-[280px] h-[200px] md:h-[280px] bg-primary/5 rounded-full animate-pulse" />
-      <div className="absolute w-[150px] md:w-[200px] h-[150px] md:h-[200px] bg-primary/10 rounded-full" />
+      <div className="absolute w-[200px] md:w-[280px] h-[200px] md:h-[280px] bg-primary/5 rounded-full animate-pulse"></div>
+      <div className="absolute w-[150px] md:w-[200px] h-[150px] md:h-[200px] bg-primary/10 rounded-full"></div>
       {steps.map((step, index) => (
         <div
           key={index}
