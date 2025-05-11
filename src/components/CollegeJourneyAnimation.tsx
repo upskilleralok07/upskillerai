@@ -1,11 +1,11 @@
 
 import { useState, useEffect } from 'react';
 import { GraduationCap, BookOpen, Award, School } from 'lucide-react';
-import { useMediaQuery } from '@/hooks/use-mobile';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const CollegeJourneyAnimation = () => {
   const [currentStep, setCurrentStep] = useState(0);
-  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isMobile = useIsMobile();
   
   const steps = [
     { icon: <GraduationCap className="w-6 md:w-8 h-6 md:h-8" />, title: "JEE Preparation" },
