@@ -5,9 +5,8 @@ import Navbar from "@/components/Navbar";
 import { ExternalLink, ChevronRight, Download, HelpCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FreeRankAnalysis } from "@/components/FreeRankAnalysis";
 
 interface StudyResource {
@@ -74,13 +73,14 @@ const Resources = () => {
           </p>
         </div>
 
-        <Tabs defaultValue="resources" className="mb-12">
-          <TabsList className="grid w-full grid-cols-2 mb-8">
-            <TabsTrigger value="resources">Study Resources</TabsTrigger>
-            <TabsTrigger value="rank-analysis">Free Rank Analysis</TabsTrigger>
-          </TabsList>
+        <div className="grid grid-cols-1 gap-12">
+          <div>
+            <h2 className="text-2xl font-bold mb-6">Free Rank Analysis</h2>
+            <FreeRankAnalysis />
+          </div>
           
-          <TabsContent value="resources">
+          <div>
+            <h2 className="text-2xl font-bold mb-6">Study Resources</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {resources?.map((resource) => (
                 <Card key={resource.id} className="p-6 hover:shadow-lg transition-shadow h-full">
@@ -104,12 +104,8 @@ const Resources = () => {
                 </div>
               )}
             </div>
-          </TabsContent>
-          
-          <TabsContent value="rank-analysis">
-            <FreeRankAnalysis />
-          </TabsContent>
-        </Tabs>
+          </div>
+        </div>
         
         <div className="mt-12 bg-muted/30 rounded-lg p-6 shadow-sm">
           <h2 className="text-xl font-semibold mb-4">Need More Personalized Help?</h2>

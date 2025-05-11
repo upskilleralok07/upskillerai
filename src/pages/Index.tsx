@@ -3,7 +3,6 @@ import { ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import FeatureCard from "@/components/FeatureCard";
 import { JourneyStarterButton } from "@/components/JourneyStarter";
-import { AIRankAnalyzer } from "@/components/AIRankAnalyzer";
 import TestimonialCard from "@/components/TestimonialCard";
 import CollegeJourneyAnimation from "@/components/CollegeJourneyAnimation";
 
@@ -25,8 +24,8 @@ const Index = () => {
               </p>
               <div className="flex flex-col sm:flex-row items-center gap-4">
                 <JourneyStarterButton />
-                <a href="#ai-assistant" className="w-full sm:w-auto px-6 py-3 rounded-lg border border-primary/30 text-primary hover:bg-primary/5 transition-all duration-300 flex items-center justify-center sm:justify-start hover-lift">
-                  Try AI Assistant <ArrowRight className="ml-2 h-4 w-4" />
+                <a href="/resources" className="w-full sm:w-auto px-6 py-3 rounded-lg border border-primary/30 text-primary hover:bg-primary/5 transition-all duration-300 flex items-center justify-center sm:justify-start hover-lift">
+                  Free Rank Analysis <ArrowRight className="ml-2 h-4 w-4" />
                 </a>
               </div>
             </div>
@@ -79,23 +78,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* AI Rank Analyzer Section */}
-      <section id="ai-assistant" className="py-12 md:py-16 px-4 md:px-6 bg-muted/50 backdrop-blur-sm">
-        <div className="container mx-auto">
-          <div className="text-center mb-8 md:mb-12">
-            <h2 className="text-2xl md:text-4xl font-bold text-text dark:text-foreground mb-3 md:mb-4">
-              Ask Our <span className="gradient-text">AI Assistant</span>
-            </h2>
-            <p className="text-text-light dark:text-foreground/70 max-w-2xl mx-auto mb-6 md:mb-8">
-              Get instant answers to your college admission queries with our AI-powered assistant
-            </p>
-          </div>
-          <div className="max-w-3xl mx-auto glass-card p-4 md:p-6 rounded-2xl shadow-lg border border-primary/10 hover-lift">
-            <AIRankAnalyzer />
-          </div>
-        </div>
-      </section>
-
       {/* Features Section */}
       <section className="py-12 md:py-20 px-4 md:px-6">
         <div className="container mx-auto">
@@ -144,7 +126,7 @@ const Index = () => {
             <TestimonialCard 
               name="Priya Patel"
               college="NIT Trichy"
-              testimonial="The AI rank analyzer gave me accurate predictions. I got admission to my dream college thanks to their personalized counseling."
+              testimonial="The rank analyzer gave me accurate predictions. I got admission to my dream college thanks to their personalized counseling."
               imageSrc="/placeholder.svg"
             />
             <TestimonialCard 
