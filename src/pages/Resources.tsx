@@ -1,13 +1,10 @@
 
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
-import { ExternalLink, Send, ChevronRight, Download, HelpCircle } from "lucide-react";
+import { ExternalLink, ChevronRight, Download, HelpCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/components/ui/use-toast";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -21,18 +18,8 @@ interface StudyResource {
   resource_type: string;
 }
 
-interface ChatMessage {
-  isUser: boolean;
-  content: string;
-}
-
 const Resources = () => {
   const { toast } = useToast();
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    { isUser: false, content: "Hi! I'm your College Sarthi AI assistant. How can I help you today?" }
-  ]);
-  const [inputMessage, setInputMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const { data: resources, isLoading: resourcesLoading, error } = useQuery({
     queryKey: ["study-resources"],
@@ -49,34 +36,6 @@ const Resources = () => {
       return data as StudyResource[];
     },
   });
-
-  const handleSendMessage = async () => {
-    if (!inputMessage.trim()) return;
-
-    const userMessage = { isUser: true, content: inputMessage.trim() };
-    setMessages(prev => [...prev, userMessage]);
-    setInputMessage("");
-    setIsLoading(true);
-
-    try {
-      // Simulated AI response for now
-      setTimeout(() => {
-        const aiResponse = {
-          isUser: false,
-          content: "I'm here to help you with college-related questions. While I'm being configured, feel free to check out our study resources listed above!"
-        };
-        setMessages(prev => [...prev, aiResponse]);
-        setIsLoading(false);
-      }, 1000);
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to send message. Please try again.",
-      });
-      setIsLoading(false);
-    }
-  };
 
   if (resourcesLoading) {
     return (
@@ -111,15 +70,14 @@ const Resources = () => {
         <div className="mb-12 text-center">
           <h1 className="text-4xl font-bold text-foreground mb-4">Free Resources & Analysis</h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Access free study materials, get a quick rank analysis, or chat with our AI assistant to help with your college journey
+            Access free study materials and get your rank analyzed to help with your college journey
           </p>
         </div>
 
         <Tabs defaultValue="resources" className="mb-12">
-          <TabsList className="grid w-full grid-cols-3 mb-8">
+          <TabsList className="grid w-full grid-cols-2 mb-8">
             <TabsTrigger value="resources">Study Resources</TabsTrigger>
             <TabsTrigger value="rank-analysis">Free Rank Analysis</TabsTrigger>
-            <TabsTrigger value="ai-assistant">AI Assistant</TabsTrigger>
           </TabsList>
           
           <TabsContent value="resources">
@@ -150,50 +108,6 @@ const Resources = () => {
           
           <TabsContent value="rank-analysis">
             <FreeRankAnalysis />
-          </TabsContent>
-          
-          <TabsContent value="ai-assistant">
-            <Card className="p-6">
-              <div className="mb-4">
-                <h2 className="text-2xl font-bold mb-2">College Sarthi AI Assistant</h2>
-                <p className="text-muted-foreground">
-                  Ask any questions about college admissions, JEE preparation, or career guidance
-                </p>
-              </div>
-              <ScrollArea className="h-[400px] pr-4 mb-4 border rounded-lg p-4">
-                <div className="space-y-4">
-                  {messages.map((message, index) => (
-                    <div
-                      key={index}
-                      className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
-                    >
-                      <div
-                        className={`max-w-[80%] p-3 rounded-lg ${
-                          message.isUser
-                            ? 'bg-primary text-primary-foreground'
-                            : 'bg-muted'
-                        }`}
-                      >
-                        {message.content}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </ScrollArea>
-              <div className="flex gap-2">
-                <Input
-                  value={inputMessage}
-                  onChange={(e) => setInputMessage(e.target.value)}
-                  placeholder="Type your question about colleges or JEE..."
-                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                  disabled={isLoading}
-                  className="flex-grow"
-                />
-                <Button onClick={handleSendMessage} disabled={isLoading}>
-                  <Send className="h-4 w-4" />
-                </Button>
-              </div>
-            </Card>
           </TabsContent>
         </Tabs>
         

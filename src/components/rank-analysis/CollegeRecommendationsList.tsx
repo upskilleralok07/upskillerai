@@ -9,7 +9,7 @@ interface CollegeRecommendation {
 }
 
 export function CollegeRecommendationsList({ recommendations }: { recommendations: CollegeRecommendation[] }) {
-  if (recommendations.length === 0) return (
+  if (!recommendations || recommendations.length === 0) return (
     <div className="text-center py-8">
       <p className="text-muted-foreground">No college recommendations available yet.</p>
     </div>
