@@ -15,8 +15,8 @@ import Reviews from "./pages/Reviews";
 import Pricing from "./pages/Pricing";
 import Contact from "./pages/Contact";
 import Resources from "./pages/Resources";
-import Courses from "./pages/Courses";
 import NotFound from "./pages/NotFound";
+import Courses from "./pages/Courses";
 
 const queryClient = new QueryClient();
 
