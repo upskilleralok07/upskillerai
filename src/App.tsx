@@ -9,12 +9,13 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { TelegramPopup } from "@/components/TelegramPopup";
 import Index from "./pages/Index";
+import Auth from "./pages/Auth";
 import Services from "./pages/Services";
 import Reviews from "./pages/Reviews";
 import Pricing from "./pages/Pricing";
 import Contact from "./pages/Contact";
 import Resources from "./pages/Resources";
-import Auth from "./pages/Auth";
+import Courses from "./pages/Courses";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,45 +32,46 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
-              <Route
-                path="/services"
+              <Route path="/courses" element={<Courses />} />
+              <Route 
+                path="/services" 
                 element={
                   <ProtectedRoute>
                     <Services />
                   </ProtectedRoute>
-                }
+                } 
               />
-              <Route
-                path="/reviews"
+              <Route 
+                path="/reviews" 
                 element={
                   <ProtectedRoute>
                     <Reviews />
                   </ProtectedRoute>
-                }
+                } 
               />
-              <Route
-                path="/pricing"
+              <Route 
+                path="/pricing" 
                 element={
                   <ProtectedRoute>
                     <Pricing />
                   </ProtectedRoute>
-                }
+                } 
               />
-              <Route
-                path="/contact"
+              <Route 
+                path="/contact" 
                 element={
                   <ProtectedRoute>
                     <Contact />
                   </ProtectedRoute>
-                }
+                } 
               />
-              <Route
-                path="/resources"
+              <Route 
+                path="/resources" 
                 element={
                   <ProtectedRoute>
                     <Resources />
                   </ProtectedRoute>
-                }
+                } 
               />
               <Route path="*" element={<NotFound />} />
             </Routes>

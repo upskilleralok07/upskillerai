@@ -50,6 +50,13 @@ const Navbar = () => {
       >
         <span>Home</span>
       </Link>
+      <Link
+        to="/courses"
+        className="text-foreground hover:text-primary transition-colors duration-200 flex items-center space-x-1"
+      >
+        <BookOpen className="h-4 w-4 mr-1" />
+        <span>Courses</span>
+      </Link>
       {user && (
         <>
           <Link

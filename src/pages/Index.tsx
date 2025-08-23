@@ -5,6 +5,8 @@ import FeatureCard from "@/components/FeatureCard";
 import { JourneyStarterButton } from "@/components/JourneyStarter";
 import TestimonialCard from "@/components/TestimonialCard";
 import CollegeJourneyAnimation from "@/components/CollegeJourneyAnimation";
+import TypewriterEffect from "@/components/TypewriterEffect";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
   return (
@@ -16,17 +18,25 @@ const Index = () => {
         <div className="container mx-auto">
           <div className="flex flex-col lg:flex-row items-center gap-8 md:gap-12">
             <div className="lg:w-1/2 text-left animate-fade-in">
-              <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-text dark:text-foreground mb-4 md:mb-6 leading-tight">
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4 md:mb-6 leading-tight">
                 Find Your <span className="gradient-text">Dream College</span> with Expert Guidance!
               </h1>
-              <p className="text-lg md:text-xl text-text-light dark:text-foreground/70 mb-6 md:mb-8">
-                Get personalized recommendations and mentorship to secure your ideal college admission with our AI-powered platform.
+              <div className="text-xl md:text-2xl text-muted-foreground mb-6 md:mb-8 h-12 flex items-center">
+                Get the best <TypewriterEffect 
+                  texts={["Placements", "Grades", "Dream College"]} 
+                  className="gradient-text font-semibold"
+                /> with our guidance!
+              </div>
+              <p className="text-lg md:text-xl text-muted-foreground mb-6 md:mb-8">
+                Join thousands of students who have transformed their college admission journey with our expert mentorship and AI-powered recommendations.
               </p>
               <div className="flex flex-col sm:flex-row items-center gap-4">
-                <JourneyStarterButton />
-                <a href="/resources" className="w-full sm:w-auto px-6 py-3 rounded-lg border border-primary/30 text-primary hover:bg-primary/5 transition-all duration-300 flex items-center justify-center sm:justify-start hover-lift">
-                  Free Rank Analysis <ArrowRight className="ml-2 h-4 w-4" />
-                </a>
+                <Button size="lg" className="bg-primary hover:bg-primary/90" asChild>
+                  <a href="/courses">Start Learning</a>
+                </Button>
+                <Button variant="outline" size="lg" asChild>
+                  <a href="/courses">Explore Courses</a>
+                </Button>
               </div>
             </div>
             <div className="lg:w-1/2 animate-fade-in w-full" style={{ animationDelay: "0.3s" }}>
