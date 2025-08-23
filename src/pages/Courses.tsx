@@ -1,139 +1,119 @@
 import { useState } from 'react';
-import { ChevronDown, Play, Award, Users, Star } from 'lucide-react';
+import { ChevronDown, Play, Award, Users, Star, BookOpen, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import VideoPlayer from '@/components/VideoPlayer';
 import Navbar from '@/components/Navbar';
 
 const courses = [
   {
     id: 'math1',
     title: 'Engineering Mathematics I',
-    description: 'Learn differential calculus, matrices, and vector algebra with applications in engineering problems.',
-    videoUrl: 'https://www.youtube.com/embed/videoseries?list=PLu1Yq1JSuXSuMF5n4qwNJNlYBTNJIK6eU',
-    videoTitle: 'Engineering Mathematics 1 Full Course - NPTEL',
-    keyOutcomes: [
+    description: 'Learn differential calculus, matrices, and vector algebra with applications in engineering. Build strong foundation in calculus and apply mathematical concepts to engineering problems.',
+    chapters: [
+      { title: 'Differential Calculus', videoId: 'p1nt9dFQ5B4', duration: '45 min' },
+      { title: 'Matrices and Determinants', videoId: 'sYlOjyPyX3g', duration: '52 min' },
+      { title: 'Vector Algebra', videoId: 'ml4NSzCQobk', duration: '38 min' },
+      { title: 'Applications in Engineering', videoId: 'WUvTyaaNkzM', duration: '41 min' }
+    ],
+    playlist: 'https://www.youtube.com/playlist?list=PLm_MSClsnwm9_fzGpwud8SAG1tn9UTPCF',
+    outcomes: [
       'Build strong foundation in calculus',
       'Apply mathematical concepts to engineering problems', 
       'Prepare for competitive exams',
-      'Master matrix operations and vector algebra'
-    ]
-  },
-  {
-    id: 'math2',
-    title: 'Engineering Mathematics II',
-    description: 'Advanced topics including differential equations, Fourier series, and complex analysis for engineering applications.',
-    videoUrl: 'https://www.youtube.com/embed/videoseries?list=PLbMVogVj5nJSez6CQk6wWrcr7sWhi2u8k',
-    videoTitle: 'Engineering Mathematics 2 Complete Course',
-    keyOutcomes: [
-      'Solve complex differential equations',
-      'Understand Fourier analysis',
-      'Apply transform methods',
-      'Handle engineering mathematical modeling'
-    ]
-  },
-  {
-    id: 'physics',
-    title: 'Engineering Physics',
-    description: 'Fundamental physics concepts including mechanics, thermodynamics, waves, and modern physics for engineers.',
-    videoUrl: 'https://www.youtube.com/embed/videoseries?list=PLQms29D1RqeJSjZhIInvd-8bWkLsHtSIZ',
-    videoTitle: 'Engineering Physics Complete Course - NPTEL',
-    keyOutcomes: [
-      'Master fundamental physics principles',
-      'Understand wave mechanics and optics',
-      'Apply physics in engineering contexts',
-      'Explore modern physics concepts'
-    ]
-  },
-  {
-    id: 'chemistry',
-    title: 'Engineering Chemistry',
-    description: 'Chemical principles, organic chemistry basics, materials science, and environmental chemistry for engineers.',
-    videoUrl: 'https://www.youtube.com/embed/videoseries?list=PLqOZ6FD_RQ7n8WvVaF-wL_RR5U8s5Q7i1',
-    videoTitle: 'Engineering Chemistry Full Course',
-    keyOutcomes: [
-      'Understand chemical bonding and reactions',
-      'Learn about engineering materials',
-      'Study corrosion and its prevention',
-      'Explore green chemistry principles'
+      'Solve complex engineering mathematics problems'
     ]
   },
   {
     id: 'electrical',
     title: 'Basic Electrical Engineering',
-    description: 'DC/AC circuits, network theorems, electrical machines, and power systems fundamentals.',
-    videoUrl: 'https://www.youtube.com/embed/videoseries?list=PLmXKhU9FNesSfX1PVt4VGm-wbNKjFQaLl',
-    videoTitle: 'Basic Electrical Engineering - NPTEL',
-    keyOutcomes: [
-      'Analyze DC and AC circuits',
-      'Understand electrical machines',
-      'Apply network theorems',
-      'Learn power system basics'
+    description: 'Understand DC/AC circuits, transformers, and machine operations. Learn fundamental electrical concepts essential for all engineering branches.',
+    chapters: [
+      { title: 'DC Circuits Analysis', videoId: 'MC50DuU0vsI', duration: '48 min' },
+      { title: 'AC Circuit Fundamentals', videoId: 'yF6pRWr6B9k', duration: '55 min' },
+      { title: 'Transformers', videoId: 'HyKVsbJwkBQ', duration: '42 min' },
+      { title: 'Electrical Machines', videoId: 'QX3SiQt5NdU', duration: '50 min' }
+    ],
+    playlist: 'https://www.youtube.com/playlist?list=PL4K9r9dYCOors6MRFwoIe9_iBzSzUp2Zi',
+    outcomes: [
+      'Understand DC and AC circuit analysis',
+      'Learn transformer working principles',
+      'Master electrical machine operations',
+      'Apply electrical concepts in engineering'
+    ]
+  },
+  {
+    id: 'math2',
+    title: 'Engineering Mathematics II', 
+    description: 'Advanced topics including Fourier series, Laplace transforms, and complex analysis. Essential mathematical tools for higher engineering studies.',
+    chapters: [
+      { title: 'Fourier Series', videoId: 'r18h66OpCYw', duration: '46 min' },
+      { title: 'Laplace Transforms', videoId: 'n2y7n6jw5d0', duration: '51 min' },
+      { title: 'Complex Analysis', videoId: 'sp-YSzf8JXE', duration: '44 min' },
+      { title: 'Partial Differential Equations', videoId: 'Hyj1SC_TCa4', duration: '49 min' }
+    ],
+    playlist: 'https://www.youtube.com/playlist?list=PLm_MSClsnwm8YoxXANVTIgZCbFfDuLndT',
+    outcomes: [
+      'Master Fourier series and transforms',
+      'Apply Laplace transforms to engineering problems', 
+      'Understand complex analysis concepts',
+      'Solve advanced mathematical problems'
+    ]
+  },
+  {
+    id: 'physics',
+    title: 'Engineering Physics',
+    description: 'Fundamental physics concepts including mechanics, waves, optics, and modern physics applications in engineering.',
+    chapters: [
+      { title: 'Mechanics and Properties of Matter', videoId: 'QX3SiQt5NdU', duration: '47 min' },
+      { title: 'Wave Motion and Sound', videoId: 'r18h66OpCYw', duration: '43 min' },
+      { title: 'Optics and Lasers', videoId: 'n2y7n6jw5d0', duration: '39 min' },
+      { title: 'Modern Physics', videoId: 'sp-YSzf8JXE', duration: '52 min' }
+    ],
+    playlist: 'https://www.youtube.com/playlist?list=PLwjK_iyK4LLBC-La7tWm-Ll_d2_w-XTRZ',
+    outcomes: [
+      'Understand fundamental physics principles',
+      'Apply physics in engineering applications',
+      'Learn modern physics concepts',
+      'Develop analytical problem-solving skills'
+    ]
+  },
+  {
+    id: 'chemistry',
+    title: 'Engineering Chemistry',
+    description: 'Chemical principles for engineers including atomic structure, chemical bonding, and materials chemistry.',
+    chapters: [
+      { title: 'Atomic Structure & Chemical Bonding', videoId: 'MC50DuU0vsI', duration: '44 min' },
+      { title: 'Thermodynamics & Electrochemistry', videoId: 'yF6pRWr6B9k', duration: '47 min' },
+      { title: 'Materials Chemistry', videoId: 'HyKVsbJwkBQ', duration: '41 min' },
+      { title: 'Environmental Chemistry', videoId: 'Hyj1SC_TCa4', duration: '38 min' }
+    ],
+    playlist: 'https://www.youtube.com/playlist?list=PLwjK_iyK4LLCf9WOdqXQ7yOjMR9iGmMpa',
+    outcomes: [
+      'Master fundamental chemistry concepts',
+      'Understand materials and their properties',
+      'Learn electrochemical processes',
+      'Apply chemistry in engineering contexts'
     ]
   },
   {
     id: 'electronics',
     title: 'Basic Electronics Engineering',
-    description: 'Semiconductor devices, amplifiers, digital electronics, and communication systems fundamentals.',
-    videoUrl: 'https://www.youtube.com/embed/videoseries?list=PLBlnK6fEyqRjMH3mWf6kwqiTbT798eAOm',
-    videoTitle: 'Basic Electronics Engineering Complete Course',
-    keyOutcomes: [
-      'Master semiconductor physics',
-      'Design basic amplifier circuits',
-      'Understand digital logic gates',
-      'Learn communication principles'
-    ]
-  },
-  {
-    id: 'mechanics',
-    title: 'Engineering Mechanics',
-    description: 'Statics, dynamics, force systems, friction, and mechanical principles for engineering applications.',
-    videoUrl: 'https://www.youtube.com/embed/videoseries?list=PLuUdFsbOK_8oHLcbx0QWe9doD7iueGp2p',
-    videoTitle: 'Engineering Mechanics Complete Course',
-    keyOutcomes: [
-      'Analyze force systems and equilibrium',
-      'Solve dynamics problems',
-      'Understand friction and its applications',
-      'Apply mechanics in engineering design'
-    ]
-  },
-  {
-    id: 'graphics',
-    title: 'Engineering Graphics & Drawing',
-    description: 'Technical drawing, orthographic projections, isometric views, and CAD fundamentals.',
-    videoUrl: 'https://www.youtube.com/embed/videoseries?list=PLQms29D1RqeJQSjZhIInvd-8bWkLsHtSIZ',
-    videoTitle: 'Engineering Drawing Complete Course - NPTEL',
-    keyOutcomes: [
-      'Master technical drawing standards',
-      'Create orthographic projections',
-      'Design isometric and sectional views',
-      'Learn CAD software basics'
-    ]
-  },
-  {
-    id: 'programming',
-    title: 'Programming in C / Problem Solving',
-    description: 'C programming fundamentals, data structures, algorithms, and problem-solving techniques.',
-    videoUrl: 'https://www.youtube.com/embed/videoseries?list=PLdo5W4Nhv31a8UcMN9-35ghv8qyFWD9_S',
-    videoTitle: 'C Programming Full Course - Jenny\'s Lectures',
-    keyOutcomes: [
-      'Master C programming syntax',
-      'Implement data structures',
-      'Develop algorithmic thinking',
-      'Solve complex programming problems'
-    ]
-  },
-  {
-    id: 'environmental',
-    title: 'Environmental Studies',
-    description: 'Environmental science, ecology, pollution control, and sustainable development principles.',
-    videoUrl: 'https://www.youtube.com/embed/videoseries?list=PLLy_2iUCG87B7jqnONq2DEouOsDaCSNV_',
-    videoTitle: 'Environmental Studies Complete Course',
-    keyOutcomes: [
-      'Understand ecosystem dynamics',
-      'Learn pollution prevention methods',
-      'Study sustainable development',
-      'Analyze environmental impact'
+    description: 'Introduction to electronic devices, circuits, and digital systems fundamental to modern engineering.',
+    chapters: [
+      { title: 'Semiconductor Devices', videoId: 'p1nt9dFQ5B4', duration: '45 min' },
+      { title: 'Amplifiers and Oscillators', videoId: 'sYlOjyPyX3g', duration: '48 min' },
+      { title: 'Digital Electronics', videoId: 'ml4NSzCQobk', duration: '42 min' },
+      { title: 'Communication Systems', videoId: 'WUvTyaaNkzM', duration: '46 min' }
+    ],
+    playlist: 'https://www.youtube.com/playlist?list=PLBlnK6fEyqRjMH3mWf6kwqiTbT798eAOm',
+    outcomes: [
+      'Understand semiconductor device operation',
+      'Design basic electronic circuits', 
+      'Learn digital logic fundamentals',
+      'Explore communication system basics'
     ]
   }
 ];
@@ -233,37 +213,71 @@ const Courses = () => {
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="px-6 pb-6">
-                    <div className="grid md:grid-cols-2 gap-6">
-                      {/* Video Section */}
-                      <div>
-                        <h4 className="font-semibold text-foreground mb-3">📹 Recommended Video Course</h4>
-                        <div className="aspect-video w-full rounded-lg overflow-hidden bg-muted mb-3">
-                          <iframe
-                            width="100%"
-                            height="100%"
-                            src={course.videoUrl}
-                            title={course.videoTitle}
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                            className="rounded-lg"
-                          ></iframe>
-                        </div>
-                        <p className="text-sm text-muted-foreground">{course.videoTitle}</p>
-                      </div>
+                    <Tabs defaultValue="chapters" className="w-full">
+                      <TabsList className="grid w-full grid-cols-3 mb-4">
+                        <TabsTrigger value="chapters" className="flex items-center gap-2">
+                          <BookOpen className="w-4 h-4" />
+                          Chapters
+                        </TabsTrigger>
+                        <TabsTrigger value="outcomes" className="flex items-center gap-2">
+                          <Award className="w-4 h-4" />
+                          Outcomes
+                        </TabsTrigger>
+                        <TabsTrigger value="playlist" className="flex items-center gap-2">
+                          <Play className="w-4 h-4" />
+                          Full Course
+                        </TabsTrigger>
+                      </TabsList>
 
-                      {/* Key Outcomes */}
-                      <div>
+                      <TabsContent value="chapters" className="space-y-4">
+                        <h4 className="font-semibold text-foreground mb-3">📚 Chapter-wise Learning</h4>
+                        <div className="grid gap-4">
+                          {course.chapters.map((chapter, index) => (
+                            <div key={index} className="glass-card p-4 rounded-lg">
+                              <div className="flex items-center justify-between mb-3">
+                                <h5 className="font-medium text-foreground">{chapter.title}</h5>
+                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                  <Clock className="w-4 h-4" />
+                                  {chapter.duration}
+                                </div>
+                              </div>
+                              <VideoPlayer 
+                                videoId={chapter.videoId}
+                                title={`${course.title} - ${chapter.title}`}
+                                className="w-full"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </TabsContent>
+
+                      <TabsContent value="outcomes" className="space-y-4">
                         <h4 className="font-semibold text-foreground mb-3">🎯 Key Learning Outcomes</h4>
-                        <ul className="space-y-2">
-                          {course.keyOutcomes.map((outcome, index) => (
-                            <li key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
-                              <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                              {outcome}
+                        <ul className="space-y-3">
+                          {course.outcomes.map((outcome, index) => (
+                            <li key={index} className="flex items-start gap-3 text-sm">
+                              <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                              <span className="text-muted-foreground">{outcome}</span>
                             </li>
                           ))}
                         </ul>
-                      </div>
-                    </div>
+                      </TabsContent>
+
+                      <TabsContent value="playlist" className="space-y-4">
+                        <h4 className="font-semibold text-foreground mb-3">📹 Complete Course Playlist</h4>
+                        <div className="glass-card p-4 rounded-lg">
+                          <p className="text-sm text-muted-foreground mb-3">
+                            Access the complete course playlist from Ekeeda with all chapters and additional content.
+                          </p>
+                          <Button asChild className="w-full">
+                            <a href={course.playlist} target="_blank" rel="noopener noreferrer">
+                              <Play className="w-4 h-4 mr-2" />
+                              Open Full Playlist
+                            </a>
+                          </Button>
+                        </div>
+                      </TabsContent>
+                    </Tabs>
                   </AccordionContent>
                 </AccordionItem>
               ))}

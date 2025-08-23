@@ -19,7 +19,7 @@ const Index = () => {
           <div className="flex flex-col lg:flex-row items-center gap-8 md:gap-12">
             <div className="lg:w-1/2 text-left animate-fade-in">
               <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4 md:mb-6 leading-tight">
-                Find Your <span className="gradient-text">Dream College</span> with Expert Guidance!
+                <span className="gradient-text">Dream College</span>
               </h1>
               <div className="text-xl md:text-2xl text-muted-foreground mb-6 md:mb-8 h-12 flex items-center">
                 Get the best <TypewriterEffect 
