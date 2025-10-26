@@ -25,6 +25,12 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.75rem;
+    
+    /* AI Theme Colors */
+    --ai-purple: 270 70% 60%;
+    --ai-blue: 220 80% 60%;
+    --ai-cyan: 190 80% 55%;
+    --ai-neon: 280 90% 70%;
   }
 
   .dark {
@@ -47,6 +53,12 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 224.3 76.3% 48%;
+    
+    /* AI Theme Colors - Dark Mode */
+    --ai-purple: 270 80% 70%;
+    --ai-blue: 220 90% 70%;
+    --ai-cyan: 190 90% 65%;
+    --ai-neon: 280 95% 75%;
   }
 
   html {
@@ -152,6 +164,24 @@
 
 .animate-slide-in {
   animation: slideIn 0.6s ease-out forwards;
+}
+
+/* Grid pattern for tech background */
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(to right, hsl(var(--primary)) 1px, transparent 1px),
+    linear-gradient(to bottom, hsl(var(--primary)) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Circuit-inspired decorations */
+@keyframes circuit-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+.circuit-decoration {
+  animation: circuit-pulse 3s ease-in-out infinite;
 }
 
 /* Mobile Optimizations */

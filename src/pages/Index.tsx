@@ -31,8 +31,15 @@ const Index = () => {
                 Join thousands of students who have transformed their college admission journey with our expert mentorship and AI-powered recommendations.
               </p>
               <div className="flex flex-col sm:flex-row items-center gap-4">
-                <Button size="lg" className="bg-primary hover:bg-primary/90" asChild>
-                  <a href="/courses">Start Learning</a>
+                <Button 
+                  size="lg" 
+                  className="bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 hover:opacity-90 text-white font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 animate-gradient group"
+                  asChild
+                >
+                  <a href="/upskiller" className="flex items-center gap-2">
+                    <span className="text-lg">Switch to Upskiller</span>
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </a>
                 </Button>
                 <Button variant="outline" size="lg" asChild>
                   <a href="/courses">Explore Courses</a>
