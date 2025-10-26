@@ -18,6 +18,7 @@ import Resources from "./pages/Resources";
 import NotFound from "./pages/NotFound";
 import Courses from "./pages/Courses";
 import Upskiller from "./pages/Upskiller";
+import OnlineCollege from "./pages/OnlineCollege";
 
 const queryClient = new QueryClient();
 
@@ -82,6 +83,14 @@ const App = () => (
                 } 
               />
               <Route path="/upskiller" element={<Upskiller />} />
+              <Route 
+                path="/online-college" 
+                element={
+                  <ProtectedRoute>
+                    <OnlineCollege />
+                  </ProtectedRoute>
+                } 
+              />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

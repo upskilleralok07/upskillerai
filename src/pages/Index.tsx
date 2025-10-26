@@ -41,8 +41,15 @@ const Index = () => {
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </a>
                 </Button>
-                <Button variant="outline" size="lg" asChild>
-                  <a href="/courses">Explore Courses</a>
+                <Button 
+                  size="lg" 
+                  className="bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 hover:opacity-90 text-white font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 animate-gradient group"
+                  asChild
+                >
+                  <a href="/online-college" className="flex items-center gap-2">
+                    <span className="text-lg">Switch to Online College</span>
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </a>
                 </Button>
               </div>
             </div>

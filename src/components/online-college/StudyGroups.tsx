@@ -1,0 +1,278 @@
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { Users, Plus, Lock, Globe, UserPlus, Clock } from "lucide-react";
+
+interface StudyGroupsProps {
+  studentId: string;
+  campus: string;
+}
+
+const StudyGroups = ({ studentId, campus }: StudyGroupsProps) => {
+  const { toast } = useToast();
+  const [groups, setGroups] = useState<any[]>([]);
+  const [myGroups, setMyGroups] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [newGroup, setNewGroup] = useState({
+    name: "",
+    study_target: "",
+    privacy: "public",
+  });
+
+  useEffect(() => {
+    fetchGroups();
+    fetchMyGroups();
+  }, [studentId]);
+
+  const fetchGroups = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("study_groups")
+        .select("*, group_members(count)")
+        .eq("campus", campus)
+        .eq("privacy", "public")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      setGroups(data || []);
+    } catch (error: any) {
+      console.error("Error fetching groups:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchMyGroups = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("group_members")
+        .select("*, study_groups(*)")
+        .eq("student_id", studentId);
+
+      if (error) throw error;
+      setMyGroups(data?.map(m => m.study_groups) || []);
+    } catch (error: any) {
+      console.error("Error fetching my groups:", error);
+    }
+  };
+
+  const createGroup = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("study_groups")
+        .insert({
+          ...newGroup,
+          creator_id: studentId,
+          campus,
+        } as any)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      // Add creator as member
+      await supabase.from("group_members").insert({
+        group_id: data.id,
+        student_id: studentId,
+      });
+
+      toast({
+        title: "Group Created! 🎉",
+        description: `${newGroup.name} is ready for collaboration.`,
+      });
+
+      setCreateDialogOpen(false);
+      setNewGroup({ name: "", study_target: "", privacy: "public" });
+      fetchGroups();
+      fetchMyGroups();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const joinGroup = async (groupId: string) => {
+    try {
+      const { error } = await supabase.from("group_members").insert({
+        group_id: groupId,
+        student_id: studentId,
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Joined Group! 🤝",
+        description: "You're now part of this study group.",
+      });
+
+      fetchGroups();
+      fetchMyGroups();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const isInGroup = (groupId: string) => {
+    return myGroups.some(g => g.id === groupId);
+  };
+
+  if (loading) {
+    return <div className="text-center py-8">Loading groups...</div>;
+  }
+
+  return (
+    <div className="space-y-8">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold">Study Groups</h2>
+          <p className="text-muted-foreground">Collaborate with peers from {campus}</p>
+        </div>
+        <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
+          <DialogTrigger asChild>
+            <Button className="bg-gradient-to-r from-primary to-secondary">
+              <Plus className="w-4 h-4 mr-2" />
+              Create Group
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create Study Group</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="groupName">Group Name *</Label>
+                <Input
+                  id="groupName"
+                  value={newGroup.name}
+                  onChange={(e) => setNewGroup({ ...newGroup, name: e.target.value })}
+                  placeholder="e.g., Data Structures Warriors"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="target">Study Target *</Label>
+                <Input
+                  id="target"
+                  value={newGroup.study_target}
+                  onChange={(e) => setNewGroup({ ...newGroup, study_target: e.target.value })}
+                  placeholder="e.g., Complete DSA in 60 days"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="privacy">Privacy</Label>
+                <Select
+                  value={newGroup.privacy}
+                  onValueChange={(value) => setNewGroup({ ...newGroup, privacy: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="public">
+                      <div className="flex items-center gap-2">
+                        <Globe className="w-4 h-4" />
+                        Public - Anyone can join
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="private">
+                      <div className="flex items-center gap-2">
+                        <Lock className="w-4 h-4" />
+                        Private - Invite only
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button onClick={createGroup} className="w-full" disabled={!newGroup.name || !newGroup.study_target}>
+                Create Group
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      {myGroups.length > 0 && (
+        <div className="space-y-4">
+          <h3 className="text-xl font-semibold flex items-center gap-2">
+            <Users className="w-5 h-5 text-primary" />
+            My Groups
+          </h3>
+          <div className="grid md:grid-cols-2 gap-4">
+            {myGroups.map((group) => (
+              <Card key={group.id} className="p-6 glass-card border-primary/20">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex-1">
+                    <h4 className="font-bold text-lg mb-2">{group.name}</h4>
+                    <p className="text-sm text-muted-foreground mb-3">{group.study_target}</p>
+                  </div>
+                  {group.privacy === "private" ? (
+                    <Lock className="w-4 h-4 text-muted-foreground" />
+                  ) : (
+                    <Globe className="w-4 h-4 text-muted-foreground" />
+                  )}
+                </div>
+                <div className="flex items-center gap-4 text-sm">
+                  <div className="flex items-center gap-1">
+                    <Clock className="w-4 h-4 text-primary" />
+                    <span>{group.total_study_hours || 0}h studied</span>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="space-y-4">
+        <h3 className="text-xl font-semibold">Available Groups</h3>
+        {groups.length === 0 ? (
+          <Card className="p-8 text-center glass-card">
+            <Users className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+            <p className="text-muted-foreground">No public groups yet. Be the first to create one!</p>
+          </Card>
+        ) : (
+          <div className="grid md:grid-cols-2 gap-4">
+            {groups.map((group) => (
+              <Card key={group.id} className="p-6 glass-card hover:border-primary/50 transition-colors">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex-1">
+                    <h4 className="font-bold text-lg mb-2">{group.name}</h4>
+                    <p className="text-sm text-muted-foreground mb-3">{group.study_target}</p>
+                  </div>
+                  <Globe className="w-4 h-4 text-muted-foreground" />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1 text-sm">
+                    <Clock className="w-4 h-4 text-primary" />
+                    <span>{group.total_study_hours || 0}h studied</span>
+                  </div>
+                  {!isInGroup(group.id) && (
+                    <Button size="sm" onClick={() => joinGroup(group.id)} variant="outline">
+                      <UserPlus className="w-4 h-4 mr-2" />
+                      Join
+                    </Button>
+                  )}
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default StudyGroups;

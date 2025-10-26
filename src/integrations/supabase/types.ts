@@ -343,6 +343,42 @@ export type Database = {
         }
         Relationships: []
       }
+      group_members: {
+        Row: {
+          group_id: string
+          id: string
+          joined_at: string | null
+          student_id: string
+        }
+        Insert: {
+          group_id: string
+          id?: string
+          joined_at?: string | null
+          student_id: string
+        }
+        Update: {
+          group_id?: string
+          id?: string
+          joined_at?: string | null
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "study_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_members_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       menu_items: {
         Row: {
           category: string | null
@@ -681,6 +717,151 @@ export type Database = {
           },
         ]
       }
+      roadmaps: {
+        Row: {
+          created_at: string | null
+          description: string
+          id: string
+          title: string
+          total_milestones: number | null
+          type: Database["public"]["Enums"]["roadmap_type"]
+        }
+        Insert: {
+          created_at?: string | null
+          description: string
+          id?: string
+          title: string
+          total_milestones?: number | null
+          type: Database["public"]["Enums"]["roadmap_type"]
+        }
+        Update: {
+          created_at?: string | null
+          description?: string
+          id?: string
+          title?: string
+          total_milestones?: number | null
+          type?: Database["public"]["Enums"]["roadmap_type"]
+        }
+        Relationships: []
+      }
+      student_progress: {
+        Row: {
+          id: string
+          milestones_completed: number | null
+          progress_percentage: number | null
+          roadmap_type: Database["public"]["Enums"]["roadmap_type"]
+          student_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          milestones_completed?: number | null
+          progress_percentage?: number | null
+          roadmap_type: Database["public"]["Enums"]["roadmap_type"]
+          student_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          milestones_completed?: number | null
+          progress_percentage?: number | null
+          roadmap_type?: Database["public"]["Enums"]["roadmap_type"]
+          student_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_progress_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      students: {
+        Row: {
+          campus: string
+          created_at: string | null
+          grade_semester: string
+          id: string
+          interests: string[] | null
+          name: string
+          selected_roadmap: Database["public"]["Enums"]["roadmap_type"]
+          total_study_hours: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          campus: string
+          created_at?: string | null
+          grade_semester: string
+          id?: string
+          interests?: string[] | null
+          name: string
+          selected_roadmap: Database["public"]["Enums"]["roadmap_type"]
+          total_study_hours?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          campus?: string
+          created_at?: string | null
+          grade_semester?: string
+          id?: string
+          interests?: string[] | null
+          name?: string
+          selected_roadmap?: Database["public"]["Enums"]["roadmap_type"]
+          total_study_hours?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      study_groups: {
+        Row: {
+          campus: string
+          created_at: string | null
+          creator_id: string
+          id: string
+          name: string
+          privacy: Database["public"]["Enums"]["group_privacy"] | null
+          study_target: string
+          total_study_hours: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          campus: string
+          created_at?: string | null
+          creator_id: string
+          id?: string
+          name: string
+          privacy?: Database["public"]["Enums"]["group_privacy"] | null
+          study_target: string
+          total_study_hours?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          campus?: string
+          created_at?: string | null
+          creator_id?: string
+          id?: string
+          name?: string
+          privacy?: Database["public"]["Enums"]["group_privacy"] | null
+          study_target?: string
+          total_study_hours?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "study_groups_creator_id_fkey"
+            columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       study_resources: {
         Row: {
           created_at: string | null
@@ -714,6 +895,105 @@ export type Database = {
         }
         Relationships: []
       }
+      study_sessions: {
+        Row: {
+          created_at: string | null
+          duration_minutes: number | null
+          end_time: string | null
+          group_id: string | null
+          id: string
+          is_active: boolean | null
+          start_time: string
+          student_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          duration_minutes?: number | null
+          end_time?: string | null
+          group_id?: string | null
+          id?: string
+          is_active?: boolean | null
+          start_time?: string
+          student_id: string
+        }
+        Update: {
+          created_at?: string | null
+          duration_minutes?: number | null
+          end_time?: string | null
+          group_id?: string | null
+          id?: string
+          is_active?: boolean | null
+          start_time?: string
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "study_sessions_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "study_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "study_sessions_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      weekly_leaderboard: {
+        Row: {
+          badge: string | null
+          campus: string
+          created_at: string | null
+          group_id: string | null
+          id: string
+          rank: number
+          student_id: string | null
+          study_hours: number
+          week_start: string
+        }
+        Insert: {
+          badge?: string | null
+          campus: string
+          created_at?: string | null
+          group_id?: string | null
+          id?: string
+          rank: number
+          student_id?: string | null
+          study_hours: number
+          week_start: string
+        }
+        Update: {
+          badge?: string | null
+          campus?: string
+          created_at?: string | null
+          group_id?: string | null
+          id?: string
+          rank?: number
+          student_id?: string | null
+          study_hours?: number
+          week_start?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "weekly_leaderboard_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "study_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "weekly_leaderboard_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -723,6 +1003,7 @@ export type Database = {
     }
     Enums: {
       counseling_type: "josaa" | "csab" | "mpdter" | "uptac"
+      group_privacy: "public" | "private"
       order_status:
         | "pending"
         | "confirmed"
@@ -731,6 +1012,13 @@ export type Database = {
         | "picked_up"
         | "completed"
         | "cancelled"
+      roadmap_type:
+        | "ace_semester_exams"
+        | "master_python"
+        | "crack_placements"
+        | "web_development"
+        | "data_science"
+        | "competitive_programming"
       user_type: "traveler" | "vendor"
     }
     CompositeTypes: {
@@ -860,6 +1148,7 @@ export const Constants = {
   public: {
     Enums: {
       counseling_type: ["josaa", "csab", "mpdter", "uptac"],
+      group_privacy: ["public", "private"],
       order_status: [
         "pending",
         "confirmed",
@@ -868,6 +1157,14 @@ export const Constants = {
         "picked_up",
         "completed",
         "cancelled",
+      ],
+      roadmap_type: [
+        "ace_semester_exams",
+        "master_python",
+        "crack_placements",
+        "web_development",
+        "data_science",
+        "competitive_programming",
       ],
       user_type: ["traveler", "vendor"],
     },
