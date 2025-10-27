@@ -343,6 +343,113 @@ export type Database = {
         }
         Relationships: []
       }
+      group_discussions: {
+        Row: {
+          created_at: string | null
+          group_id: string
+          id: string
+          message: string
+          parent_message_id: string | null
+          student_id: string
+          topic_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          group_id: string
+          id?: string
+          message: string
+          parent_message_id?: string | null
+          student_id: string
+          topic_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          group_id?: string
+          id?: string
+          message?: string
+          parent_message_id?: string | null
+          student_id?: string
+          topic_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_discussions_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "study_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_discussions_parent_message_id_fkey"
+            columns: ["parent_message_id"]
+            isOneToOne: false
+            referencedRelation: "group_discussions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_discussions_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_discussions_topic_id_fkey"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "roadmap_topics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_invites: {
+        Row: {
+          created_at: string | null
+          created_by: string
+          current_uses: number | null
+          expires_at: string | null
+          group_id: string
+          id: string
+          invite_code: string
+          max_uses: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by: string
+          current_uses?: number | null
+          expires_at?: string | null
+          group_id: string
+          id?: string
+          invite_code: string
+          max_uses?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string
+          current_uses?: number | null
+          expires_at?: string | null
+          group_id?: string
+          id?: string
+          invite_code?: string
+          max_uses?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_invites_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_invites_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "study_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       group_members: {
         Row: {
           group_id: string
@@ -375,6 +482,115 @@ export type Database = {
             columns: ["student_id"]
             isOneToOne: false
             referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_resources: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          group_id: string
+          id: string
+          language: string | null
+          resource_type: string
+          title: string
+          topic_id: string | null
+          url: string
+          view_count: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          group_id: string
+          id?: string
+          language?: string | null
+          resource_type: string
+          title: string
+          topic_id?: string | null
+          url: string
+          view_count?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          group_id?: string
+          id?: string
+          language?: string | null
+          resource_type?: string
+          title?: string
+          topic_id?: string | null
+          url?: string
+          view_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_resources_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_resources_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "study_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_resources_topic_id_fkey"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "roadmap_topics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_targets: {
+        Row: {
+          created_at: string | null
+          created_by: string
+          description: string | null
+          group_id: string
+          id: string
+          is_completed: boolean | null
+          target_date: string
+          title: string
+        }
+        Insert: {
+          created_at?: string | null
+          created_by: string
+          description?: string | null
+          group_id: string
+          id?: string
+          is_completed?: boolean | null
+          target_date: string
+          title: string
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string
+          description?: string | null
+          group_id?: string
+          id?: string
+          is_completed?: boolean | null
+          target_date?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_targets_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_targets_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "study_groups"
             referencedColumns: ["id"]
           },
         ]
@@ -717,6 +933,47 @@ export type Database = {
           },
         ]
       }
+      roadmap_topics: {
+        Row: {
+          category: Database["public"]["Enums"]["roadmap_category"]
+          created_at: string | null
+          description: string | null
+          estimated_hours: number | null
+          id: string
+          parent_topic_id: string | null
+          sequence_order: number
+          title: string
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["roadmap_category"]
+          created_at?: string | null
+          description?: string | null
+          estimated_hours?: number | null
+          id?: string
+          parent_topic_id?: string | null
+          sequence_order: number
+          title: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["roadmap_category"]
+          created_at?: string | null
+          description?: string | null
+          estimated_hours?: number | null
+          id?: string
+          parent_topic_id?: string | null
+          sequence_order?: number
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "roadmap_topics_parent_topic_id_fkey"
+            columns: ["parent_topic_id"]
+            isOneToOne: false
+            referencedRelation: "roadmap_topics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       roadmaps: {
         Row: {
           created_at: string | null
@@ -779,6 +1036,58 @@ export type Database = {
           },
         ]
       }
+      student_topic_progress: {
+        Row: {
+          completed_at: string | null
+          group_id: string
+          id: string
+          is_completed: boolean | null
+          notes: string | null
+          student_id: string
+          topic_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          group_id: string
+          id?: string
+          is_completed?: boolean | null
+          notes?: string | null
+          student_id: string
+          topic_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          group_id?: string
+          id?: string
+          is_completed?: boolean | null
+          notes?: string | null
+          student_id?: string
+          topic_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_topic_progress_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "study_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_topic_progress_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_topic_progress_topic_id_fkey"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "roadmap_topics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       students: {
         Row: {
           campus: string
@@ -826,6 +1135,9 @@ export type Database = {
           id: string
           name: string
           privacy: Database["public"]["Enums"]["group_privacy"] | null
+          roadmap_category:
+            | Database["public"]["Enums"]["roadmap_category"]
+            | null
           study_target: string
           total_study_hours: number | null
           updated_at: string | null
@@ -837,6 +1149,9 @@ export type Database = {
           id?: string
           name: string
           privacy?: Database["public"]["Enums"]["group_privacy"] | null
+          roadmap_category?:
+            | Database["public"]["Enums"]["roadmap_category"]
+            | null
           study_target: string
           total_study_hours?: number | null
           updated_at?: string | null
@@ -848,6 +1163,9 @@ export type Database = {
           id?: string
           name?: string
           privacy?: Database["public"]["Enums"]["group_privacy"] | null
+          roadmap_category?:
+            | Database["public"]["Enums"]["roadmap_category"]
+            | null
           study_target?: string
           total_study_hours?: number | null
           updated_at?: string | null
@@ -1012,6 +1330,11 @@ export type Database = {
         | "picked_up"
         | "completed"
         | "cancelled"
+      roadmap_category:
+        | "web_development"
+        | "data_science_ai"
+        | "app_development"
+        | "dsa"
       roadmap_type:
         | "ace_semester_exams"
         | "master_python"
@@ -1157,6 +1480,12 @@ export const Constants = {
         "picked_up",
         "completed",
         "cancelled",
+      ],
+      roadmap_category: [
+        "web_development",
+        "data_science_ai",
+        "app_development",
+        "dsa",
       ],
       roadmap_type: [
         "ace_semester_exams",

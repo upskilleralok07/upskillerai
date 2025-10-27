@@ -19,6 +19,7 @@ import NotFound from "./pages/NotFound";
 import Courses from "./pages/Courses";
 import Upskiller from "./pages/Upskiller";
 import OnlineCollege from "./pages/OnlineCollege";
+import GroupDetails from "./pages/GroupDetails";
 
 const queryClient = new QueryClient();
 
@@ -88,6 +89,14 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <OnlineCollege />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/online-college/group/:groupId" 
+                element={
+                  <ProtectedRoute>
+                    <GroupDetails />
                   </ProtectedRoute>
                 } 
               />

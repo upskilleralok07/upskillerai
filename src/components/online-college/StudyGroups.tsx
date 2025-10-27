@@ -7,7 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Users, Plus, Lock, Globe, UserPlus, Clock } from "lucide-react";
+import { Users, Plus, Lock, Globe, UserPlus, Clock, BookOpen, Target, MessageSquare, Share2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface StudyGroupsProps {
   studentId: string;
@@ -24,7 +25,9 @@ const StudyGroups = ({ studentId, campus }: StudyGroupsProps) => {
     name: "",
     study_target: "",
     privacy: "public",
+    roadmap_category: "",
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchGroups();
@@ -71,6 +74,7 @@ const StudyGroups = ({ studentId, campus }: StudyGroupsProps) => {
           ...newGroup,
           creator_id: studentId,
           campus,
+          roadmap_category: newGroup.roadmap_category || null,
         } as any)
         .select()
         .single();
@@ -89,7 +93,7 @@ const StudyGroups = ({ studentId, campus }: StudyGroupsProps) => {
       });
 
       setCreateDialogOpen(false);
-      setNewGroup({ name: "", study_target: "", privacy: "public" });
+      setNewGroup({ name: "", study_target: "", privacy: "public", roadmap_category: "" });
       fetchGroups();
       fetchMyGroups();
     } catch (error: any) {
@@ -163,6 +167,43 @@ const StudyGroups = ({ studentId, campus }: StudyGroupsProps) => {
                 />
               </div>
               <div className="space-y-2">
+                <Label htmlFor="roadmap">Learning Roadmap</Label>
+                <Select
+                  value={newGroup.roadmap_category}
+                  onValueChange={(value) => setNewGroup({ ...newGroup, roadmap_category: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a roadmap (optional)" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="web_development">
+                      <div className="flex items-center gap-2">
+                        <BookOpen className="w-4 h-4" />
+                        Web Development
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="data_science_ai">
+                      <div className="flex items-center gap-2">
+                        <BookOpen className="w-4 h-4" />
+                        Data Science & AI
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="app_development">
+                      <div className="flex items-center gap-2">
+                        <BookOpen className="w-4 h-4" />
+                        App Development
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="dsa">
+                      <div className="flex items-center gap-2">
+                        <BookOpen className="w-4 h-4" />
+                        Data Structures & Algorithms
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
                 <Label htmlFor="target">Study Target *</Label>
                 <Input
                   id="target"
@@ -224,10 +265,22 @@ const StudyGroups = ({ studentId, campus }: StudyGroupsProps) => {
                     <Globe className="w-4 h-4 text-muted-foreground" />
                   )}
                 </div>
-                <div className="flex items-center gap-4 text-sm">
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4 text-primary" />
-                    <span>{group.total_study_hours || 0}h studied</span>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3 text-sm">
+                    <div className="flex items-center gap-1">
+                      <Clock className="w-4 h-4 text-primary" />
+                      <span>{group.total_study_hours || 0}h</span>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => navigate(`/online-college/group/${group.id}`)}
+                    >
+                      <Target className="w-4 h-4 mr-2" />
+                      View
+                    </Button>
                   </div>
                 </div>
               </Card>
@@ -255,9 +308,19 @@ const StudyGroups = ({ studentId, campus }: StudyGroupsProps) => {
                   <Globe className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1 text-sm">
-                    <Clock className="w-4 h-4 text-primary" />
-                    <span>{group.total_study_hours || 0}h studied</span>
+                  <div className="flex items-center gap-3 text-sm flex-wrap">
+                    <div className="flex items-center gap-1">
+                      <Clock className="w-4 h-4 text-primary" />
+                      <span>{group.total_study_hours || 0}h</span>
+                    </div>
+                    {group.roadmap_category && (
+                      <div className="flex items-center gap-1">
+                        <BookOpen className="w-4 h-4 text-primary" />
+                        <span className="text-xs">
+                          {group.roadmap_category.replace('_', ' ').split(' ').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
+                        </span>
+                      </div>
+                    )}
                   </div>
                   {!isInGroup(group.id) && (
                     <Button size="sm" onClick={() => joinGroup(group.id)} variant="outline">
