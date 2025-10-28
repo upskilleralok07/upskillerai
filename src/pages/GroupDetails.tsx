@@ -72,14 +72,8 @@ const GroupDetails = () => {
   }
 
   if (!group) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
-        <div className="container mx-auto px-4 pt-24 text-center">
-          <h1 className="text-2xl font-bold">Group not found</h1>
-        </div>
-      </div>
-    );
+    navigate("/group-not-found");
+    return null;
   }
 
   return (

@@ -5,9 +5,10 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Users, Plus, Lock, Globe, UserPlus, Clock, BookOpen, Target, MessageSquare, Share2 } from "lucide-react";
+import { Users, Plus, Lock, Globe, UserPlus, Clock, BookOpen, Target, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface StudyGroupsProps {
@@ -132,6 +133,38 @@ const StudyGroups = ({ studentId, campus }: StudyGroupsProps) => {
 
   const isInGroup = (groupId: string) => {
     return myGroups.some(g => g.id === groupId);
+  };
+
+  const deleteGroup = async (groupId: string) => {
+    try {
+      // Delete all related data first
+      await supabase.from("group_members").delete().eq("group_id", groupId);
+      await supabase.from("group_resources").delete().eq("group_id", groupId);
+      await supabase.from("group_discussions").delete().eq("group_id", groupId);
+      await supabase.from("group_targets").delete().eq("group_id", groupId);
+      await supabase.from("group_invites").delete().eq("group_id", groupId);
+      
+      // Delete the group
+      const { error } = await supabase
+        .from("study_groups")
+        .delete()
+        .eq("id", groupId);
+
+      if (error) throw error;
+
+      toast({
+        title: "🏆 Group deleted!",
+        description: "Your management badge has been awarded!",
+      });
+      fetchGroups();
+      fetchMyGroups();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
   if (loading) {
@@ -281,6 +314,27 @@ const StudyGroups = ({ studentId, campus }: StudyGroupsProps) => {
                       <Target className="w-4 h-4 mr-2" />
                       View
                     </Button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="destructive" size="icon">
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Delete Group?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Are you sure? Delete group and claim your badge for managing group history! This action cannot be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => deleteGroup(group.id)}>
+                            Delete & Claim Badge
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
                 </div>
               </Card>

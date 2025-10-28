@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { useToast } from "@/hooks/use-toast";
-import { CheckCircle2, Circle } from "lucide-react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
+import { CheckCircle, Lock, Trophy, Flame, Star, Play } from "lucide-react";
+import ModuleQuiz from "./ModuleQuiz";
 
 interface RoadmapProgressProps {
   groupId: string;
@@ -13,15 +17,23 @@ interface RoadmapProgressProps {
 }
 
 const RoadmapProgress = ({ groupId, studentId, roadmapCategory }: RoadmapProgressProps) => {
-  const { toast } = useToast();
+  const { user } = useAuth();
   const [topics, setTopics] = useState<any[]>([]);
   const [progress, setProgress] = useState<any[]>([]);
+  const [quizAttempts, setQuizAttempts] = useState<any[]>([]);
+  const [studentData, setStudentData] = useState<any>(null);
+  const [isPremium, setIsPremium] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [selectedTopic, setSelectedTopic] = useState<any>(null);
 
   useEffect(() => {
     fetchTopics();
     fetchProgress();
-  }, [groupId, roadmapCategory]);
+    fetchQuizAttempts();
+    checkPremiumStatus();
+    fetchStudentData();
+  }, [roadmapCategory, studentId]);
 
   const fetchTopics = async () => {
     try {
@@ -33,7 +45,7 @@ const RoadmapProgress = ({ groupId, studentId, roadmapCategory }: RoadmapProgres
 
       if (error) throw error;
       setTopics(data || []);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error fetching topics:", error);
     } finally {
       setLoading(false);
@@ -50,50 +62,54 @@ const RoadmapProgress = ({ groupId, studentId, roadmapCategory }: RoadmapProgres
 
       if (error) throw error;
       setProgress(data || []);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error fetching progress:", error);
     }
   };
 
-  const toggleTopicCompletion = async (topicId: string, isCompleted: boolean) => {
+  const fetchQuizAttempts = async () => {
     try {
-      const existing = progress.find(p => p.topic_id === topicId);
+      const { data, error } = await supabase
+        .from("quiz_attempts" as any)
+        .select("*")
+        .eq("student_id", studentId)
+        .eq("passed", true);
 
-      if (existing) {
-        const { error } = await supabase
-          .from("student_topic_progress")
-          .update({
-            is_completed: !isCompleted,
-            completed_at: !isCompleted ? new Date().toISOString() : null,
-          })
-          .eq("id", existing.id);
+      if (error) throw error;
+      setQuizAttempts(data || []);
+    } catch (error) {
+      console.error("Error fetching quiz attempts:", error);
+    }
+  };
 
-        if (error) throw error;
-      } else {
-        const { error } = await supabase
-          .from("student_topic_progress")
-          .insert({
-            student_id: studentId,
-            group_id: groupId,
-            topic_id: topicId,
-            is_completed: true,
-            completed_at: new Date().toISOString(),
-          });
+  const checkPremiumStatus = async () => {
+    if (!user) return;
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("subscription_tier")
+        .eq("id", user.id)
+        .single();
 
-        if (error) throw error;
-      }
+      if (error) throw error;
+      setIsPremium(data?.subscription_tier === 'premium');
+    } catch (error) {
+      console.error("Error checking premium status:", error);
+    }
+  };
 
-      fetchProgress();
-      toast({
-        title: !isCompleted ? "Topic Completed! 🎉" : "Progress Updated",
-        description: !isCompleted ? "Keep up the great work!" : "Topic marked as incomplete",
-      });
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
+  const fetchStudentData = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("students")
+        .select("current_streak, longest_streak, badges")
+        .eq("id", studentId)
+        .single();
+
+      if (error) throw error;
+      setStudentData(data);
+    } catch (error) {
+      console.error("Error fetching student data:", error);
     }
   };
 
@@ -101,8 +117,35 @@ const RoadmapProgress = ({ groupId, studentId, roadmapCategory }: RoadmapProgres
     return progress.some(p => p.topic_id === topicId && p.is_completed);
   };
 
-  const completionPercentage = topics.length > 0
-    ? Math.round((progress.filter(p => p.is_completed).length / topics.length) * 100)
+  const hasPassedQuiz = (topicId: string) => {
+    return quizAttempts.some(a => a.topic_id === topicId);
+  };
+
+  const isTopicUnlocked = (index: number) => {
+    if (index === 0) return true; // First topic always unlocked
+    const previousTopic = topics[index - 1];
+    return isTopicCompleted(previousTopic.id) && hasPassedQuiz(previousTopic.id);
+  };
+
+  const handleStartQuiz = (topic: any) => {
+    if (!isPremium) {
+      toast.error("⭐ Upgrade to Premium to take quizzes and unlock modules!");
+      return;
+    }
+    setSelectedTopic(topic);
+    setShowQuiz(true);
+  };
+
+  const handleQuizComplete = () => {
+    setShowQuiz(false);
+    fetchProgress();
+    fetchQuizAttempts();
+    toast.success("🎉 Next module unlocked!");
+  };
+
+  const completedCount = progress.filter(p => p.is_completed).length;
+  const progressPercentage = topics.length > 0
+    ? Math.round((completedCount / topics.length) * 100)
     : 0;
 
   if (loading) {
@@ -111,7 +154,7 @@ const RoadmapProgress = ({ groupId, studentId, roadmapCategory }: RoadmapProgres
 
   if (topics.length === 0) {
     return (
-      <Card className="p-8 text-center glass-card">
+      <Card className="p-8 text-center">
         <p className="text-muted-foreground">
           No topics available yet. Topics will be added soon for this roadmap.
         </p>
@@ -121,49 +164,144 @@ const RoadmapProgress = ({ groupId, studentId, roadmapCategory }: RoadmapProgres
 
   return (
     <div className="space-y-6">
-      <Card className="p-6 glass-card border-primary/20">
-        <h3 className="text-lg font-semibold mb-4">Overall Progress</h3>
-        <Progress value={completionPercentage} className="mb-2" />
-        <p className="text-sm text-muted-foreground">
-          {progress.filter(p => p.is_completed).length} of {topics.length} topics completed ({completionPercentage}%)
-        </p>
+      {/* Gamification Banner */}
+      <Card className="p-6 bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 border-2 border-primary/20">
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <h3 className="text-2xl font-bold mb-2">🏆 Compete, Complete, and Win!</h3>
+            <p className="text-muted-foreground">
+              Become the Leaderboard Topper and get free mentorship every month. Unlock premium study roadmaps and resources now.
+            </p>
+          </div>
+          {studentData && (
+            <div className="flex gap-4">
+              <div className="text-center">
+                <Flame className="w-8 h-8 mx-auto mb-1 text-orange-500" />
+                <div className="text-2xl font-bold">{studentData.current_streak || 0}</div>
+                <div className="text-xs text-muted-foreground">Day Streak</div>
+              </div>
+              <div className="text-center">
+                <Trophy className="w-8 h-8 mx-auto mb-1 text-yellow-500" />
+                <div className="text-2xl font-bold">{studentData.longest_streak || 0}</div>
+                <div className="text-xs text-muted-foreground">Best Streak</div>
+              </div>
+              <div className="text-center">
+                <Star className="w-8 h-8 mx-auto mb-1 text-blue-500" />
+                <div className="text-2xl font-bold">{JSON.parse(studentData.badges || '[]').length}</div>
+                <div className="text-xs text-muted-foreground">Badges</div>
+              </div>
+            </div>
+          )}
+        </div>
       </Card>
 
-      <div className="space-y-3">
-        {topics.map((topic) => {
+      <Card className="p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-xl font-semibold">Learning Progress</h3>
+          {!isPremium && (
+            <Badge variant="secondary" className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white">
+              ⭐ Premium Feature
+            </Badge>
+          )}
+        </div>
+        <div className="space-y-2">
+          <div className="flex justify-between text-sm">
+            <span>Completed</span>
+            <span>{completedCount} / {topics.length} modules</span>
+          </div>
+          <Progress value={progressPercentage} className="h-3" />
+          <p className="text-xs text-muted-foreground mt-2">
+            Complete quizzes to unlock new modules and earn badges!
+          </p>
+        </div>
+      </Card>
+
+      <div className="grid gap-4">
+        {topics.map((topic, index) => {
           const completed = isTopicCompleted(topic.id);
+          const unlocked = isTopicUnlocked(index);
+          const quizPassed = hasPassedQuiz(topic.id);
+          
           return (
-            <Card
-              key={topic.id}
-              className={`p-4 glass-card transition-all hover:border-primary/50 ${
-                completed ? "border-primary/30 bg-primary/5" : ""
-              }`}
+            <Card 
+              key={topic.id} 
+              className={`p-6 transition-all ${
+                !unlocked ? 'opacity-60 bg-secondary/50' : 'hover:shadow-lg'
+              } ${completed && quizPassed ? 'border-2 border-green-500' : ''}`}
             >
-              <div className="flex items-start gap-3">
-                <Checkbox
-                  checked={completed}
-                  onCheckedChange={() => toggleTopicCompletion(topic.id, completed)}
-                  className="mt-1"
-                />
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    {completed ? (
-                      <CheckCircle2 className="w-5 h-5 text-primary" />
+              <div className="flex items-start gap-4">
+                <div className="flex flex-col items-center gap-2">
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                    completed && quizPassed 
+                      ? 'bg-green-500 text-white' 
+                      : unlocked 
+                      ? 'bg-primary/10 text-primary' 
+                      : 'bg-secondary text-muted-foreground'
+                  }`}>
+                    {completed && quizPassed ? (
+                      <CheckCircle className="w-6 h-6" />
+                    ) : unlocked ? (
+                      <Play className="w-6 h-6" />
                     ) : (
-                      <Circle className="w-5 h-5 text-muted-foreground" />
+                      <Lock className="w-6 h-6" />
                     )}
-                    <h4 className={`font-medium ${completed ? "text-primary" : ""}`}>
-                      {topic.title}
-                    </h4>
                   </div>
+                  <span className="text-xs font-semibold text-muted-foreground">
+                    Module {index + 1}
+                  </span>
+                </div>
+
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2 flex-wrap">
+                    <h4 className="font-bold text-lg">{topic.title}</h4>
+                    {!unlocked && (
+                      <Badge variant="secondary" className="text-xs">
+                        🔒 Locked
+                      </Badge>
+                    )}
+                    {completed && quizPassed && (
+                      <Badge className="text-xs bg-green-500">
+                        ✓ Completed
+                      </Badge>
+                    )}
+                    {completed && !quizPassed && (
+                      <Badge variant="outline" className="text-xs">
+                        Quiz Pending
+                      </Badge>
+                    )}
+                    {!isPremium && (
+                      <Badge variant="secondary" className="text-xs bg-gradient-to-r from-yellow-500 to-orange-500 text-white">
+                        ⭐ Premium
+                      </Badge>
+                    )}
+                  </div>
+                  
                   {topic.description && (
-                    <p className="text-sm text-muted-foreground mt-1 ml-7">
+                    <p className="text-sm text-muted-foreground mb-3">
                       {topic.description}
                     </p>
                   )}
-                  {topic.estimated_hours > 0 && (
-                    <p className="text-xs text-muted-foreground mt-1 ml-7">
-                      Estimated: {topic.estimated_hours}h
+                  
+                  <div className="flex items-center gap-4 text-xs text-muted-foreground mb-3">
+                    <span className="flex items-center gap-1">
+                      📚 {topic.estimated_hours} hours
+                    </span>
+                  </div>
+
+                  {unlocked && !quizPassed && (
+                    <Button 
+                      onClick={() => handleStartQuiz(topic)}
+                      disabled={!isPremium}
+                      className="mt-2"
+                      variant={isPremium ? "default" : "outline"}
+                    >
+                      {isPremium ? "Take Quiz to Unlock Next" : "⭐ Upgrade to Take Quiz"}
+                    </Button>
+                  )}
+                  
+                  {!unlocked && (
+                    <p className="text-sm text-muted-foreground italic mt-2">
+                      Complete previous module's quiz to unlock
                     </p>
                   )}
                 </div>
@@ -172,6 +310,21 @@ const RoadmapProgress = ({ groupId, studentId, roadmapCategory }: RoadmapProgres
           );
         })}
       </div>
+
+      {/* Quiz Dialog */}
+      <Dialog open={showQuiz} onOpenChange={setShowQuiz}>
+        <DialogContent className="max-w-2xl">
+          {selectedTopic && (
+            <ModuleQuiz
+              topicId={selectedTopic.id}
+              studentId={studentId}
+              topicTitle={selectedTopic.title}
+              onComplete={handleQuizComplete}
+              onClose={() => setShowQuiz(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

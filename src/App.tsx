@@ -20,6 +20,7 @@ import Courses from "./pages/Courses";
 import Upskiller from "./pages/Upskiller";
 import OnlineCollege from "./pages/OnlineCollege";
 import GroupDetails from "./pages/GroupDetails";
+import GroupNotFound from "./pages/GroupNotFound";
 
 const queryClient = new QueryClient();
 
@@ -100,6 +101,7 @@ const App = () => (
                   </ProtectedRoute>
                 } 
               />
+              <Route path="/group-not-found" element={<GroupNotFound />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
