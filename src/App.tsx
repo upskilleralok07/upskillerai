@@ -101,6 +101,14 @@ const App = () => (
                   </ProtectedRoute>
                 } 
               />
+              <Route 
+                path="/group/:inviteCode" 
+                element={
+                  <ProtectedRoute>
+                    <GroupDetails />
+                  </ProtectedRoute>
+                } 
+              />
               <Route path="/group-not-found" element={<GroupNotFound />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

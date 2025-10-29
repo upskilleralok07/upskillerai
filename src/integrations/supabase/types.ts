@@ -1335,6 +1335,15 @@ export type Database = {
         | "data_science_ai"
         | "app_development"
         | "dsa"
+        | "system_design"
+        | "ai_ml"
+        | "data_science"
+        | "frontend"
+        | "backend"
+        | "fullstack"
+        | "devops"
+        | "react"
+        | "machine_learning"
       roadmap_type:
         | "ace_semester_exams"
         | "master_python"
@@ -1486,6 +1495,15 @@ export const Constants = {
         "data_science_ai",
         "app_development",
         "dsa",
+        "system_design",
+        "ai_ml",
+        "data_science",
+        "frontend",
+        "backend",
+        "fullstack",
+        "devops",
+        "react",
+        "machine_learning",
       ],
       roadmap_type: [
         "ace_semester_exams",

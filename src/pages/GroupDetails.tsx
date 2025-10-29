@@ -12,7 +12,7 @@ import InviteFriends from "@/components/online-college/InviteFriends";
 import GroupResources from "@/components/online-college/GroupResources";
 
 const GroupDetails = () => {
-  const { groupId } = useParams();
+  const { groupId, inviteCode } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [group, setGroup] = useState<any>(null);
@@ -26,7 +26,7 @@ const GroupDetails = () => {
     }
     fetchGroupDetails();
     fetchStudentProfile();
-  }, [user, groupId]);
+  }, [user, groupId, inviteCode]);
 
   const fetchStudentProfile = async () => {
     try {
@@ -45,19 +45,34 @@ const GroupDetails = () => {
 
   const fetchGroupDetails = async () => {
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from("study_groups")
         .select(`
           *,
           group_members(count)
-        `)
-        .eq("id", groupId)
-        .single();
+        `);
+
+      // If inviteCode is provided, look up the group by invite code
+      if (inviteCode) {
+        const { data: inviteData, error: inviteError } = await supabase
+          .from("group_invites")
+          .select("group_id")
+          .eq("invite_code", inviteCode)
+          .single();
+
+        if (inviteError) throw inviteError;
+        query = query.eq("id", inviteData.group_id);
+      } else {
+        query = query.eq("id", groupId);
+      }
+
+      const { data, error } = await query.single();
 
       if (error) throw error;
       setGroup(data);
     } catch (error) {
       console.error("Error fetching group:", error);
+      navigate("/group-not-found");
     } finally {
       setLoading(false);
     }
