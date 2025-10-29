@@ -209,30 +209,17 @@ const StudyGroups = ({ studentId, campus }: StudyGroupsProps) => {
                     <SelectValue placeholder="Select a roadmap (optional)" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="web_development">
-                      <div className="flex items-center gap-2">
-                        <BookOpen className="w-4 h-4" />
-                        Web Development
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="data_science_ai">
-                      <div className="flex items-center gap-2">
-                        <BookOpen className="w-4 h-4" />
-                        Data Science & AI
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="app_development">
-                      <div className="flex items-center gap-2">
-                        <BookOpen className="w-4 h-4" />
-                        App Development
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="dsa">
-                      <div className="flex items-center gap-2">
-                        <BookOpen className="w-4 h-4" />
-                        Data Structures & Algorithms
-                      </div>
-                    </SelectItem>
+                    <SelectItem value="dsa">DSA (30 modules)</SelectItem>
+                    <SelectItem value="system_design">System Design (25 modules)</SelectItem>
+                    <SelectItem value="frontend">Frontend (35 modules)</SelectItem>
+                    <SelectItem value="backend">Backend (40 modules)</SelectItem>
+                    <SelectItem value="fullstack">Full Stack</SelectItem>
+                    <SelectItem value="web_development">Web Development</SelectItem>
+                    <SelectItem value="react">React Mastery</SelectItem>
+                    <SelectItem value="devops">DevOps</SelectItem>
+                    <SelectItem value="ai_ml">AI/ML</SelectItem>
+                    <SelectItem value="machine_learning">Machine Learning</SelectItem>
+                    <SelectItem value="data_science">Data Science</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

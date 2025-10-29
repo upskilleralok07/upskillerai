@@ -288,6 +288,45 @@ const RoadmapProgress = ({ groupId, studentId, roadmapCategory }: RoadmapProgres
                     </span>
                   </div>
 
+                  {/* Resources Section */}
+                  {topic.resources && JSON.parse(topic.resources as any).length > 0 && unlocked && (
+                    <div className="mt-3 p-3 bg-secondary/30 rounded-lg">
+                      <h5 className="text-sm font-semibold mb-2 flex items-center gap-2">
+                        📖 Learning Resources
+                        {!isPremium && (
+                          <Badge variant="secondary" className="text-xs bg-gradient-to-r from-yellow-500 to-orange-500 text-white">
+                            ⭐ Premium
+                          </Badge>
+                        )}
+                      </h5>
+                      {isPremium ? (
+                        <div className="space-y-2">
+                          {JSON.parse(topic.resources as any).map((resource: any, idx: number) => (
+                            <a
+                              key={idx}
+                              href={resource.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-2 text-sm text-primary hover:underline"
+                            >
+                              <span>
+                                {resource.type === 'video' && '🎥'}
+                                {resource.type === 'playlist' && '📺'}
+                                {resource.type === 'article' && '📄'}
+                                {resource.type === 'course' && '🎓'}
+                              </span>
+                              <span>{resource.title}</span>
+                            </a>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-xs text-muted-foreground">
+                          Upgrade to Premium to access curated learning resources for each module
+                        </p>
+                      )}
+                    </div>
+                  )}
+
                   {unlocked && !quizPassed && (
                     <Button 
                       onClick={() => handleStartQuiz(topic)}
