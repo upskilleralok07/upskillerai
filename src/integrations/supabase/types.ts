@@ -941,6 +941,7 @@ export type Database = {
           estimated_hours: number | null
           id: string
           parent_topic_id: string | null
+          resources: Json | null
           sequence_order: number
           title: string
         }
@@ -951,6 +952,7 @@ export type Database = {
           estimated_hours?: number | null
           id?: string
           parent_topic_id?: string | null
+          resources?: Json | null
           sequence_order: number
           title: string
         }
@@ -961,6 +963,7 @@ export type Database = {
           estimated_hours?: number | null
           id?: string
           parent_topic_id?: string | null
+          resources?: Json | null
           sequence_order?: number
           title?: string
         }
