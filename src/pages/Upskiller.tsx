@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Search, Filter, Sparkles, Brain, Code, Zap, ChevronRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
@@ -15,9 +16,21 @@ interface Course {
   duration: string;
   icon: any;
   gradient: string;
+  link?: string;
 }
 
 const aiCourses: Course[] = [
+  {
+    id: "dsa-patterns",
+    title: "DSA Pattern Mastery Course",
+    description: "Master DSA in 10 patterns, not 1000 problems. Learn problem-solving patterns used in 90% of coding interviews.",
+    category: "Data Structures & Algorithms",
+    difficulty: "Intermediate",
+    duration: "10 weeks",
+    icon: Code,
+    gradient: "from-violet-500 to-purple-500",
+    link: "/dsa-patterns"
+  },
   {
     id: "1",
     title: "Introduction to Machine Learning",
@@ -80,7 +93,7 @@ const aiCourses: Course[] = [
   }
 ];
 
-const categories = ["All", "Machine Learning", "Generative AI", "Prompt Engineering", "AI Integration", "Deep Learning", "AI Ethics"];
+const categories = ["All", "Machine Learning", "Generative AI", "Prompt Engineering", "AI Integration", "Deep Learning", "AI Ethics", "Data Structures & Algorithms"];
 
 const Upskiller = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -216,10 +229,19 @@ const Upskiller = () => {
                       <span className="text-sm text-muted-foreground">{course.duration}</span>
                       <Badge variant="outline">{course.category}</Badge>
                     </div>
-                    <Button className="w-full group" size="lg">
-                      Start Course
-                      <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                    </Button>
+                    {course.link ? (
+                      <Button asChild className="w-full group" size="lg">
+                        <Link to={course.link}>
+                          Start Course
+                          <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                        </Link>
+                      </Button>
+                    ) : (
+                      <Button className="w-full group" size="lg">
+                        Coming Soon
+                        <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                      </Button>
+                    )}
                   </CardContent>
                 </Card>
               );
