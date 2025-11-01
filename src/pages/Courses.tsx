@@ -9,6 +9,32 @@ import Navbar from '@/components/Navbar';
 
 const courses = [
   {
+    id: 'dsa-patterns',
+    title: 'DSA Pattern Mastery Course',
+    description: 'Master DSA in 10 Patterns, Not 1000 Problems. Stop random grinding. Learn the patterns. Crack any interview with 150+ curated problems.',
+    chapters: [
+      { title: 'Pattern 1: Sliding Window', videoId: 'jM2dhDPYMQM', duration: '42 min' },
+      { title: 'Pattern 2: Two Pointers', videoId: 'On03HWe2tZM', duration: '38 min' },
+      { title: 'Pattern 3: Modified Binary Search', videoId: 'W9QJ8HaRvJQ', duration: '45 min' },
+      { title: 'Pattern 4: Binary Tree BFS', videoId: 'D2jMcmxU4bs', duration: '40 min' },
+      { title: 'Pattern 5: Binary Tree DFS', videoId: 'WLvU5EQVZqY', duration: '43 min' },
+      { title: 'Pattern 6: Top K Elements (Heap)', videoId: 'jUM_VZr65fM', duration: '47 min' },
+      { title: 'Pattern 7: Subset Pattern', videoId: 'GBKI9VSKdGg', duration: '44 min' },
+      { title: 'Pattern 8: Topological Sort', videoId: 'cIBFEhD77b4', duration: '39 min' },
+      { title: 'Pattern 9: Fast & Slow Pointer', videoId: 'zbozWoMgKW0', duration: '36 min' },
+      { title: 'Pattern 10: Backtracking', videoId: 'A80YzvNwqXA', duration: '50 min' }
+    ],
+    playlist: 'https://www.youtube.com/playlist?list=PLgUwDviBIf0rENwdL0nEH0uGom9no0nyB',
+    outcomes: [
+      'Master 10 essential DSA patterns used in 90% of interview problems',
+      'Solve 150+ curated LeetCode problems with confidence',
+      'Achieve 95% interview success rate at top companies',
+      'Stop random problem grinding and learn systematic problem-solving',
+      'Get ready for FAANG and product-based company interviews',
+      'Build strong pattern recognition skills for any coding challenge'
+    ]
+  },
+  {
     id: 'math1',
     title: 'Engineering Mathematics I',
     description: 'Learn differential calculus, matrices, and vector algebra with applications in engineering. Build strong foundation in calculus and apply mathematical concepts to engineering problems.',
