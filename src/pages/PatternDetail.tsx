@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Play, CheckCircle2, Circle, ExternalLink, Lock, Clock, Target, Award } from 'lucide-react';
+import { ArrowLeft, Play, CheckCircle2, Circle, ExternalLink, Lock, Clock, Target, Award, Building2, BookOpen } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -9,9 +9,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Navbar from '@/components/Navbar';
 import VideoPlayer from '@/components/VideoPlayer';
+import { allPatternData } from '@/data/dsaPatterns';
 
-const patternData = {
-  'arrays': {
+const patternData = allPatternData;
+
+const oldPatternData = {
+  'arrays-old': {
     name: 'Arrays',
     icon: '📊',
     color: 'from-indigo-500 to-purple-500',
@@ -326,36 +329,62 @@ const PatternDetail = () => {
                     {(['easy', 'medium', 'hard'] as const).map((difficulty) => (
                       <TabsContent key={difficulty} value={difficulty} className="space-y-3 mt-4">
                         {pattern.problems[difficulty].map((problem) => (
-                          <div key={problem.id} className="glass-card p-4 rounded-lg flex items-center gap-4">
-                            <div className="flex-shrink-0">
-                              {problem.solved ? (
-                                <CheckCircle2 className="w-6 h-6 text-green-500" />
-                              ) : problem.attempted ? (
-                                <Circle className="w-6 h-6 text-yellow-500" />
-                              ) : (
-                                <Circle className="w-6 h-6 text-muted-foreground" />
-                              )}
-                            </div>
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2 mb-1">
-                                <span className="text-sm text-muted-foreground">#{problem.leetcode}</span>
-                                <h4 className="font-medium text-foreground">{problem.title}</h4>
+                          <div key={problem.id} className="glass-card p-4 rounded-lg">
+                            <div className="flex items-start gap-4">
+                              <div className="flex-shrink-0 mt-1">
+                                {problem.solved ? (
+                                  <CheckCircle2 className="w-6 h-6 text-green-500" />
+                                ) : problem.attempted ? (
+                                  <Circle className="w-6 h-6 text-yellow-500" />
+                                ) : (
+                                  <Circle className="w-6 h-6 text-muted-foreground" />
+                                )}
                               </div>
-                              <Badge variant="outline" className="text-xs capitalize">
-                                {difficulty}
-                              </Badge>
-                            </div>
-                            <div className="flex gap-2">
-                              <Button asChild size="sm" variant="outline">
-                                <a href={problem.link} target="_blank" rel="noopener noreferrer">
-                                  <ExternalLink className="w-4 h-4 mr-1" />
-                                  Solve
-                                </a>
-                              </Button>
-                              <Button size="sm" variant="ghost" disabled>
-                                <Lock className="w-4 h-4 mr-1" />
-                                Solution
-                              </Button>
+                              <div className="flex-1 space-y-2">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-sm text-muted-foreground">{problem.leetcode}</span>
+                                  <h4 className="font-medium text-foreground">{problem.title}</h4>
+                                  <Badge variant="outline" className="text-xs capitalize ml-auto">
+                                    {difficulty}
+                                  </Badge>
+                                </div>
+                                {problem.companies && problem.companies.length > 0 && (
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <Building2 className="w-3 h-3 text-muted-foreground" />
+                                    {problem.companies.slice(0, 5).map((company, idx) => (
+                                      <Badge key={idx} variant="secondary" className="text-xs">
+                                        {company}
+                                      </Badge>
+                                    ))}
+                                    {problem.companies.length > 5 && (
+                                      <span className="text-xs text-muted-foreground">+{problem.companies.length - 5} more</span>
+                                    )}
+                                  </div>
+                                )}
+                                {problem.prerequisites && problem.prerequisites.length > 0 && (
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <BookOpen className="w-3 h-3 text-muted-foreground" />
+                                    <span className="text-xs text-muted-foreground">Prerequisites:</span>
+                                    {problem.prerequisites.map((prereq, idx) => (
+                                      <Badge key={idx} variant="outline" className="text-xs">
+                                        {prereq}
+                                      </Badge>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                              <div className="flex gap-2 flex-shrink-0">
+                                <Button asChild size="sm" variant="outline">
+                                  <a href={problem.link} target="_blank" rel="noopener noreferrer">
+                                    <ExternalLink className="w-4 h-4 mr-1" />
+                                    Solve
+                                  </a>
+                                </Button>
+                                <Button size="sm" variant="ghost" disabled>
+                                  <Lock className="w-4 h-4 mr-1" />
+                                  Solution
+                                </Button>
+                              </div>
                             </div>
                           </div>
                         ))}
