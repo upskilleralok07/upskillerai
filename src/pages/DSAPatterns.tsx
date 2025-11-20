@@ -10,6 +10,19 @@ import Navbar from '@/components/Navbar';
 
 const patterns = [
   {
+    id: 'arrays',
+    name: 'Arrays',
+    icon: '📊',
+    color: 'from-indigo-500 to-purple-500',
+    difficulty: 'Beginner',
+    problems: 25,
+    estimatedTime: '10-12 hours',
+    description: 'Master fundamental array manipulation techniques, sorting, searching, and optimization problems.',
+    tags: ['Arrays', 'Sorting', 'Hashing', 'Two Pointers'],
+    badge: 'Foundation',
+    progress: 0
+  },
+  {
     id: 'sliding-window',
     name: 'Sliding Window',
     icon: '🪟',

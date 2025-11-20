@@ -11,6 +11,103 @@ import Navbar from '@/components/Navbar';
 import VideoPlayer from '@/components/VideoPlayer';
 
 const patternData = {
+  'arrays': {
+    name: 'Arrays',
+    icon: '📊',
+    color: 'from-indigo-500 to-purple-500',
+    difficulty: 'Beginner',
+    estimatedTime: '10-12 hours',
+    videoId: 'AT14lCXuMKI',
+    description: 'Arrays are fundamental data structures that store elements in contiguous memory locations. Mastering array problems is essential for coding interviews as they form the foundation for more complex algorithms. This pattern covers sorting, searching, two-pointers, hashing, and various optimization techniques.',
+    whenToUse: [
+      'Finding patterns in sequential data',
+      'Searching and sorting problems',
+      'Two-pointer technique for optimization',
+      'Hash-based lookups for O(1) access',
+      'Matrix manipulation and traversal'
+    ],
+    template: `def array_pattern(arr):
+    # Two Pointer Approach
+    left, right = 0, len(arr) - 1
+    
+    while left < right:
+        # Process elements
+        if condition:
+            left += 1
+        else:
+            right -= 1
+    
+    return result`,
+    problems: {
+      easy: [
+        { id: 1, title: 'Majority Element', leetcode: 169, link: 'https://leetcode.com/problems/majority-element/', solved: false, attempted: false, companies: ['Amazon', 'Google'] },
+        { id: 2, title: 'Repeat & Missing Number', leetcode: 287, link: 'https://leetcode.com/problems/find-the-duplicate-number/', solved: false, attempted: false, companies: ['Amazon'], tags: ['Hashing'] },
+        { id: 4, title: 'Single Number', leetcode: 136, link: 'https://leetcode.com/problems/single-number/', solved: false, attempted: false },
+        { id: 5, title: 'Stock Buy & Sell', leetcode: 121, link: 'https://leetcode.com/problems/best-time-to-buy-and-sell-stock/', solved: false, attempted: false, companies: ['Amazon', 'Microsoft', 'Goldman Sachs', 'Google'] }
+      ],
+      medium: [
+        { id: 3, title: 'Merge 2 Sorted Arrays Without Extra Space', leetcode: 88, link: 'https://leetcode.com/problems/merge-sorted-array/', solved: false, attempted: false, companies: ['Adobe', 'Microsoft', 'LinkedIn'], tags: ['Sorting'] },
+        { id: 6, title: 'Kadane\'s Algorithm (Maximum Subarray)', leetcode: 53, link: 'https://leetcode.com/problems/maximum-subarray/', solved: false, attempted: false, companies: ['Microsoft', 'Facebook'] },
+        { id: 7, title: 'Pow(x, n)', leetcode: 50, link: 'https://leetcode.com/problems/powx-n/', solved: false, attempted: false },
+        { id: 8, title: 'Container With Most Water', leetcode: 11, link: 'https://leetcode.com/problems/container-with-most-water/', solved: false, attempted: false, companies: ['Flipkart'] },
+        { id: 9, title: 'Sort Array of 0s, 1s & 2s', leetcode: 75, link: 'https://leetcode.com/problems/sort-colors/', solved: false, attempted: false, companies: ['Microsoft', 'Amazon'], tags: ['Sorting'] },
+        { id: 10, title: '3Sum', leetcode: 15, link: 'https://leetcode.com/problems/3sum/', solved: false, attempted: false, companies: ['Adobe', 'Amazon', 'Microsoft'], tags: ['Hashing'] },
+        { id: 11, title: '4Sum', leetcode: 18, link: 'https://leetcode.com/problems/4sum/', solved: false, attempted: false, tags: ['Hashing'] },
+        { id: 12, title: 'Search a 2D Matrix', leetcode: 74, link: 'https://leetcode.com/problems/search-a-2d-matrix/', solved: false, attempted: false, tags: ['2D Array'] },
+        { id: 13, title: 'Next Permutation', leetcode: 31, link: 'https://leetcode.com/problems/next-permutation/', solved: false, attempted: false, companies: ['Adobe', 'Goldman Sachs', 'Uber'], tags: ['Sorting'] },
+        { id: 14, title: 'Merge Overlapping Intervals', leetcode: 56, link: 'https://leetcode.com/problems/merge-intervals/', solved: false, attempted: false, companies: ['Google'], tags: ['Sorting'] },
+        { id: 15, title: 'Longest Substring Without Repeating', leetcode: 3, link: 'https://leetcode.com/problems/longest-substring-without-repeating-characters/', solved: false, attempted: false, companies: ['Morgan Stanley', 'Amazon'], tags: ['String'] },
+        { id: 16, title: 'Set Matrix Zeroes', leetcode: 73, link: 'https://leetcode.com/problems/set-matrix-zeroes/', solved: false, attempted: false, companies: ['Microsoft', 'Amazon'], tags: ['Sets'] },
+        { id: 17, title: 'Word Search', leetcode: 79, link: 'https://leetcode.com/problems/word-search/', solved: false, attempted: false, companies: ['Goldman Sachs', 'Google'], tags: ['Recursion'] },
+        { id: 18, title: 'Product of Array Except Self', leetcode: 238, link: 'https://leetcode.com/problems/product-of-array-except-self/', solved: false, attempted: false, companies: ['Amazon', 'Flipkart'] },
+        { id: 19, title: 'Subarray Sum Equals K', leetcode: 560, link: 'https://leetcode.com/problems/subarray-sum-equals-k/', solved: false, attempted: false, tags: ['Hashing'] },
+        { id: 20, title: 'Find Duplicate', leetcode: 287, link: 'https://leetcode.com/problems/find-the-duplicate-number/', solved: false, attempted: false, companies: ['Amazon', 'Flipkart'], tags: ['LL Cycles'] }
+      ],
+      hard: [
+        { id: 21, title: 'Count Inversions', leetcode: 493, link: 'https://leetcode.com/problems/reverse-pairs/', solved: false, attempted: false, companies: ['Adobe', 'Amazon', 'Microsoft'], tags: ['Merge Sort'] },
+        { id: 22, title: 'Trapping Rainwater', leetcode: 42, link: 'https://leetcode.com/problems/trapping-rain-water/', solved: false, attempted: false, companies: ['Samsung'] },
+        { id: 23, title: 'Sliding Window Maximum', leetcode: 239, link: 'https://leetcode.com/problems/sliding-window-maximum/', solved: false, attempted: false, companies: ['Amazon', 'Microsoft', 'Google'], tags: ['Hashing'] },
+        { id: 24, title: 'Reverse Pairs', leetcode: 493, link: 'https://leetcode.com/problems/reverse-pairs/', solved: false, attempted: false, tags: ['Merge Sort'] },
+        { id: 25, title: 'Largest Rectangle in Histogram', leetcode: 84, link: 'https://leetcode.com/problems/largest-rectangle-in-histogram/', solved: false, attempted: false }
+      ]
+    },
+    commonMistakes: [
+      {
+        title: 'Not handling array bounds properly',
+        why: 'Accessing indices outside array bounds leads to runtime errors or undefined behavior.',
+        fix: 'Always validate array indices before accessing elements.',
+        code: `# Wrong: No bounds checking
+result = arr[i + 1]
+
+# Correct: Check bounds first
+if i + 1 < len(arr):
+    result = arr[i + 1]`
+      },
+      {
+        title: 'Modifying array while iterating',
+        why: 'Changing array size during iteration can skip elements or cause errors.',
+        fix: 'Create a new array or iterate in reverse when removing elements.',
+        code: `# Correct approach for removal
+arr = [x for x in arr if condition(x)]
+
+# Or iterate in reverse
+for i in range(len(arr) - 1, -1, -1):
+    if condition(arr[i]):
+        arr.pop(i)`
+      },
+      {
+        title: 'Using O(n²) when O(n) is possible',
+        why: 'Nested loops are often unnecessary with hash tables or two-pointers.',
+        fix: 'Use hash maps for O(1) lookups or two-pointer technique.',
+        code: `# Better: O(n) with hash map
+seen = set()
+for num in arr:
+    if target - num in seen:
+        return True
+    seen.add(num)`
+      }
+    ]
+  },
   'sliding-window': {
     name: 'Sliding Window',
     icon: '🪟',
