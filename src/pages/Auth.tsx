@@ -130,10 +130,15 @@ const Auth = () => {
       }
     } catch (error: any) {
       console.error('Sign up error:', error);
+      const errorMessage = error.message || "An unexpected error occurred. Please try again.";
+      const isNetworkError = errorMessage.includes("Failed to fetch") || errorMessage.includes("NetworkError");
+      
       toast({
         variant: "destructive",
-        title: "Sign up failed",
-        description: error.message || "An unexpected error occurred. Please try again.",
+        title: isNetworkError ? "Connection Error" : "Sign up failed",
+        description: isNetworkError 
+          ? "Unable to connect to the server. Please check your internet connection and try again." 
+          : errorMessage,
       });
     } finally {
       setLoading(false);
@@ -180,10 +185,15 @@ const Auth = () => {
       }
     } catch (error: any) {
       console.error('Sign in error:', error);
+      const errorMessage = error.message || "An unexpected error occurred. Please try again.";
+      const isNetworkError = errorMessage.includes("Failed to fetch") || errorMessage.includes("NetworkError");
+      
       toast({
         variant: "destructive",
-        title: "Sign in failed",
-        description: error.message || "An unexpected error occurred. Please try again.",
+        title: isNetworkError ? "Connection Error" : "Sign in failed",
+        description: isNetworkError 
+          ? "Unable to connect to the server. Please check your internet connection and try again." 
+          : errorMessage,
       });
     } finally {
       setLoading(false);
