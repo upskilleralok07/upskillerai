@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Play, CheckCircle2, Circle, ExternalLink, Lock, Clock, Target, Award, Building2, BookOpen } from 'lucide-react';
+import { ArrowLeft, Play, CheckCircle2, Circle, ExternalLink, Lock, Clock, Target, Award, Building2, BookOpen, Star } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Navbar from '@/components/Navbar';
 import VideoPlayer from '@/components/VideoPlayer';
-import { allPatternData } from '@/data/dsaPatterns';
+import { getTopicById, allPatternData } from '@/data/dsaCourseData';
 
 const patternData = allPatternData;
 
