@@ -1533,6 +1533,23 @@ export const getAllTopics = (): DSATopic[] => {
   return [...phase1Topics, ...phase2Topics, ...phase3Topics];
 };
 
+export const getCourseStats = () => {
+  const allTopics = getAllTopics();
+  const totalProblems = allTopics.reduce((total, topic) => {
+    return total + topic.patterns.reduce((patternTotal, pattern) => {
+      return patternTotal + pattern.problems.length;
+    }, 0);
+  }, 0);
+  const totalPatterns = allTopics.reduce((total, topic) => total + topic.patterns.length, 0);
+  
+  return {
+    totalTopics: allTopics.length,
+    totalPatterns,
+    totalProblems,
+    estimatedTime: '6-10 Months'
+  };
+};
+
 export const getTopicById = (id: string): DSATopic | undefined => {
   return getAllTopics().find(topic => topic.id === id);
 };
