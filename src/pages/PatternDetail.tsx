@@ -10,6 +10,9 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import Navbar from '@/components/Navbar';
 import VideoPlayer from '@/components/VideoPlayer';
 import { getTopicById, allPatternData } from '@/data/dsaCourseData';
+import ProgressStats, { BadgesDisplay, XPBreakdown } from '@/components/dsa/ProgressStats';
+import ProblemCard from '@/components/dsa/ProblemCard';
+import { useDSAProgress } from '@/hooks/useDSAProgress';
 
 const patternData = allPatternData;
 
@@ -188,6 +191,7 @@ const PatternDetail = () => {
   const { patternId } = useParams();
   const pattern = patternData[patternId as keyof typeof patternData];
   const [activeTab, setActiveTab] = useState('overview');
+  const { progress, isProblemSolved } = useDSAProgress();
 
   if (!pattern) {
     return (
@@ -203,8 +207,15 @@ const PatternDetail = () => {
   }
 
   const totalProblems = pattern.problems.easy.length + pattern.problems.medium.length + pattern.problems.hard.length;
-  const solvedProblems = 0; // This would come from your database
-  const progress = Math.round((solvedProblems / totalProblems) * 100);
+  
+  // Count solved problems from all difficulty levels
+  const solvedProblems = [
+    ...pattern.problems.easy,
+    ...pattern.problems.medium,
+    ...pattern.problems.hard
+  ].filter(p => isProblemSolved(p.id?.toString() || '')).length;
+  
+  const progressPercent = totalProblems > 0 ? Math.round((solvedProblems / totalProblems) * 100) : 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-primary/5">
@@ -216,6 +227,9 @@ const PatternDetail = () => {
             <ArrowLeft className="w-4 h-4" />
             Back to All Patterns
           </Link>
+
+          {/* Progress Stats */}
+          <ProgressStats />
 
           {/* Pattern Header */}
           <div className="glass-card rounded-2xl p-6 md:p-8 mb-8">
@@ -237,13 +251,17 @@ const PatternDetail = () => {
                     <Target className="w-4 h-4" />
                     {totalProblems} problems
                   </div>
+                  <div className="flex items-center gap-2 text-green-500">
+                    <CheckCircle2 className="w-4 h-4" />
+                    {solvedProblems} solved
+                  </div>
                 </div>
                 <div className="mb-4">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm text-muted-foreground">Your Progress</span>
-                    <span className="text-sm font-medium text-foreground">{progress}%</span>
+                    <span className="text-sm font-medium text-foreground">{progressPercent}%</span>
                   </div>
-                  <Progress value={progress} className="h-2" />
+                  <Progress value={progressPercent} className="h-2" />
                 </div>
               </div>
             </div>
@@ -313,86 +331,56 @@ const PatternDetail = () => {
             </TabsContent>
 
             <TabsContent value="problems" className="space-y-6">
-              <Card className="glass-card border-primary/10">
-                <CardHeader>
-                  <CardTitle>Problem Set - {totalProblems} Problems</CardTitle>
-                  <CardDescription>Practice problems organized by difficulty</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Tabs defaultValue="easy">
-                    <TabsList className="grid w-full grid-cols-3">
-                      <TabsTrigger value="easy">Easy ({pattern.problems.easy.length})</TabsTrigger>
-                      <TabsTrigger value="medium">Medium ({pattern.problems.medium.length})</TabsTrigger>
-                      <TabsTrigger value="hard">Hard ({pattern.problems.hard.length})</TabsTrigger>
-                    </TabsList>
+              {/* XP Breakdown */}
+              <div className="grid md:grid-cols-3 gap-4">
+                <div className="md:col-span-2">
+                  <Card className="glass-card border-primary/10 h-full">
+                    <CardHeader>
+                      <CardTitle>Problem Set - {totalProblems} Problems</CardTitle>
+                      <CardDescription>
+                        Click the circle to mark problems as solved. Earn XP for each problem!
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <Tabs defaultValue="easy">
+                        <TabsList className="grid w-full grid-cols-3">
+                          <TabsTrigger value="easy" className="data-[state=active]:bg-green-500/20">
+                            Easy ({pattern.problems.easy.length})
+                          </TabsTrigger>
+                          <TabsTrigger value="medium" className="data-[state=active]:bg-yellow-500/20">
+                            Medium ({pattern.problems.medium.length})
+                          </TabsTrigger>
+                          <TabsTrigger value="hard" className="data-[state=active]:bg-red-500/20">
+                            Hard ({pattern.problems.hard.length})
+                          </TabsTrigger>
+                        </TabsList>
 
-                    {(['easy', 'medium', 'hard'] as const).map((difficulty) => (
-                      <TabsContent key={difficulty} value={difficulty} className="space-y-3 mt-4">
-                        {pattern.problems[difficulty].map((problem) => (
-                          <div key={problem.id} className="glass-card p-4 rounded-lg">
-                            <div className="flex items-start gap-4">
-                              <div className="flex-shrink-0 mt-1">
-                                {problem.solved ? (
-                                  <CheckCircle2 className="w-6 h-6 text-green-500" />
-                                ) : problem.attempted ? (
-                                  <Circle className="w-6 h-6 text-yellow-500" />
-                                ) : (
-                                  <Circle className="w-6 h-6 text-muted-foreground" />
-                                )}
-                              </div>
-                              <div className="flex-1 space-y-2">
-                                <div className="flex items-center gap-2">
-                                  <span className="text-sm text-muted-foreground">{problem.leetcode}</span>
-                                  <h4 className="font-medium text-foreground">{problem.title}</h4>
-                                  <Badge variant="outline" className="text-xs capitalize ml-auto">
-                                    {difficulty}
-                                  </Badge>
-                                </div>
-                                {problem.companies && problem.companies.length > 0 && (
-                                  <div className="flex items-center gap-2 flex-wrap">
-                                    <Building2 className="w-3 h-3 text-muted-foreground" />
-                                    {problem.companies.slice(0, 5).map((company, idx) => (
-                                      <Badge key={idx} variant="secondary" className="text-xs">
-                                        {company}
-                                      </Badge>
-                                    ))}
-                                    {problem.companies.length > 5 && (
-                                      <span className="text-xs text-muted-foreground">+{problem.companies.length - 5} more</span>
-                                    )}
-                                  </div>
-                                )}
-                                {problem.prerequisites && problem.prerequisites.length > 0 && (
-                                  <div className="flex items-center gap-2 flex-wrap">
-                                    <BookOpen className="w-3 h-3 text-muted-foreground" />
-                                    <span className="text-xs text-muted-foreground">Prerequisites:</span>
-                                    {problem.prerequisites.map((prereq, idx) => (
-                                      <Badge key={idx} variant="outline" className="text-xs">
-                                        {prereq}
-                                      </Badge>
-                                    ))}
-                                  </div>
-                                )}
-                              </div>
-                              <div className="flex gap-2 flex-shrink-0">
-                                <Button asChild size="sm" variant="outline">
-                                  <a href={problem.link} target="_blank" rel="noopener noreferrer">
-                                    <ExternalLink className="w-4 h-4 mr-1" />
-                                    Solve
-                                  </a>
-                                </Button>
-                                <Button size="sm" variant="ghost" disabled>
-                                  <Lock className="w-4 h-4 mr-1" />
-                                  Solution
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
+                        {(['easy', 'medium', 'hard'] as const).map((difficulty) => (
+                          <TabsContent key={difficulty} value={difficulty} className="space-y-3 mt-4">
+                            {pattern.problems[difficulty].map((problem) => (
+                              <ProblemCard
+                                key={problem.id}
+                                problemId={problem.id?.toString() || ''}
+                                title={problem.title}
+                                link={problem.link}
+                                leetcode={problem.leetcode ? `LC #${problem.leetcode}` : undefined}
+                                difficulty={difficulty === 'easy' ? 'Easy' : difficulty === 'medium' ? 'Medium' : 'Hard'}
+                                companies={problem.companies}
+                                prerequisites={problem.tags || problem.prerequisites}
+                                solution="locked"
+                              />
+                            ))}
+                          </TabsContent>
                         ))}
-                      </TabsContent>
-                    ))}
-                  </Tabs>
-                </CardContent>
-              </Card>
+                      </Tabs>
+                    </CardContent>
+                  </Card>
+                </div>
+                <div className="space-y-4">
+                  <XPBreakdown />
+                  <BadgesDisplay />
+                </div>
+              </div>
             </TabsContent>
 
             <TabsContent value="mistakes">
