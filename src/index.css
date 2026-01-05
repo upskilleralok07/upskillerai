@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -26,19 +25,33 @@
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.75rem;
     
-    /* AI Theme Colors */
-    --ai-purple: 270 70% 60%;
-    --ai-blue: 220 80% 60%;
-    --ai-cyan: 190 80% 55%;
-    --ai-neon: 280 90% 70%;
+    /* Activity Colors */
+    --activity-coding: 142 76% 36%;
+    --activity-learning: 217 91% 60%;
+    --activity-research: 280 68% 60%;
+    --activity-writing: 25 95% 53%;
+    --activity-planning: 48 96% 53%;
+    --activity-other: 215 16% 47%;
+    
+    /* Gamification Colors */
+    --streak: 38 92% 50%;
+    --xp: 142 76% 36%;
+    --badge-gold: 45 93% 47%;
+    --badge-silver: 210 11% 71%;
+    --badge-bronze: 30 41% 40%;
+    
+    /* Status Colors */
+    --success: 142 76% 36%;
+    --warning: 38 92% 50%;
+    --info: 217 91% 60%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 222 47% 6%;
     --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
+    --card: 222 47% 8%;
     --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
+    --popover: 222 47% 8%;
     --popover-foreground: 210 40% 98%;
     --primary: 217.2 91.2% 59.8%;
     --primary-foreground: 222.2 47.4% 11.2%;
@@ -54,11 +67,20 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 224.3 76.3% 48%;
     
-    /* AI Theme Colors - Dark Mode */
-    --ai-purple: 270 80% 70%;
-    --ai-blue: 220 90% 70%;
-    --ai-cyan: 190 90% 65%;
-    --ai-neon: 280 95% 75%;
+    /* Activity Colors - Dark Mode */
+    --activity-coding: 142 70% 45%;
+    --activity-learning: 217 85% 65%;
+    --activity-research: 280 65% 65%;
+    --activity-writing: 25 90% 58%;
+    --activity-planning: 48 90% 58%;
+    --activity-other: 215 20% 55%;
+    
+    /* Gamification Colors - Dark Mode */
+    --streak: 38 88% 55%;
+    --xp: 142 70% 45%;
+    --badge-gold: 45 90% 52%;
+    --badge-silver: 210 15% 75%;
+    --badge-bronze: 30 45% 45%;
   }
 
   html {
@@ -68,7 +90,7 @@
 
   body {
     @apply text-foreground bg-background;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', ui-monospace, monospace;
     overscroll-behavior-y: none;
   }
   
@@ -81,7 +103,28 @@
 
 /* Glass effects */
 .glass-card {
-  @apply bg-white/50 dark:bg-card/50 backdrop-blur-md border border-white/20 dark:border-white/10 shadow-lg;
+  @apply bg-card/80 backdrop-blur-xl border border-border/50 shadow-xl;
+}
+
+.glass-card-hover {
+  @apply glass-card transition-all duration-300;
+}
+
+.glass-card-hover:hover {
+  @apply border-primary/30 shadow-2xl;
+  transform: translateY(-2px);
+}
+
+/* Activity Ring Styles */
+.activity-ring {
+  transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Timer Display */
+.timer-display {
+  font-family: 'JetBrains Mono', 'SF Mono', monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.05em;
 }
 
 /* Enhanced animations */
@@ -91,10 +134,18 @@
   100% { transform: translateY(0px); }
 }
 
-@keyframes pulse-subtle {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.03); }
-  100% { transform: scale(1); }
+@keyframes pulse-glow {
+  0%, 100% { 
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
+  }
+  50% { 
+    box-shadow: 0 0 40px hsl(var(--primary) / 0.5);
+  }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.5); opacity: 0; }
 }
 
 @keyframes gradient-shift {
@@ -103,17 +154,39 @@
   100% { background-position: 0% 50%; }
 }
 
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes streak-fire {
+  0%, 100% { transform: scale(1) rotate(-5deg); }
+  50% { transform: scale(1.1) rotate(5deg); }
+}
+
 .animate-float {
   animation: float 4s ease-in-out infinite;
 }
 
-.animate-pulse-subtle {
-  animation: pulse-subtle 3s ease-in-out infinite;
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 1.5s ease-out infinite;
 }
 
 .animate-gradient {
   background-size: 200% 200%;
   animation: gradient-shift 5s ease infinite;
+}
+
+.animate-count-up {
+  animation: count-up 0.5s ease-out forwards;
+}
+
+.animate-streak-fire {
+  animation: streak-fire 0.5s ease-in-out infinite;
 }
 
 /* Interactive hover effects */
@@ -139,12 +212,27 @@
 }
 
 .gradient-text {
-  @apply bg-gradient-to-r from-primary via-primary-dark to-purple-600 bg-clip-text text-transparent;
+  @apply bg-gradient-to-r from-primary via-blue-400 to-purple-500 bg-clip-text text-transparent;
 }
 
 .gradient-bg {
-  @apply bg-gradient-to-r from-primary-light via-primary to-primary-dark;
+  @apply bg-gradient-to-r from-primary to-purple-600;
 }
+
+/* Activity color utilities */
+.bg-activity-coding { background-color: hsl(var(--activity-coding)); }
+.bg-activity-learning { background-color: hsl(var(--activity-learning)); }
+.bg-activity-research { background-color: hsl(var(--activity-research)); }
+.bg-activity-writing { background-color: hsl(var(--activity-writing)); }
+.bg-activity-planning { background-color: hsl(var(--activity-planning)); }
+.bg-activity-other { background-color: hsl(var(--activity-other)); }
+
+.text-activity-coding { color: hsl(var(--activity-coding)); }
+.text-activity-learning { color: hsl(var(--activity-learning)); }
+.text-activity-research { color: hsl(var(--activity-research)); }
+.text-activity-writing { color: hsl(var(--activity-writing)); }
+.text-activity-planning { color: hsl(var(--activity-planning)); }
+.text-activity-other { color: hsl(var(--activity-other)); }
 
 /* Enhanced fade-in animation */
 @keyframes fadeIn {
@@ -166,38 +254,40 @@
   animation: slideIn 0.6s ease-out forwards;
 }
 
+/* Kanban styles */
+.kanban-column {
+  @apply bg-muted/30 rounded-xl p-4 min-h-[400px];
+}
+
+.kanban-card {
+  @apply bg-card p-4 rounded-lg border border-border/50 shadow-sm;
+  @apply transition-all duration-200;
+}
+
+.kanban-card:hover {
+  @apply shadow-md border-primary/30;
+}
+
 /* Grid pattern for tech background */
 .bg-grid-pattern {
   background-image: 
-    linear-gradient(to right, hsl(var(--primary)) 1px, transparent 1px),
-    linear-gradient(to bottom, hsl(var(--primary)) 1px, transparent 1px);
+    linear-gradient(to right, hsl(var(--border) / 0.3) 1px, transparent 1px),
+    linear-gradient(to bottom, hsl(var(--border) / 0.3) 1px, transparent 1px);
   background-size: 40px 40px;
-}
-
-/* Circuit-inspired decorations */
-@keyframes circuit-pulse {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.6; }
-}
-
-.circuit-decoration {
-  animation: circuit-pulse 3s ease-in-out infinite;
 }
 
 /* Mobile Optimizations */
 @media (max-width: 640px) {
   .glass-card {
-    @apply bg-white/70 dark:bg-card/70; /* Increase opacity for better readability on mobile */
+    @apply bg-card/90;
   }
   
-  /* Better touch targets */
   button, a {
     @apply min-h-[44px] min-w-[44px];
   }
   
-  /* Adjust animations for performance */
   .animate-float {
-    animation-duration: 5s; /* Slower animation for better performance */
+    animation-duration: 5s;
   }
 }
 
@@ -218,4 +308,24 @@
   .hover-scale:active {
     transform: scale(1.03);
   }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
 }
