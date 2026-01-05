@@ -4,12 +4,21 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import Navbar from "@/components/Navbar";
 import StudentRegistration from "@/components/online-college/StudentRegistration";
-import StudyGroups from "@/components/online-college/StudyGroups";
-import StudyTimer from "@/components/online-college/StudyTimer";
-import Leaderboard from "@/components/online-college/Leaderboard";
-import ProgressDashboard from "@/components/online-college/ProgressDashboard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Users, Timer, Trophy, TrendingUp } from "lucide-react";
+import { 
+  LayoutDashboard, Timer, ListTodo, Trophy, BarChart2, Award, Flame
+} from "lucide-react";
+
+// New Campus Components
+import { LiveActivityPanel } from "@/components/campus/LiveActivityPanel";
+import { StatsOverview } from "@/components/campus/StatsOverview";
+import { FocusTimer } from "@/components/campus/FocusTimer";
+import { TaskBoard } from "@/components/campus/TaskBoard";
+import { CampusLeaderboard } from "@/components/campus/CampusLeaderboard";
+import { AnalyticsDashboard } from "@/components/campus/AnalyticsDashboard";
+import { BadgesAndAchievements } from "@/components/campus/BadgesAndAchievements";
+import { StreakTracker } from "@/components/campus/StreakTracker";
+import { useStudentStats } from "@/hooks/useStudentStats";
 
 const OnlineCollege = () => {
   const { user } = useAuth();
@@ -47,14 +56,17 @@ const OnlineCollege = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-pulse text-primary text-xl">Loading...</div>
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+          <p className="text-muted-foreground">Loading your campus...</p>
+        </div>
       </div>
     );
   }
 
   if (!studentProfile) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-secondary/5">
+      <div className="min-h-screen bg-background">
         <Navbar />
         <StudentRegistration onComplete={checkStudentProfile} />
       </div>
@@ -62,61 +74,111 @@ const OnlineCollege = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-secondary/5">
+    <div className="min-h-screen bg-background bg-grid-pattern">
       <Navbar />
       
       <div className="container mx-auto px-4 pt-24 pb-12">
-        <div className="text-center mb-8 animate-fade-in">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            <span className="gradient-text">Online College</span>
+        {/* Welcome Header */}
+        <div className="mb-8 animate-fade-in">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">
+            Welcome back, <span className="gradient-text">{studentProfile.name}</span>
           </h1>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Learn together, compete together, succeed together
+          <p className="text-muted-foreground">
+            Your virtual campus at {studentProfile.campus}
           </p>
         </div>
 
-        <Tabs defaultValue="groups" className="w-full">
-          <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-4 mb-8">
-            <TabsTrigger value="groups" className="flex items-center gap-2">
-              <Users className="w-4 h-4" />
-              <span className="hidden sm:inline">Groups</span>
+        <Tabs defaultValue="dashboard" className="w-full">
+          <TabsList className="grid w-full max-w-3xl grid-cols-7 mb-8 bg-card/50 backdrop-blur">
+            <TabsTrigger value="dashboard" className="flex items-center gap-2">
+              <LayoutDashboard className="w-4 h-4" />
+              <span className="hidden md:inline">Dashboard</span>
             </TabsTrigger>
             <TabsTrigger value="timer" className="flex items-center gap-2">
               <Timer className="w-4 h-4" />
-              <span className="hidden sm:inline">Study Timer</span>
+              <span className="hidden md:inline">Focus</span>
+            </TabsTrigger>
+            <TabsTrigger value="tasks" className="flex items-center gap-2">
+              <ListTodo className="w-4 h-4" />
+              <span className="hidden md:inline">Tasks</span>
+            </TabsTrigger>
+            <TabsTrigger value="streak" className="flex items-center gap-2">
+              <Flame className="w-4 h-4" />
+              <span className="hidden md:inline">Streak</span>
             </TabsTrigger>
             <TabsTrigger value="leaderboard" className="flex items-center gap-2">
               <Trophy className="w-4 h-4" />
-              <span className="hidden sm:inline">Leaderboard</span>
+              <span className="hidden md:inline">Rank</span>
             </TabsTrigger>
-            <TabsTrigger value="progress" className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4" />
-              <span className="hidden sm:inline">Progress</span>
+            <TabsTrigger value="analytics" className="flex items-center gap-2">
+              <BarChart2 className="w-4 h-4" />
+              <span className="hidden md:inline">Analytics</span>
+            </TabsTrigger>
+            <TabsTrigger value="badges" className="flex items-center gap-2">
+              <Award className="w-4 h-4" />
+              <span className="hidden md:inline">Badges</span>
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="groups">
-            <StudyGroups studentId={studentProfile.id} campus={studentProfile.campus} />
+          <TabsContent value="dashboard" className="space-y-6">
+            <StatsOverview studentId={studentProfile.id} />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <FocusTimer studentId={studentProfile.id} />
+              <LiveActivityPanel campus={studentProfile.campus} />
+            </div>
           </TabsContent>
 
           <TabsContent value="timer">
-            <StudyTimer studentId={studentProfile.id} />
+            <div className="max-w-2xl mx-auto">
+              <FocusTimer studentId={studentProfile.id} />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="tasks">
+            <TaskBoard studentId={studentProfile.id} />
+          </TabsContent>
+
+          <TabsContent value="streak">
+            <div className="max-w-3xl mx-auto">
+              <StreakTracker studentId={studentProfile.id} />
+            </div>
           </TabsContent>
 
           <TabsContent value="leaderboard">
-            <Leaderboard campus={studentProfile.campus} />
+            <div className="max-w-3xl mx-auto">
+              <CampusLeaderboard 
+                campus={studentProfile.campus} 
+                currentStudentId={studentProfile.id}
+              />
+            </div>
           </TabsContent>
 
-          <TabsContent value="progress">
-            <ProgressDashboard 
-              studentId={studentProfile.id}
-              roadmapType={studentProfile.selected_roadmap}
-            />
+          <TabsContent value="analytics">
+            <AnalyticsDashboard studentId={studentProfile.id} />
+          </TabsContent>
+
+          <TabsContent value="badges">
+            <StudentBadgesWrapper studentId={studentProfile.id} />
           </TabsContent>
         </Tabs>
       </div>
     </div>
   );
 };
+
+// Wrapper to get stats for badges
+function StudentBadgesWrapper({ studentId }: { studentId: string }) {
+  const { stats } = useStudentStats({ studentId });
+  
+  return (
+    <BadgesAndAchievements
+      studentId={studentId}
+      totalMinutes={stats.allTimeMinutes}
+      currentStreak={stats.currentStreak}
+      longestStreak={stats.longestStreak}
+      totalSessions={stats.allTimeSessions}
+    />
+  );
+}
 
 export default OnlineCollege;
