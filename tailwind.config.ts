@@ -20,7 +20,8 @@ export default {
     extend: {
       fontFamily: {
         mono: ['JetBrains Mono', 'SF Mono', 'Fira Code', 'ui-monospace', 'monospace'],
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
+        display: ['Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -65,6 +66,10 @@ export default {
           planning: "hsl(var(--activity-planning))",
           other: "hsl(var(--activity-other))",
         },
+        // Difficulty colors
+        easy: "hsl(var(--easy))",
+        medium: "hsl(var(--medium))",
+        hard: "hsl(var(--hard))",
         // Gamification colors
         streak: "hsl(var(--streak))",
         xp: "hsl(var(--xp))",
@@ -76,6 +81,10 @@ export default {
         success: "hsl(var(--success))",
         warning: "hsl(var(--warning))",
         info: "hsl(var(--info))",
+      },
+      borderRadius: {
+        '2xl': '1rem',
+        '3xl': '1.5rem',
       },
       keyframes: {
         "slide-in": {
