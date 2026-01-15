@@ -55,7 +55,7 @@ const DSAPatterns = () => {
   const filteredTopics = getFilteredTopics();
 
   return (
-    <div className="min-h-screen bg-background bg-grid-pattern dark">
+    <div className="min-h-screen bg-background bg-grid-pattern dark" data-theme="dsa">
       <Navbar />
       <DSASidebar />
       

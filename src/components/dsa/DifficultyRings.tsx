@@ -1,27 +1,38 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Target } from 'lucide-react';
+import { useDSAProgress } from '@/hooks/useDSAProgress';
+import { dsaPhases } from '@/data/dsaCourseData';
 
-interface DifficultyData {
-  easy: { solved: number; total: number };
-  medium: { solved: number; total: number };
-  hard: { solved: number; total: number };
-}
-
-interface DifficultyRingsProps {
-  data?: DifficultyData;
-}
-
-const DifficultyRings = ({
-  data = {
-    easy: { solved: 45, total: 100 },
-    medium: { solved: 28, total: 80 },
-    hard: { solved: 12, total: 40 }
-  }
-}: DifficultyRingsProps) => {
+const DifficultyRings = () => {
+  const { progress, isProblemSolved } = useDSAProgress();
+  
+  // Get all problems from course data
+  const allProblems = dsaPhases.flatMap(phase => 
+    phase.topics.flatMap(topic => 
+      topic.patterns.flatMap(pattern => pattern.problems)
+    )
+  );
+  
+  // Calculate totals and solved counts by difficulty
+  const easyProblems = allProblems.filter(p => p.difficulty === 'Easy');
+  const mediumProblems = allProblems.filter(p => p.difficulty === 'Medium');
+  const hardProblems = allProblems.filter(p => p.difficulty === 'Hard');
+  
+  const easySolved = easyProblems.filter(p => isProblemSolved(p.id)).length;
+  const mediumSolved = mediumProblems.filter(p => isProblemSolved(p.id)).length;
+  const hardSolved = hardProblems.filter(p => isProblemSolved(p.id)).length;
+  
+  const data = {
+    easy: { solved: easySolved, total: easyProblems.length },
+    medium: { solved: mediumSolved, total: mediumProblems.length },
+    hard: { solved: hardSolved, total: hardProblems.length }
+  };
+  
   const totalSolved = data.easy.solved + data.medium.solved + data.hard.solved;
   const totalProblems = data.easy.total + data.medium.total + data.hard.total;
 
-  const calculatePercentage = (solved: number, total: number) => (solved / total) * 100;
+  const calculatePercentage = (solved: number, total: number) => 
+    total > 0 ? (solved / total) * 100 : 0;
   
   const CircularProgress = ({ 
     percentage, 
@@ -97,7 +108,7 @@ const DifficultyRings = ({
     <Card className="premium-card red-border-glow">
       <CardHeader className="pb-2">
         <CardTitle className="text-lg flex items-center gap-2">
-          <Target className="w-5 h-5 text-primary" />
+          <Target className="w-5 h-5 text-red-500" />
           Difficulty Breakdown
         </CardTitle>
       </CardHeader>
@@ -106,7 +117,7 @@ const DifficultyRings = ({
         {/* Total Problems Solved */}
         <div className="text-center mb-6 p-4 bg-muted/50 rounded-xl">
           <p className="text-sm text-muted-foreground">Total Solved</p>
-          <p className="text-4xl font-bold gradient-text">{totalSolved}</p>
+          <p className="text-4xl font-bold gradient-text-red">{totalSolved}</p>
           <p className="text-xs text-muted-foreground">of {totalProblems} problems</p>
         </div>
 

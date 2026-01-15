@@ -1,29 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
+    /* Blue/Purple theme for main website */
     --background: 0 0% 100%;
-    --foreground: 0 0% 6%;
+    --foreground: 220 15% 15%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 6%;
+    --card-foreground: 220 15% 15%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 6%;
-    --primary: 0 84% 50%;
+    --popover-foreground: 220 15% 15%;
+    --primary: 250 84% 54%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 6%;
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
-    --accent: 0 84% 50%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 15% 15%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+    --accent: 250 84% 54%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 0 84% 50%;
-    --radius: 1rem;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 250 84% 54%;
+    --radius: 0.75rem;
     
     /* Activity Colors */
     --activity-coding: 142 76% 36%;
@@ -52,25 +55,26 @@
   }
 
   .dark {
-    --background: 0 0% 6%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 84% 50%;
+    /* Blue/Purple dark theme for main website */
+    --background: 222 47% 6%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 8%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 8%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 250 84% 54%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 64%;
-    --accent: 0 84% 50%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 250 84% 54%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 62% 30%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 18%;
-    --input: 0 0% 18%;
-    --ring: 0 84% 50%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 250 84% 54%;
     
     /* Activity Colors - Dark Mode */
     --activity-coding: 142 70% 45%;
@@ -93,6 +97,26 @@
     --hard: 0 84% 55%;
   }
 
+  /* DSA Red Theme - Applied via data attribute */
+  [data-theme="dsa"] {
+    --primary: 0 84% 50%;
+    --accent: 0 84% 50%;
+    --ring: 0 84% 50%;
+  }
+
+  [data-theme="dsa"].dark {
+    --background: 0 0% 6%;
+    --card: 0 0% 9%;
+    --popover: 0 0% 9%;
+    --secondary: 0 0% 12%;
+    --muted: 0 0% 15%;
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
+    --primary: 0 84% 50%;
+    --accent: 0 84% 50%;
+    --ring: 0 84% 50%;
+  }
+
   html {
     scroll-behavior: smooth;
     -webkit-tap-highlight-color: transparent;
@@ -100,13 +124,15 @@
 
   body {
     @apply text-foreground bg-background;
-    font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+    font-family: 'Be Vietnam Pro', system-ui, sans-serif;
     overscroll-behavior-y: none;
+    letter-spacing: -0.01em;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
-    font-weight: 600;
+    font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
   }
   
   code, pre, .font-mono {
@@ -120,7 +146,21 @@
   }
 }
 
-/* Red Glow Effects */
+/* Blue/Purple Glow Effects for main website */
+.glow {
+  box-shadow: 0 0 30px hsl(250 84% 54% / 0.3), 0 0 60px hsl(250 84% 54% / 0.15);
+}
+
+.glow-sm {
+  box-shadow: 0 0 15px hsl(250 84% 54% / 0.25);
+}
+
+.border-glow {
+  border: 1px solid hsl(250 84% 54% / 0.5);
+  box-shadow: 0 0 20px hsl(250 84% 54% / 0.2), inset 0 0 20px hsl(250 84% 54% / 0.05);
+}
+
+/* Red Glow Effects - DSA specific */
 .red-glow {
   box-shadow: 0 0 30px hsl(0 84% 50% / 0.3), 0 0 60px hsl(0 84% 50% / 0.15);
 }
@@ -153,13 +193,13 @@
 }
 
 .glass-card-red {
-  @apply bg-card/80 backdrop-blur-xl border border-primary/20 shadow-xl rounded-2xl;
+  @apply bg-card/80 backdrop-blur-xl border border-red-500/20 shadow-xl rounded-2xl;
   box-shadow: 0 0 30px hsl(0 84% 50% / 0.1), 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* Premium Card Effect */
+/* Premium Card Effect - DSA */
 .premium-card {
-  @apply relative bg-card border border-primary/20 rounded-2xl overflow-hidden;
+  @apply relative bg-card border border-red-500/20 rounded-2xl overflow-hidden;
   background: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(0 0% 5%) 100%);
 }
 
@@ -194,10 +234,10 @@
 
 @keyframes pulse-glow {
   0%, 100% { 
-    box-shadow: 0 0 20px hsl(0 84% 50% / 0.3);
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
   }
   50% { 
-    box-shadow: 0 0 40px hsl(0 84% 50% / 0.5);
+    box-shadow: 0 0 40px hsl(var(--primary) / 0.5);
   }
 }
 
@@ -240,6 +280,11 @@
   100% { transform: translateX(100%); }
 }
 
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
 .animate-float {
   animation: float 4s ease-in-out infinite;
 }
@@ -273,6 +318,10 @@
   animation: shimmer 2s infinite;
 }
 
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s ease-in-out infinite;
+}
+
 /* Interactive hover effects */
 .hover-lift {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -282,7 +331,7 @@
 @media (hover: hover) {
   .hover-lift:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(220, 38, 38, 0.2);
+    box-shadow: 0 10px 30px hsl(var(--primary) / 0.2);
   }
   
   .hover-scale:hover {
@@ -295,17 +344,22 @@
   cursor: pointer;
 }
 
-/* Gradient Text */
+/* Gradient Text - Blue/Purple */
 .gradient-text {
-  @apply bg-gradient-to-r from-primary via-red-400 to-orange-500 bg-clip-text text-transparent;
+  @apply bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-500 bg-clip-text text-transparent;
 }
 
+/* Red Gradient Text - DSA specific */
 .gradient-text-fire {
   @apply bg-gradient-to-r from-red-500 via-orange-400 to-yellow-500 bg-clip-text text-transparent;
 }
 
+.gradient-text-red {
+  @apply bg-gradient-to-r from-red-500 via-red-400 to-orange-500 bg-clip-text text-transparent;
+}
+
 .gradient-bg {
-  @apply bg-gradient-to-r from-primary to-red-600;
+  @apply bg-gradient-to-r from-purple-600 to-blue-600;
 }
 
 .gradient-bg-fire {
@@ -370,7 +424,7 @@
   @apply shadow-md border-primary/30;
 }
 
-/* Grid pattern for tech background */
+/* Grid pattern for tech background - DSA */
 .bg-grid-pattern {
   background-image: 
     linear-gradient(to right, hsl(0 84% 50% / 0.03) 1px, transparent 1px),
@@ -378,15 +432,23 @@
   background-size: 40px 40px;
 }
 
+/* Blue grid pattern for main website */
+.bg-grid-pattern-blue {
+  background-image: 
+    linear-gradient(to right, hsl(250 84% 54% / 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, hsl(250 84% 54% / 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
 /* Circuit pattern background */
 .bg-circuit-pattern {
   background-image: 
-    radial-gradient(circle at 25% 25%, hsl(0 84% 50% / 0.05) 2px, transparent 2px),
-    radial-gradient(circle at 75% 75%, hsl(0 84% 50% / 0.03) 1px, transparent 1px);
+    radial-gradient(circle at 25% 25%, hsl(var(--primary) / 0.05) 2px, transparent 2px),
+    radial-gradient(circle at 75% 75%, hsl(var(--primary) / 0.03) 1px, transparent 1px);
   background-size: 60px 60px;
 }
 
-/* Heatmap colors */
+/* Heatmap colors - Red for DSA */
 .heatmap-0 { background-color: hsl(0 0% 15%); }
 .heatmap-1 { background-color: hsl(0 84% 20%); }
 .heatmap-2 { background-color: hsl(0 84% 30%); }
@@ -409,7 +471,7 @@
   transform-origin: 50% 50%;
 }
 
-/* Sidebar styling */
+/* Sidebar styling - DSA */
 .sidebar {
   @apply fixed left-0 top-0 h-full w-64 bg-card border-r border-border z-40;
   background: linear-gradient(180deg, hsl(var(--card)) 0%, hsl(0 0% 5%) 100%);
@@ -441,7 +503,7 @@
 @media (hover: none) {
   .hover-lift:active {
     transform: translateY(-3px);
-    box-shadow: 0 5px 15px hsl(0 84% 50% / 0.2);
+    box-shadow: 0 5px 15px hsl(var(--primary) / 0.2);
   }
   
   .hover-scale:active {
@@ -461,12 +523,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(0 84% 50% / 0.3);
+  background: hsl(var(--primary) / 0.3);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(0 84% 50% / 0.5);
+  background: hsl(var(--primary) / 0.5);
 }
 
 /* Tab active state */
