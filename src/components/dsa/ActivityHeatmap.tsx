@@ -1,19 +1,40 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useDSAProgress } from '@/hooks/useDSAProgress';
 
-interface ActivityHeatmapProps {
-  data?: number[];
-}
-
-const ActivityHeatmap = ({ data }: ActivityHeatmapProps) => {
-  const [year, setYear] = useState(2024);
+const ActivityHeatmap = () => {
+  const [year, setYear] = useState(new Date().getFullYear());
+  const { progress } = useDSAProgress();
   
-  // Generate mock data for 365 days if not provided
-  const activityData = data || Array.from({ length: 365 }, () => 
-    Math.random() > 0.3 ? Math.floor(Math.random() * 5) : 0
-  );
+  // Build activity data from solved problems
+  const activityData = useMemo(() => {
+    const data: Record<string, number> = {};
+    
+    // Count problems solved per day
+    Object.values(progress.problems).forEach(problem => {
+      if (problem.solved && problem.solvedAt) {
+        const date = problem.solvedAt.split('T')[0];
+        data[date] = (data[date] || 0) + 1;
+      }
+    });
+    
+    // Generate array for the year
+    const yearData: number[] = [];
+    const startDate = new Date(year, 0, 1);
+    const endDate = new Date(year, 11, 31);
+    
+    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+      const dateStr = d.toISOString().split('T')[0];
+      const count = data[dateStr] || 0;
+      // Convert count to level (0-4)
+      const level = count === 0 ? 0 : count === 1 ? 1 : count <= 3 ? 2 : count <= 5 ? 3 : 4;
+      yearData.push(level);
+    }
+    
+    return yearData;
+  }, [progress.problems, year]);
 
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -21,16 +42,27 @@ const ActivityHeatmap = ({ data }: ActivityHeatmapProps) => {
   const getColorClass = (level: number) => {
     switch (level) {
       case 0: return 'bg-muted';
-      case 1: return 'bg-primary/20';
-      case 2: return 'bg-primary/40';
-      case 3: return 'bg-primary/60';
-      case 4: return 'bg-primary';
+      case 1: return 'bg-red-500/20';
+      case 2: return 'bg-red-500/40';
+      case 3: return 'bg-red-500/60';
+      case 4: return 'bg-red-500';
       default: return 'bg-muted';
     }
   };
 
-  const totalContributions = activityData.reduce((a, b) => a + b, 0);
-  const activeDays = activityData.filter(d => d > 0).length;
+  const totalSubmissions = useMemo(() => {
+    return Object.values(progress.problems).filter(p => p.solved).length;
+  }, [progress.problems]);
+  
+  const activeDays = useMemo(() => {
+    const days = new Set<string>();
+    Object.values(progress.problems).forEach(problem => {
+      if (problem.solved && problem.solvedAt) {
+        days.add(problem.solvedAt.split('T')[0]);
+      }
+    });
+    return days.size;
+  }, [progress.problems]);
 
   // Create weeks (52 columns)
   const weeks: number[][] = [];
@@ -43,7 +75,7 @@ const ActivityHeatmap = ({ data }: ActivityHeatmapProps) => {
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-primary" />
+            <Calendar className="w-5 h-5 text-red-500" />
             Activity Heatmap
           </CardTitle>
           <div className="flex items-center gap-2">
@@ -61,6 +93,7 @@ const ActivityHeatmap = ({ data }: ActivityHeatmapProps) => {
               size="icon" 
               className="h-7 w-7"
               onClick={() => setYear(y => y + 1)}
+              disabled={year >= new Date().getFullYear()}
             >
               <ChevronRight className="w-4 h-4" />
             </Button>
@@ -73,7 +106,7 @@ const ActivityHeatmap = ({ data }: ActivityHeatmapProps) => {
         <div className="flex gap-6 mb-4 text-sm">
           <div>
             <span className="text-muted-foreground">Total submissions: </span>
-            <span className="font-bold text-foreground">{totalContributions}</span>
+            <span className="font-bold text-foreground">{totalSubmissions}</span>
           </div>
           <div>
             <span className="text-muted-foreground">Active days: </span>
@@ -108,7 +141,7 @@ const ActivityHeatmap = ({ data }: ActivityHeatmapProps) => {
                 {week.map((day, dayIndex) => (
                   <div
                     key={`${weekIndex}-${dayIndex}`}
-                    className={`w-3 h-3 rounded-sm ${getColorClass(day)} transition-all hover:ring-1 hover:ring-primary cursor-pointer`}
+                    className={`w-3 h-3 rounded-sm ${getColorClass(day)} transition-all hover:ring-1 hover:ring-red-500 cursor-pointer`}
                     title={`${day} submissions`}
                   />
                 ))}

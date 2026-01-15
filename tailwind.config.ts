@@ -20,8 +20,8 @@ export default {
     extend: {
       fontFamily: {
         mono: ['JetBrains Mono', 'SF Mono', 'Fira Code', 'ui-monospace', 'monospace'],
-        sans: ['Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
-        display: ['Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['Be Vietnam Pro', 'system-ui', 'sans-serif'],
+        display: ['Be Vietnam Pro', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
