@@ -343,6 +343,57 @@ export type Database = {
         }
         Relationships: []
       }
+      dsa_leaderboard: {
+        Row: {
+          badges: string[] | null
+          created_at: string
+          current_streak: number
+          easy_solved: number
+          hard_solved: number
+          id: string
+          last_solved_date: string | null
+          level: number
+          longest_streak: number
+          medium_solved: number
+          problems_solved: number
+          updated_at: string
+          user_id: string
+          xp: number
+        }
+        Insert: {
+          badges?: string[] | null
+          created_at?: string
+          current_streak?: number
+          easy_solved?: number
+          hard_solved?: number
+          id?: string
+          last_solved_date?: string | null
+          level?: number
+          longest_streak?: number
+          medium_solved?: number
+          problems_solved?: number
+          updated_at?: string
+          user_id: string
+          xp?: number
+        }
+        Update: {
+          badges?: string[] | null
+          created_at?: string
+          current_streak?: number
+          easy_solved?: number
+          hard_solved?: number
+          id?: string
+          last_solved_date?: string | null
+          level?: number
+          longest_streak?: number
+          medium_solved?: number
+          problems_solved?: number
+          updated_at?: string
+          user_id?: string
+          xp?: number
+        }
+        Relationships: []
+      }
       group_discussions: {
         Row: {
           created_at: string | null
@@ -746,33 +797,45 @@ export type Database = {
       }
       profiles: {
         Row: {
+          address: string | null
           avatar_url: string | null
+          college: string | null
           created_at: string
+          dsa_access_date: string | null
           email: string | null
           id: string
           name: string | null
           phone: string | null
           subscription_tier: string | null
+          tshirt_size: string | null
           user_type: Database["public"]["Enums"]["user_type"] | null
         }
         Insert: {
+          address?: string | null
           avatar_url?: string | null
+          college?: string | null
           created_at?: string
+          dsa_access_date?: string | null
           email?: string | null
           id: string
           name?: string | null
           phone?: string | null
           subscription_tier?: string | null
+          tshirt_size?: string | null
           user_type?: Database["public"]["Enums"]["user_type"] | null
         }
         Update: {
+          address?: string | null
           avatar_url?: string | null
+          college?: string | null
           created_at?: string
+          dsa_access_date?: string | null
           email?: string | null
           id?: string
           name?: string | null
           phone?: string | null
           subscription_tier?: string | null
+          tshirt_size?: string | null
           user_type?: Database["public"]["Enums"]["user_type"] | null
         }
         Relationships: []
