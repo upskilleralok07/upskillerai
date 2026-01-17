@@ -13,9 +13,12 @@ import RankXPCard from '@/components/dsa/RankXPCard';
 import DifficultyRings from '@/components/dsa/DifficultyRings';
 import ActivityHeatmap from '@/components/dsa/ActivityHeatmap';
 import BatchLeaderboard from '@/components/dsa/BatchLeaderboard';
+import GenieChatbot from '@/components/dsa/GenieChatbot';
 import { dsaPhases, getCourseStats, DSAPhase, DSATopic } from '@/data/dsaCourseData';
+import { dsaTopicsWithProblems, getDSAStats } from '@/data/dsaProblemsData';
 
 const stats = getCourseStats();
+const problemStats = getDSAStats();
 
 const DSAPatterns = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -83,9 +86,9 @@ const DSAPatterns = () => {
               {/* Stats */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
                 {[
-                  { icon: BookOpen, value: stats.totalTopics, label: 'Topics' },
-                  { icon: Target, value: `${stats.totalPatterns}+`, label: 'Patterns' },
-                  { icon: CheckCircle2, value: `${stats.totalProblems}+`, label: 'Problems' },
+                  { icon: BookOpen, value: problemStats.totalTopics, label: 'Topics' },
+                  { icon: Target, value: '13', label: 'Categories' },
+                  { icon: CheckCircle2, value: problemStats.totalProblems, label: 'Problems' },
                   { icon: Calendar, value: stats.estimatedTime, label: 'Duration' },
                 ].map((stat, i) => (
                   <Card key={i} className="glass-card-red hover-lift">
@@ -259,6 +262,9 @@ const DSAPatterns = () => {
             </Button>
           </div>
         </section>
+
+        {/* Genie Chatbot */}
+        <GenieChatbot />
       </main>
     </div>
   );
