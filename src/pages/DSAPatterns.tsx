@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Target, Clock, Award, Search, CheckCircle2, Star, TrendingUp, Calendar, BookOpen, Flame } from 'lucide-react';
+import { ArrowLeft, Target, Clock, Award, Search, CheckCircle2, Star, TrendingUp, Calendar, BookOpen, Flame, Zap } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Navbar from '@/components/Navbar';
 import DSASidebar from '@/components/dsa/DSASidebar';
 import ProfileCard from '@/components/dsa/ProfileCard';
@@ -14,11 +15,14 @@ import DifficultyRings from '@/components/dsa/DifficultyRings';
 import ActivityHeatmap from '@/components/dsa/ActivityHeatmap';
 import BatchLeaderboard from '@/components/dsa/BatchLeaderboard';
 import GenieChatbot from '@/components/dsa/GenieChatbot';
+import PatternPracticeSection from '@/components/dsa/PatternPracticeSection';
 import { dsaPhases, getCourseStats, DSAPhase, DSATopic } from '@/data/dsaCourseData';
 import { dsaTopicsWithProblems, getDSAStats } from '@/data/dsaProblemsData';
+import { getPatternStats } from '@/data/dsaPatternsData';
 
 const stats = getCourseStats();
 const problemStats = getDSAStats();
+const patternStats = getPatternStats();
 
 const DSAPatterns = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -244,6 +248,13 @@ const DSAPatterns = () => {
                 </Link>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* Pattern-wise Practice Section */}
+        <section className="pb-12 px-4 md:px-6" id="patterns">
+          <div className="container mx-auto max-w-7xl">
+            <PatternPracticeSection />
           </div>
         </section>
 
