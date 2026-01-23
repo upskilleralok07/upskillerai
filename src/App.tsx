@@ -1,5 +1,6 @@
 import DSAPatterns from "./pages/DSAPatterns";
 import PatternDetail from "./pages/PatternDetail";
+import GenAICourse from "./pages/GenAICourse";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -88,6 +89,7 @@ const App = () => (
               <Route path="/upskiller" element={<Upskiller />} />
               <Route path="/dsa-patterns" element={<DSAPatterns />} />
               <Route path="/dsa-patterns/:patternId" element={<PatternDetail />} />
+              <Route path="/genai-course" element={<GenAICourse />} />
               <Route
                 path="/online-college" 
                 element={

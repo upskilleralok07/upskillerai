@@ -21,15 +21,26 @@ interface Course {
 
 const aiCourses: Course[] = [
   {
-    id: "dsa-patterns",
-    title: "DSA Pattern Mastery Course",
-    description: "Master DSA in 10 patterns, not 1000 problems. Learn problem-solving patterns used in 90% of coding interviews.",
+    id: "algoforge",
+    title: "AlgoForge - DSA Mastery",
+    description: "Master DSA in 30 patterns with 400+ curated problems. Topic-wise & pattern-wise practice for coding interviews.",
     category: "Data Structures & Algorithms",
     difficulty: "Intermediate",
-    duration: "10 weeks",
+    duration: "12 weeks",
     icon: Code,
-    gradient: "from-violet-500 to-purple-500",
+    gradient: "from-red-500 to-orange-500",
     link: "/dsa-patterns"
+  },
+  {
+    id: "genai-llm",
+    title: "Generative AI & LLMs",
+    description: "Complete GenAI course: Python to production. Build RAG systems, AI agents, and deploy LLMs.",
+    category: "Generative AI",
+    difficulty: "Intermediate",
+    duration: "16 weeks",
+    icon: Sparkles,
+    gradient: "from-purple-500 to-pink-500",
+    link: "/genai-course"
   },
   {
     id: "1",
@@ -40,16 +51,6 @@ const aiCourses: Course[] = [
     duration: "8 weeks",
     icon: Brain,
     gradient: "from-purple-500 to-pink-500"
-  },
-  {
-    id: "2",
-    title: "Generative AI & LLMs",
-    description: "Explore GPT, DALL-E, and other generative models. Learn prompt engineering and fine-tuning.",
-    category: "Generative AI",
-    difficulty: "Intermediate",
-    duration: "6 weeks",
-    icon: Sparkles,
-    gradient: "from-blue-500 to-cyan-500"
   },
   {
     id: "3",
@@ -93,7 +94,7 @@ const aiCourses: Course[] = [
   }
 ];
 
-const categories = ["All", "Machine Learning", "Generative AI", "Prompt Engineering", "AI Integration", "Deep Learning", "AI Ethics", "Data Structures & Algorithms"];
+const categories = ["All", "Data Structures & Algorithms", "Generative AI", "Machine Learning", "Prompt Engineering", "AI Integration", "Deep Learning", "AI Ethics"];
 
 const Upskiller = () => {
   const [searchQuery, setSearchQuery] = useState("");
