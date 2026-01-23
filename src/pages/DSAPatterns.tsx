@@ -5,9 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Navbar from '@/components/Navbar';
-import DSASidebar from '@/components/dsa/DSASidebar';
+import AlgoForgeSidebar from '@/components/dsa/AlgoForgeSidebar';
 import ProfileCard from '@/components/dsa/ProfileCard';
 import StreakCard from '@/components/dsa/StreakCard';
 import RankXPCard from '@/components/dsa/RankXPCard';
@@ -16,6 +15,8 @@ import ActivityHeatmap from '@/components/dsa/ActivityHeatmap';
 import BatchLeaderboard from '@/components/dsa/BatchLeaderboard';
 import GenieChatbot from '@/components/dsa/GenieChatbot';
 import PatternPracticeSection from '@/components/dsa/PatternPracticeSection';
+import LiveLecturesSection from '@/components/dsa/LiveLecturesSection';
+import AnalyticsSection from '@/components/dsa/AnalyticsSection';
 import { dsaPhases, getCourseStats, DSAPhase, DSATopic } from '@/data/dsaCourseData';
 import { dsaTopicsWithProblems, getDSAStats } from '@/data/dsaProblemsData';
 import { getPatternStats } from '@/data/dsaPatternsData';
@@ -64,7 +65,7 @@ const DSAPatterns = () => {
   return (
     <div className="min-h-screen bg-background bg-grid-pattern dark" data-theme="dsa">
       <Navbar />
-      <DSASidebar />
+      <AlgoForgeSidebar />
       
       {/* Main Content - with sidebar offset on large screens */}
       <main className="lg:ml-64 min-h-screen">
@@ -78,13 +79,13 @@ const DSAPatterns = () => {
             
             <div className="text-center mb-8">
               <Badge className="mb-4 bg-primary/10 text-primary border-primary/20 red-glow-sm">
-                <Flame className="w-3 h-3 mr-1" /> DSA Calendar 2026
+                <Flame className="w-3 h-3 mr-1" /> AlgoForge 2026
               </Badge>
               <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-                Master DSA in <span className="gradient-text">3 Phases</span>
+                Master DSA with <span className="gradient-text">AlgoForge</span>
               </h1>
               <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-6">
-                A structured 6-10 month journey from absolute beginner to interview-ready.
+                A structured journey from absolute beginner to interview-ready with 30 patterns & 400+ problems.
               </p>
               
               {/* Stats */}
@@ -258,11 +259,25 @@ const DSAPatterns = () => {
           </div>
         </section>
 
+        {/* Analytics Section */}
+        <section className="pb-12 px-4 md:px-6" id="analytics">
+          <div className="container mx-auto max-w-7xl">
+            <AnalyticsSection />
+          </div>
+        </section>
+
+        {/* Live Lectures Section */}
+        <section className="pb-12 px-4 md:px-6" id="lectures">
+          <div className="container mx-auto max-w-7xl">
+            <LiveLecturesSection />
+          </div>
+        </section>
+
         {/* CTA */}
         <section className="py-12 px-4 md:px-6 bg-gradient-to-r from-primary/10 via-primary/5 to-background">
           <div className="container mx-auto text-center max-w-3xl">
             <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-              Ready to Start Your DSA Journey?
+              Ready to Start Your AlgoForge Journey?
             </h2>
             <p className="text-muted-foreground mb-6 text-sm">
               ❌ No shortcuts ❌ No motivation hacks ✅ Only consistent execution
