@@ -205,6 +205,27 @@ const GenAICourse = () => {
           </div>
         </div>
       </main>
+
+      {/* Video Player Dialog */}
+      <Dialog open={!!activeVideo} onOpenChange={() => setActiveVideo(null)}>
+        <DialogContent className="max-w-4xl p-0 overflow-hidden">
+          <DialogHeader className="p-4 pb-0">
+            <DialogTitle>{activeVideo?.title}</DialogTitle>
+          </DialogHeader>
+          <div className="aspect-video w-full">
+            {activeVideo && (
+              <iframe
+                src={`https://www.youtube.com/embed/${activeVideo.url}?autoplay=1&rel=0&modestbranding=1`}
+                title={activeVideo.title}
+                className="w-full h-full"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
