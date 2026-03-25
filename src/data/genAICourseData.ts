@@ -109,11 +109,15 @@ export const genAIModules: Module[] = [
     icon: '🔌',
     color: 'from-indigo-500 to-purple-500',
     submodules: [
-      { id: '6.1', title: 'OpenAI API setup and integration', duration: '45 min' },
-      { id: '6.2', title: 'Gemini API setup and integration', duration: '40 min' },
-      { id: '6.3', title: 'Running local models with Ollama + Docker', duration: '60 min' },
-      { id: '6.4', title: 'Using Hugging Face and instruct-tuned models', duration: '50 min' },
-      { id: '6.5', title: 'Exposing LLMs via FastAPI endpoints', duration: '45 min' },
+      { id: '6.1', title: 'LLM API Models vs Local Models', duration: '4 min', videoUrl: 'https://www.youtube.com/watch?v=98UciFUHijk&start=854' },
+      { id: '6.2', title: 'Setting up API Keys (OpenAI, Gemini, Groq, Mistral)', duration: '7 min', videoUrl: 'https://www.youtube.com/watch?v=98UciFUHijk&start=1048' },
+      { id: '6.3', title: 'Using LLM APIs', duration: '2 min', videoUrl: 'https://www.youtube.com/watch?v=bIHNnSpn1Uc&start=1087' },
+      { id: '6.4', title: 'Initializing Chat Models with LangChain', duration: '8 min', videoUrl: 'https://www.youtube.com/watch?v=98UciFUHijk&start=1987' },
+      { id: '6.5', title: 'OpenAI API setup and integration', duration: '45 min' },
+      { id: '6.6', title: 'Gemini API setup and integration', duration: '40 min' },
+      { id: '6.7', title: 'Running local models with Ollama + Docker', duration: '60 min' },
+      { id: '6.8', title: 'Using Hugging Face and instruct-tuned models', duration: '50 min' },
+      { id: '6.9', title: 'Exposing LLMs via FastAPI endpoints', duration: '45 min' },
     ]
   },
   {
