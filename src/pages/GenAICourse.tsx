@@ -12,6 +12,7 @@ import { genAIModules, getGenAIStats } from '@/data/genAICourseData';
 
 const GenAICourse = () => {
   const [completedSubmodules, setCompletedSubmodules] = useState<Set<string>>(new Set());
+  const [activeVideo, setActiveVideo] = useState<{ url: string; title: string } | null>(null);
   const stats = getGenAIStats();
 
   const toggleComplete = (submoduleId: string) => {
