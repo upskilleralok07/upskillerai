@@ -23,8 +23,8 @@ export const genAIModules: Module[] = [
     icon: '🛠️',
     color: 'from-blue-500 to-cyan-500',
     submodules: [
-      { id: '1.1', title: 'Installation of tools (VS Code, Python)', duration: '15 min' },
-      { id: '1.2', title: 'VS Code setup (extensions, themes)', duration: '20 min' },
+      { id: '1.1', title: 'Installation of tools (VS Code, Python)', duration: '15 min', videoUrl: 'https://www.youtube.com/watch?v=MYSKezQj23s' },
+      { id: '1.2', title: 'VS Code setup (extensions, themes)', duration: '20 min', videoUrl: 'https://www.youtube.com/watch?v=nOrN-sprkMk' },
       { id: '1.3', title: 'Downloading starter code files', duration: '10 min' },
     ]
   },
