@@ -94,11 +94,12 @@ export const genAIModules: Module[] = [
     icon: '✨',
     color: 'from-yellow-500 to-orange-500',
     submodules: [
-      { id: '5.1', title: 'Zero-shot and one-shot prompting', duration: '30 min' },
-      { id: '5.2', title: 'Few-shot and chain-of-thought prompting', duration: '40 min' },
-      { id: '5.3', title: 'Persona-based prompting', duration: '25 min' },
-      { id: '5.4', title: 'Alpaca, ChatML, and LLaMA-2 formats', duration: '35 min' },
-      { id: '5.5', title: 'Structured outputs with Pydantic + prompts', duration: '45 min' },
+      { id: '5.1', title: 'Prompt Engineering & Types of Prompts', duration: '2 min', videoUrl: 'https://www.youtube.com/watch?v=bIHNnSpn1Uc&start=1388' },
+      { id: '5.2', title: 'Zero-shot and one-shot prompting', duration: '30 min' },
+      { id: '5.3', title: 'Few-shot and chain-of-thought prompting', duration: '40 min' },
+      { id: '5.4', title: 'Persona-based prompting', duration: '25 min' },
+      { id: '5.5', title: 'Alpaca, ChatML, and LLaMA-2 formats', duration: '35 min' },
+      { id: '5.6', title: 'Structured outputs with Pydantic + prompts', duration: '45 min' },
     ]
   },
   {
