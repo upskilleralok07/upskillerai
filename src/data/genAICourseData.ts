@@ -149,9 +149,10 @@ export const genAIModules: Module[] = [
     icon: '🧩',
     color: 'from-teal-500 to-cyan-500',
     submodules: [
-      { id: '8.1', title: 'LangGraph concepts: state, nodes, edges', duration: '50 min' },
-      { id: '8.2', title: 'Checkpointing with MongoDB', duration: '40 min' },
-      { id: '8.3', title: 'Memory types: short-term, long-term, episodic, semantic', duration: '45 min' },
+      { id: '8.1', title: 'LLM Memory', duration: '5 min', videoUrl: 'https://www.youtube.com/watch?v=bIHNnSpn1Uc&start=1505' },
+      { id: '8.2', title: 'LangGraph concepts: state, nodes, edges', duration: '50 min' },
+      { id: '8.3', title: 'Checkpointing with MongoDB', duration: '40 min' },
+      { id: '8.4', title: 'Memory types: short-term, long-term, episodic, semantic', duration: '45 min' },
       { id: '8.4', title: 'Memory layers with Mem0 and vector DB', duration: '50 min' },
       { id: '8.5', title: 'Graph memory using Neo4j and Cypher', duration: '60 min' },
     ]
