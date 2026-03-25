@@ -3,6 +3,7 @@ export interface Submodule {
   title: string;
   duration?: string;
   completed?: boolean;
+  videoUrl?: string;
 }
 
 export interface Module {
