@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Play, CheckCircle2, Clock, ChevronDown, ChevronRight, BookOpen, Sparkles } from 'lucide-react';
+import { ArrowLeft, Play, CheckCircle2, Clock, ChevronDown, ChevronRight, BookOpen, Sparkles, Video, ExternalLink } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Progress } from '@/components/ui/progress';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import Navbar from '@/components/Navbar';
 import { genAIModules, getGenAIStats } from '@/data/genAICourseData';
 
