@@ -3,6 +3,7 @@ export interface Submodule {
   title: string;
   duration?: string;
   completed?: boolean;
+  videoUrl?: string;
 }
 
 export interface Module {
@@ -22,8 +23,8 @@ export const genAIModules: Module[] = [
     icon: '🛠️',
     color: 'from-blue-500 to-cyan-500',
     submodules: [
-      { id: '1.1', title: 'Installation of tools (VS Code, Python)', duration: '15 min' },
-      { id: '1.2', title: 'VS Code setup (extensions, themes)', duration: '20 min' },
+      { id: '1.1', title: 'Installation of tools (VS Code, Python)', duration: '15 min', videoUrl: 'https://www.youtube.com/watch?v=MYSKezQj23s' },
+      { id: '1.2', title: 'VS Code setup (extensions, themes)', duration: '20 min', videoUrl: 'https://www.youtube.com/watch?v=nOrN-sprkMk' },
       { id: '1.3', title: 'Downloading starter code files', duration: '10 min' },
     ]
   },
@@ -34,12 +35,12 @@ export const genAIModules: Module[] = [
     icon: '🐍',
     color: 'from-green-500 to-emerald-500',
     submodules: [
-      { id: '2.1', title: 'Introduction to coding with Python', duration: '30 min' },
-      { id: '2.2', title: 'Data types in Python', duration: '45 min' },
+      { id: '2.1', title: 'Introduction to coding with Python', duration: '30 min', videoUrl: 'https://www.youtube.com/watch?v=wjvvVSZVXiQ' },
+      { id: '2.2', title: 'Data types in Python', duration: '45 min', videoUrl: 'https://www.youtube.com/watch?v=tf3NPy6ySSI' },
       { id: '2.3', title: 'Conditionals in Python', duration: '30 min' },
-      { id: '2.4', title: 'Loops in Python', duration: '35 min' },
-      { id: '2.5', title: 'Functions in Python', duration: '40 min' },
-      { id: '2.6', title: 'Comprehensions in Python', duration: '25 min' },
+      { id: '2.4', title: 'Loops in Python', duration: '35 min', videoUrl: 'https://www.youtube.com/watch?v=iUVaz25o3og' },
+      { id: '2.5', title: 'Functions in Python', duration: '40 min', videoUrl: 'https://www.youtube.com/watch?v=so97jTalLo8' },
+      { id: '2.6', title: 'Comprehensions in Python', duration: '25 min', videoUrl: 'https://www.youtube.com/watch?v=QiTfuiNrMxQ' },
       { id: '2.7', title: 'Generators and decorators', duration: '45 min' },
       { id: '2.8', title: 'Object-oriented programming', duration: '60 min' },
       { id: '2.9', title: 'File and exception handling', duration: '35 min' },

@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Play, CheckCircle2, Clock, ChevronDown, ChevronRight, BookOpen, Sparkles } from 'lucide-react';
+import { ArrowLeft, Play, CheckCircle2, Clock, ChevronDown, ChevronRight, BookOpen, Sparkles, Video, ExternalLink } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Progress } from '@/components/ui/progress';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import Navbar from '@/components/Navbar';
 import { genAIModules, getGenAIStats } from '@/data/genAICourseData';
 
 const GenAICourse = () => {
   const [completedSubmodules, setCompletedSubmodules] = useState<Set<string>>(new Set());
+  const [activeVideo, setActiveVideo] = useState<{ url: string; title: string } | null>(null);
   const stats = getGenAIStats();
 
   const toggleComplete = (submoduleId: string) => {
@@ -134,14 +136,16 @@ const GenAICourse = () => {
                             return (
                               <div 
                                 key={submodule.id}
-                                className={`flex items-center gap-3 p-3 rounded-lg transition-colors cursor-pointer ${
+                                className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${
                                   isCompleted ? 'bg-primary/10' : 'hover:bg-muted/50'
                                 }`}
-                                onClick={() => toggleComplete(submodule.id)}
                               >
-                                <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
-                                  isCompleted ? 'bg-primary text-primary-foreground' : 'border-2 border-muted-foreground'
-                                }`}>
+                                <div 
+                                  className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 cursor-pointer ${
+                                    isCompleted ? 'bg-primary text-primary-foreground' : 'border-2 border-muted-foreground'
+                                  }`}
+                                  onClick={() => toggleComplete(submodule.id)}
+                                >
                                   {isCompleted && <CheckCircle2 className="w-4 h-4" />}
                                 </div>
                                 <div className="flex-1">
@@ -149,6 +153,25 @@ const GenAICourse = () => {
                                     {submodule.title}
                                   </p>
                                 </div>
+                                {submodule.videoUrl ? (
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="gap-1 text-xs border-primary/30 text-primary hover:bg-primary/10"
+                                    onClick={() => {
+                                      const videoId = submodule.videoUrl!.split('v=')[1];
+                                      setActiveVideo({ url: videoId, title: submodule.title });
+                                    }}
+                                  >
+                                    <Video className="w-3 h-3" />
+                                    Watch
+                                  </Button>
+                                ) : (
+                                  <Badge variant="secondary" className="text-xs opacity-50">
+                                    <Clock className="w-3 h-3 mr-1" />
+                                    Coming Soon
+                                  </Badge>
+                                )}
                                 <Badge variant="secondary" className="text-xs">
                                   <Clock className="w-3 h-3 mr-1" />
                                   {submodule.duration}
@@ -182,6 +205,27 @@ const GenAICourse = () => {
           </div>
         </div>
       </main>
+
+      {/* Video Player Dialog */}
+      <Dialog open={!!activeVideo} onOpenChange={() => setActiveVideo(null)}>
+        <DialogContent className="max-w-4xl p-0 overflow-hidden">
+          <DialogHeader className="p-4 pb-0">
+            <DialogTitle>{activeVideo?.title}</DialogTitle>
+          </DialogHeader>
+          <div className="aspect-video w-full">
+            {activeVideo && (
+              <iframe
+                src={`https://www.youtube.com/embed/${activeVideo.url}?autoplay=1&rel=0&modestbranding=1`}
+                title={activeVideo.title}
+                className="w-full h-full"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
