@@ -26,6 +26,11 @@ export const genAIModules: Module[] = [
       { id: '1.1', title: 'Installation of tools (VS Code, Python)', duration: '15 min', videoUrl: 'https://www.youtube.com/watch?v=MYSKezQj23s' },
       { id: '1.2', title: 'VS Code setup (extensions, themes)', duration: '20 min', videoUrl: 'https://www.youtube.com/watch?v=nOrN-sprkMk' },
       { id: '1.3', title: 'Downloading starter code files', duration: '10 min' },
+      { id: '1.4', title: 'Introduction to the AI Series', duration: '2 min', videoUrl: 'https://www.youtube.com/watch?v=98UciFUHijk&start=0' },
+      { id: '1.5', title: 'Virtual Environment Setup using UV', duration: '4 min', videoUrl: 'https://www.youtube.com/watch?v=98UciFUHijk&start=119' },
+      { id: '1.6', title: 'Understanding and Installing UV', duration: '4 min', videoUrl: 'https://www.youtube.com/watch?v=98UciFUHijk&start=324' },
+      { id: '1.7', title: 'Installing Project Dependencies (Requirements File)', duration: '3 min', videoUrl: 'https://www.youtube.com/watch?v=98UciFUHijk&start=542' },
+      { id: '1.8', title: 'Project Structure Guidelines', duration: '3 min', videoUrl: 'https://www.youtube.com/watch?v=98UciFUHijk&start=685' },
     ]
   },
   {
