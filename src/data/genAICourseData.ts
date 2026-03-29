@@ -29,7 +29,7 @@ export const genAIModules: Module[] = [
       { id: '1.4', title: 'Introduction to the AI Series', duration: '2 min', videoUrl: 'https://www.youtube.com/watch?v=98UciFUHijk&start=0' },
       { id: '1.5', title: 'Virtual Environment Setup using UV', duration: '4 min', videoUrl: 'https://www.youtube.com/watch?v=98UciFUHijk&start=119' },
       { id: '1.6', title: 'Understanding and Installing UV', duration: '4 min', videoUrl: 'https://www.youtube.com/watch?v=98UciFUHijk&start=324' },
-      { id: '1.7', title: 'Installing Project Dependencies (Requirements File)', duration: '3 min', videoUrl: 'https://www.youtube.com/watch?v=98UciFUHijk&start=542' },
+      { id: '1.7', title: 'Installing Project Dependencies (Requirement File)', duration: '3 min', videoUrl: 'https://www.youtube.com/watch?v=98UciFUHijk&start=542' },
       { id: '1.8', title: 'Project Structure Guidelines', duration: '3 min', videoUrl: 'https://www.youtube.com/watch?v=98UciFUHijk&start=685' },
     ]
   },
@@ -109,7 +109,7 @@ export const genAIModules: Module[] = [
     icon: '🔌',
     color: 'from-indigo-500 to-purple-500',
     submodules: [
-      { id: '6.1', title: 'LLM API Models vs Local Models', duration: '4 min', videoUrl: 'https://www.youtube.com/watch?v=98UciFUHijk&start=854' },
+      { id: '6.1', title: 'LLM API Models vs. Local Models', duration: '4 min', videoUrl: 'https://www.youtube.com/watch?v=98UciFUHijk&start=854' },
       { id: '6.2', title: 'Setting up API Keys (OpenAI, Gemini, Groq, Mistral)', duration: '7 min', videoUrl: 'https://www.youtube.com/watch?v=98UciFUHijk&start=1048' },
       { id: '6.3', title: 'Using LLM APIs', duration: '2 min', videoUrl: 'https://www.youtube.com/watch?v=bIHNnSpn1Uc&start=1087' },
       { id: '6.4', title: 'Initializing Chat Models with LangChain', duration: '8 min', videoUrl: 'https://www.youtube.com/watch?v=98UciFUHijk&start=1987' },
@@ -127,7 +127,7 @@ export const genAIModules: Module[] = [
     icon: '🤖',
     color: 'from-red-500 to-pink-500',
     submodules: [
-      { id: '7.1', title: 'Types of Chatbots (Basic vs RAG)', duration: '7 min', videoUrl: 'https://www.youtube.com/watch?v=98UciFUHijk&start=1421' },
+      { id: '7.1', title: 'Types of Chatbots (Basic vs. RAG)', duration: '7 min', videoUrl: 'https://www.youtube.com/watch?v=98UciFUHijk&start=1421' },
       { id: '7.2', title: 'Introduction to LangChain', duration: '3 min', videoUrl: 'https://www.youtube.com/watch?v=98UciFUHijk&start=1819' },
       { id: '7.3', title: 'LangChain Core Components', duration: '1 min', videoUrl: 'https://www.youtube.com/watch?v=bIHNnSpn1Uc&start=1239' },
       { id: '7.4', title: 'Running the AI Chatbot Project', duration: '8 min', videoUrl: 'https://www.youtube.com/watch?v=98UciFUHijk&start=2415' },
