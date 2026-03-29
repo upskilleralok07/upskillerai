@@ -4,7 +4,65 @@ export interface Submodule {
   duration?: string;
   completed?: boolean;
   videoUrl?: string;
+  startTime?: number;
+  endTime?: number;
 }
+
+export interface VideoTopicMap {
+  videoId: string;
+  moduleId: string;
+  topics: { submoduleId: string; title: string; start_time: number; end_time: number }[];
+}
+
+// Maps for interactive topic-based player
+export const videoTopicMaps: VideoTopicMap[] = [
+  {
+    videoId: '98UciFUHijk',
+    moduleId: 'video-98UciFUHijk',
+    topics: [
+      { submoduleId: '1.4', title: 'Introduction & Course Roadmap', start_time: 0, end_time: 349 },
+      { submoduleId: '1.5', title: 'How AI Models are Built', start_time: 349, end_time: 621 },
+      { submoduleId: '1.6', title: 'Application Layer & Real-world Use Cases', start_time: 621, end_time: 677 },
+      { submoduleId: '1.7', title: 'Plan of Action for the Course', start_time: 677, end_time: 769 },
+      { submoduleId: '4.5', title: 'What are LLMs (Large Language Models)', start_time: 769, end_time: 913 },
+      { submoduleId: '4.6', title: 'How LLMs Work (Prediction)', start_time: 913, end_time: 1001 },
+      { submoduleId: '4.7', title: 'Popular LLMs (GPT, Gemini, Llama, etc.)', start_time: 1001, end_time: 1066 },
+      { submoduleId: '4.8', title: 'Why You Cannot Train Your Own LLM', start_time: 1066, end_time: 1087 },
+      { submoduleId: '6.3', title: 'Using LLM APIs', start_time: 1087, end_time: 1160 },
+      { submoduleId: '7.2', title: 'Introduction to LangChain', start_time: 1160, end_time: 1230 },
+      { submoduleId: '7.3', title: 'LangChain Core Components', start_time: 1230, end_time: 1266 },
+      { submoduleId: '4.9', title: 'Types of Models (Chat, Embedding, Multimodal)', start_time: 1266, end_time: 1376 },
+      { submoduleId: '5.1', title: 'Prompt Engineering & Types of Prompts', start_time: 1376, end_time: 1579 },
+      { submoduleId: '8.1', title: 'LLM Memory', start_time: 1579, end_time: 1714 },
+      { submoduleId: '7.5', title: 'RAG (Retrieval Augmented Generation)', start_time: 1714, end_time: 1844 },
+      { submoduleId: '7.6', title: 'AI Agents vs Chains', start_time: 1844, end_time: 2033 },
+    ],
+  },
+  {
+    videoId: 'bIHNnSpn1Uc',
+    moduleId: 'video-bIHNnSpn1Uc',
+    topics: [
+      { submoduleId: 'v2.1', title: 'Introduction to Part 2 & Series Overview', start_time: 0, end_time: 145 },
+      { submoduleId: 'v2.2', title: 'Module 1: Virtual Environment Basics & Why You Need It', start_time: 145, end_time: 286 },
+      { submoduleId: 'v2.3', title: 'Setting Up Virtual Environment in VS Code', start_time: 286, end_time: 394 },
+      { submoduleId: 'v2.4', title: 'UV Package Introduction & Installation', start_time: 415, end_time: 558 },
+      { submoduleId: 'v2.5', title: 'Installing Dependencies & Requirements File', start_time: 558, end_time: 679 },
+      { submoduleId: 'v2.6', title: 'Module 2: Project Structure & Why It Matters', start_time: 714, end_time: 785 },
+      { submoduleId: 'v2.7', title: 'Running Python Code in Virtual Environment', start_time: 785, end_time: 850 },
+      { submoduleId: 'v2.8', title: 'Bedrock Models Overview (ChatGPT, Gemini, Groq, Llama, etc.)', start_time: 850, end_time: 941 },
+      { submoduleId: 'v2.9', title: 'Why Use API Keys Instead of Local Installation', start_time: 941, end_time: 1047 },
+      { submoduleId: 'v2.10', title: 'Generating OpenAI API Key', start_time: 1047, end_time: 1109 },
+      { submoduleId: 'v2.11', title: 'Generating Google Gemini API Key', start_time: 1109, end_time: 1227 },
+      { submoduleId: 'v2.12', title: 'Setting Up .env File for API Keys', start_time: 1152, end_time: 1260 },
+      { submoduleId: 'v2.13', title: 'Setting Up Groq API Key', start_time: 1241, end_time: 1286 },
+      { submoduleId: 'v2.14', title: 'Setting Up Mistral API Key (Free Tier)', start_time: 1296, end_time: 1423 },
+      { submoduleId: 'v2.15', title: 'Protecting API Keys: .gitignore & Security Best Practices', start_time: 1508, end_time: 1555 },
+      { submoduleId: 'v2.16', title: 'Chat Models vs Embedding Models Explained', start_time: 1428, end_time: 1503 },
+      { submoduleId: 'v2.17', title: 'LLM Architecture: How Chat Models Work', start_time: 1567, end_time: 1744 },
+      { submoduleId: 'v2.18', title: 'Introduction to LangChain Framework', start_time: 1779, end_time: 1835 },
+    ],
+  },
+];
 
 export interface Module {
   id: string;

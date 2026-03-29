@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Play, CheckCircle2, Clock, ChevronRight, Sparkles, Video } from 'lucide-react';
+import { ArrowLeft, Play, CheckCircle2, Clock, ChevronRight, Sparkles, Video, Tv } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -8,7 +8,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Progress } from '@/components/ui/progress';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import Navbar from '@/components/Navbar';
-import { genAIModules, getGenAIStats } from '@/data/genAICourseData';
+import YouTubeTopicPlayer, { VideoTopic } from '@/components/YouTubeTopicPlayer';
+import { genAIModules, getGenAIStats, videoTopicMaps } from '@/data/genAICourseData';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -34,6 +35,7 @@ const GenAICourse = () => {
   const { user } = useAuth();
   const [completedSubmodules, setCompletedSubmodules] = useState<Set<string>>(new Set());
   const [activeVideo, setActiveVideo] = useState<{ videoId: string; startTime?: number; title: string; submoduleId: string } | null>(null);
+  const [activeTopicPlayer, setActiveTopicPlayer] = useState<{ videoId: string; topics: VideoTopic[] } | null>(null);
   const stats = getGenAIStats();
 
   // Load progress from Supabase
@@ -93,21 +95,26 @@ const GenAICourse = () => {
     });
   };
 
-  // Auto-mark completed after watching for 30 seconds
+  const handleTopicComplete = useCallback((submoduleId: string) => {
+    setCompletedSubmodules(prev => {
+      if (prev.has(submoduleId)) return prev;
+      const newSet = new Set(prev);
+      newSet.add(submoduleId);
+      saveProgress(submoduleId, true);
+      return newSet;
+    });
+  }, [saveProgress]);
+
+  // Auto-mark completed after watching simple video for 30 seconds
   useEffect(() => {
     if (!activeVideo) return;
     const timer = setTimeout(() => {
       if (!completedSubmodules.has(activeVideo.submoduleId)) {
-        setCompletedSubmodules(prev => {
-          const newSet = new Set(prev);
-          newSet.add(activeVideo.submoduleId);
-          return newSet;
-        });
-        saveProgress(activeVideo.submoduleId, true);
+        handleTopicComplete(activeVideo.submoduleId);
       }
     }, 30000);
     return () => clearTimeout(timer);
-  }, [activeVideo, completedSubmodules, saveProgress]);
+  }, [activeVideo, completedSubmodules, handleTopicComplete]);
 
   const getModuleProgress = (moduleId: string) => {
     const module = genAIModules.find(m => m.id === moduleId);
@@ -117,6 +124,44 @@ const GenAICourse = () => {
   };
 
   const totalProgress = Math.round((completedSubmodules.size / stats.totalSubmodules) * 100);
+
+  // Find which video topic maps apply to a module's submodules
+  const getTopicMapForSubmodule = (submoduleId: string) => {
+    for (const map of videoTopicMaps) {
+      if (map.topics.some(t => t.submoduleId === submoduleId)) {
+        return map;
+      }
+    }
+    return null;
+  };
+
+  const openTopicPlayer = (videoId: string) => {
+    const map = videoTopicMaps.find(m => m.videoId === videoId);
+    if (!map) return;
+    const topics: VideoTopic[] = map.topics.map(t => ({
+      id: t.submoduleId,
+      title: t.title,
+      start_time: t.start_time,
+      end_time: t.end_time,
+      submoduleId: t.submoduleId,
+    }));
+    setActiveTopicPlayer({ videoId, topics });
+  };
+
+  // Collect unique video IDs used in a module
+  const getModuleVideoIds = (moduleId: string) => {
+    const module = genAIModules.find(m => m.id === moduleId);
+    if (!module) return [];
+    const videoIds = new Set<string>();
+    for (const sub of module.submodules) {
+      if (sub.videoUrl) {
+        const { videoId } = parseVideoUrl(sub.videoUrl);
+        const map = videoTopicMaps.find(m => m.videoId === videoId);
+        if (map) videoIds.add(videoId);
+      }
+    }
+    return Array.from(videoIds);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -180,6 +225,7 @@ const GenAICourse = () => {
               {genAIModules.map((module) => {
                 const moduleProgress = getModuleProgress(module.id);
                 const completedCount = module.submodules.filter(s => completedSubmodules.has(s.id)).length;
+                const moduleVideoIds = getModuleVideoIds(module.id);
                 
                 return (
                   <AccordionItem key={module.id} value={module.id} className="border-0">
@@ -204,8 +250,31 @@ const GenAICourse = () => {
                       </AccordionTrigger>
                       <AccordionContent>
                         <div className="px-6 pb-4 space-y-2">
+                          {/* Interactive Video Player Buttons */}
+                          {moduleVideoIds.length > 0 && (
+                            <div className="flex flex-wrap gap-2 mb-3 p-3 rounded-lg bg-primary/5 border border-primary/10">
+                              <span className="text-xs text-muted-foreground flex items-center gap-1 mr-2">
+                                <Tv className="w-3.5 h-3.5" /> Interactive Lessons:
+                              </span>
+                              {moduleVideoIds.map((vid) => (
+                                <Button
+                                  key={vid}
+                                  size="sm"
+                                  variant="outline"
+                                  className="gap-1.5 text-xs border-primary/30 text-primary hover:bg-primary/10"
+                                  onClick={() => openTopicPlayer(vid)}
+                                >
+                                  <Play className="w-3 h-3" />
+                                  Open Topic Player
+                                </Button>
+                              ))}
+                            </div>
+                          )}
+
                           {module.submodules.map((submodule) => {
                             const isCompleted = completedSubmodules.has(submodule.id);
+                            const topicMap = submodule.videoUrl ? getTopicMapForSubmodule(submodule.id) : null;
+
                             return (
                               <div 
                                 key={submodule.id}
@@ -227,18 +296,30 @@ const GenAICourse = () => {
                                   </p>
                                 </div>
                                 {submodule.videoUrl ? (
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="gap-1 text-xs border-primary/30 text-primary hover:bg-primary/10"
-                                    onClick={() => {
-                                      const { videoId, startTime } = parseVideoUrl(submodule.videoUrl!);
-                                      setActiveVideo({ videoId, startTime, title: submodule.title, submoduleId: submodule.id });
-                                    }}
-                                  >
-                                    <Video className="w-3 h-3" />
-                                    Watch
-                                  </Button>
+                                  topicMap ? (
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      className="gap-1 text-xs border-primary/30 text-primary hover:bg-primary/10"
+                                      onClick={() => openTopicPlayer(topicMap.videoId)}
+                                    >
+                                      <Tv className="w-3 h-3" />
+                                      Topics
+                                    </Button>
+                                  ) : (
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      className="gap-1 text-xs border-primary/30 text-primary hover:bg-primary/10"
+                                      onClick={() => {
+                                        const { videoId, startTime } = parseVideoUrl(submodule.videoUrl!);
+                                        setActiveVideo({ videoId, startTime, title: submodule.title, submoduleId: submodule.id });
+                                      }}
+                                    >
+                                      <Video className="w-3 h-3" />
+                                      Watch
+                                    </Button>
+                                  )
                                 ) : (
                                   <Badge variant="secondary" className="text-xs opacity-50">
                                     <Clock className="w-3 h-3 mr-1" />
@@ -278,7 +359,7 @@ const GenAICourse = () => {
         </div>
       </main>
 
-      {/* Video Player Dialog */}
+      {/* Simple Video Player Dialog */}
       <Dialog open={!!activeVideo} onOpenChange={() => setActiveVideo(null)}>
         <DialogContent className="max-w-4xl p-0 overflow-hidden">
           <DialogHeader className="p-4 pb-0">
@@ -297,6 +378,27 @@ const GenAICourse = () => {
               />
             )}
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Interactive Topic Player Dialog */}
+      <Dialog open={!!activeTopicPlayer} onOpenChange={() => setActiveTopicPlayer(null)}>
+        <DialogContent className="max-w-6xl w-[95vw] p-4 md:p-6 overflow-hidden">
+          <DialogHeader className="pb-2">
+            <DialogTitle className="flex items-center gap-2">
+              <Tv className="w-5 h-5 text-primary" />
+              Interactive Video Lessons
+            </DialogTitle>
+            <DialogDescription>Click a topic to jump to that section. Video auto-pauses at the end of each topic and marks it complete.</DialogDescription>
+          </DialogHeader>
+          {activeTopicPlayer && (
+            <YouTubeTopicPlayer
+              videoId={activeTopicPlayer.videoId}
+              topics={activeTopicPlayer.topics}
+              completedIds={completedSubmodules}
+              onTopicComplete={handleTopicComplete}
+            />
+          )}
         </DialogContent>
       </Dialog>
     </div>
